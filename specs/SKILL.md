@@ -4,10 +4,13 @@ description: Prepare and maintain repo truth by creating, refining, indexing, an
 argument-hint: [task to prepare or area to sync]
 ---
 
-Use this skill in two situations:
+Use this skill in two user-facing situations:
 
-1. before work, to make sure the relevant spec exists and is good enough
-2. after work, to keep `AGENTS.md` and `specs/` aligned with reality
+1. bootstrap a repo that is missing `AGENTS.md`, `specs/`, or both
+2. sync `AGENTS.md` and `specs/` with current code reality
+
+This skill may also be auto-invoked during implementation when the current task
+is clearly blocked by weak or missing repo truth.
 
 This skill replaces separate "write specs", "reverse engineer specs", and
 "sync specs" workflows with one repo-truth skill.
@@ -22,9 +25,11 @@ This skill replaces separate "write specs", "reverse engineer specs", and
 ## Process
 
 1. Determine intent.
-   - `prepare`: a task arrived and specs must be ready for planning/execution
+   - `bootstrap`: `AGENTS.md`, `specs/`, or core index docs are missing or too
+     weak to support work
    - `sync`: docs may have drifted from code reality
-   - if no task is given, default to sync
+   - if invoked automatically during a task, treat task-scoped fixes as part of
+     syncing the repo truth needed for that work
 
 2. Audit the current truth layer.
    - Read `AGENTS.md`, `specs/README.md`, and the relevant `specs/*`.
@@ -53,6 +58,10 @@ This skill replaces separate "write specs", "reverse engineer specs", and
 
 5. Update the truth layer.
    - Read `AGENTS.md` and `specs/README.md` first.
+   - If `AGENTS.md` is missing, create it from the template and immediately
+     specialize it to the repo.
+   - If `specs/` is missing, create it, create `specs/README.md`, and create
+     the first topic specs needed for the codebase.
    - Refine an existing spec when the topic already exists.
    - Create a new topic spec when the area is not documented and the topic is
      large enough to deserve one.
@@ -84,6 +93,8 @@ Return a short summary with:
   template.
 - Use templates as scaffolding for missing structure, not as a reason to thin
   or flatten already-strong specs.
+- User-facing role: bootstrap or sync. Task-scoped spec preparation is an
+  internal behavior of this same skill when clearly needed.
 - Do not silently broaden task scope.
 - Prefer updating one good spec over creating many tiny docs.
 - Keep `AGENTS.md` compact; avoid dumping architecture details that belong in
