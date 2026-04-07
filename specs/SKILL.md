@@ -15,6 +15,9 @@ is clearly blocked by weak or missing repo truth.
 This skill replaces separate "write specs", "reverse engineer specs", and
 "sync specs" workflows with one repo-truth skill.
 
+Specs are durable domain and system truth for provider-native agents. They are
+not task plans, execution plans, or TODO lists.
+
 This is the only skill that should create or modify the codebase harness layer:
 
 - `AGENTS.md`
@@ -90,9 +93,14 @@ Bootstrap assets live alongside this skill in:
 
 6. Keep specs useful for agents.
    - one topic of concern per file
-   - outcome-oriented
    - concrete enough to guide implementation
    - light on implementation prescription
+   - biased toward the mature house style:
+     - `Overview`
+     - `Non-Goals`
+     - `Key Patterns`
+     - topic-specific sections
+     - `Verification`
 
 ## Output
 
@@ -112,6 +120,13 @@ Return a short summary with:
   template.
 - Use the local skill assets as scaffolding for missing structure, not as a
   reason to thin or flatten already-strong specs.
+- Treat the generic spec template as bootstrap scaffolding only. Do not
+  reintroduce broad filler sections unless the repo's actual house style uses
+  them or the topic genuinely needs them.
+- Specs should capture durable topic truth. They should not read like task
+  breakdowns or implementation checklists.
+- Verification commands or concrete checks in specs are encouraged when they
+  materially help future agents confirm reality.
 - User-facing role: bootstrap or sync. Task-scoped spec preparation is an
   internal behavior of this same skill when clearly needed.
 - Prefer proportional fixes. Small unrelated drift should usually be noted, not

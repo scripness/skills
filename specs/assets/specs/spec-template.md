@@ -11,54 +11,34 @@ Last verified: [YYYY-MM-DD]
 <!-- Review when [path] changes -->
 <!-- Review when [path] changes -->
 
-## Purpose
+## Overview
 
-[What this topic owns and why it exists.]
-
-## Scope
-
-In scope:
-
-- [owned behavior]
-- [owned behavior]
-
-Out of scope:
-
-- [non-goal]
-- [neighboring area owned elsewhere]
+[What this area owns, how it fits into the system, and why it exists.]
 
 ## Non-Goals
 
-- [what this spec explicitly does not try to define]
-- [another non-goal]
-
-## Behavior
-
-- [what should happen]
-- [what should happen]
-- [important invariant]
-
-## Key Structures
-
-- [important module, type, route, job, table, or component]
-- [important module, type, route, job, table, or component]
+- [what this spec explicitly does not define]
+- [neighboring concern owned elsewhere]
 
 ## Key Patterns
 
-- [important implementation or architecture pattern to preserve]
-- [important invariant or flow]
+- [important invariant, architecture rule, or flow]
+- [important implementation constraint to preserve]
+- [important edge or operational rule]
 
+<!-- Add topic-specific sections as needed. Examples:
+## Endpoint Reference
+## Data Flow
+## Frontend Client
+## Operational Constraints
+## Test Infrastructure Requirements
+## File Placement
 ## Boundaries
-
-- [how this topic interacts with adjacent systems]
-- [where agents should look for related concerns]
-
-## Acceptance Signals
-
-- [observable outcome]
-- [observable outcome]
-- [important edge case]
-
+## Key Structures
 ## Notes
+-->
 
-- [gotcha, domain term, or operational detail that is not obvious from one file]
+## Verification
+
+- [command, grep, or file path check that helps confirm this spec against code]
+- [another concrete verification step when the topic warrants it]

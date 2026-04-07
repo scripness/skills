@@ -12,6 +12,8 @@
 - **Check the codebase first.** Specs describe intent; code describes reality.
 - **Use specs as guidance.** Follow the relevant spec's patterns, types,
   boundaries, and terminology when implementing work in that area.
+- **Treat specs as durable system truth.** They document stable domain and
+  architecture rules, not task-by-task execution plans.
 
 ## Local Agent Toolbox
 

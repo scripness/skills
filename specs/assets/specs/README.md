@@ -7,6 +7,7 @@
 - Read the relevant spec before implementing in that area.
 - Treat specs as intent and code as implemented reality.
 - Keep specs focused on one topic of concern per file.
+- Use specs for durable topic truth, not execution planning or task checklists.
 - Update this index when specs are added, removed, renamed, or materially
   repurposed.
 
