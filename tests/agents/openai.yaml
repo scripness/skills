@@ -1,0 +1,3 @@
+display_name: Test Truth Sync
+short_description: Sync test coverage with changed behavior
+default_prompt: Use this skill to align the test suite with changed behavior and the repo's testing policy.

@@ -1,0 +1,3 @@
+display_name: Adversarial Verify
+short_description: Review plans, implementations, or claims against reality
+default_prompt: Use this skill to adversarially verify the current plan, implementation, or claim against repo truth and mechanical checks.
