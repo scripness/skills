@@ -18,6 +18,8 @@ Do not use this skill when:
 - the task is already clear
 - the answer is a simple file lookup
 - the user asked for implementation now
+- the only open question is a narrow implementation detail that can be resolved
+  during coding
 
 ## Inputs
 
@@ -52,6 +54,7 @@ Do not use this skill when:
    - What is true now
    - What options exist
    - What you recommend and why
+   - What remains unresolved, if anything
 
 ## Output
 
@@ -66,6 +69,9 @@ Return:
 4. `Open questions`
    - Only the unresolved questions that block action
 
+If the angles materially disagree, say so explicitly and recommend the safest
+bounded next move rather than pretending the answer is settled.
+
 Every non-trivial claim should point to code or spec references.
 
 ## Quality Bar
@@ -76,3 +82,5 @@ Every non-trivial claim should point to code or spec references.
 - If a decision should change `specs/`, say that explicitly.
 - If the task is large enough to merit a durable plan artifact, surface what
   should be carried into that plan.
+- Stop once there is a safe evidence-backed recommendation. Do not turn small
+  tasks into research theater.

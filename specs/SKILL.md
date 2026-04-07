@@ -40,6 +40,9 @@ This skill replaces separate "write specs", "reverse engineer specs", and
      - missing topic specs
      - stale `specs/README.md` entries
      - stale repo-wide operational guidance in `AGENTS.md`
+     - related config, schema, CI, migration, or generated-artifact truth that
+       affects what the docs should claim
+     - related specs that mention the same subsystem or invariant
 
 3. Consult before applying broad or ambiguous changes.
    - If the task is ambiguous, the area is poorly understood, or multiple
@@ -62,6 +65,8 @@ This skill replaces separate "write specs", "reverse engineer specs", and
      specialize it to the repo.
    - If `specs/` is missing, create it, create `specs/README.md`, and create
      the first topic specs needed for the codebase.
+   - Bootstrap minimally: create only the docs needed to make safe work
+     possible, not a speculative doc forest.
    - Refine an existing spec when the topic already exists.
    - Create a new topic spec when the area is not documented and the topic is
      large enough to deserve one.
@@ -95,6 +100,10 @@ Return a short summary with:
   or flatten already-strong specs.
 - User-facing role: bootstrap or sync. Task-scoped spec preparation is an
   internal behavior of this same skill when clearly needed.
+- Prefer proportional fixes. Small unrelated drift should usually be noted, not
+  expanded into a broad rewrite.
+- Keep related specs consistent when they share terms, boundaries, or
+  invariants.
 - Do not silently broaden task scope.
 - Prefer updating one good spec over creating many tiny docs.
 - Keep `AGENTS.md` compact; avoid dumping architecture details that belong in

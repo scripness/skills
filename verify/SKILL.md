@@ -29,6 +29,8 @@ technical claim.
    - Use the exact commands from `AGENTS.md`.
    - Run the smallest set that still proves correctness.
    - If required checks are too expensive or blocked, say so clearly.
+   - If the repo already has unrelated failing checks, separate that baseline
+     from failures introduced or exposed by the current work.
 
 4. Verify against source of truth.
    - code for reality
@@ -76,5 +78,14 @@ If there are no findings, say that explicitly and still note residual risk.
 - Missing or weak tests are real findings when the repo's testing policy
   requires them.
 - If docs drifted during the work, recommend running the `specs` skill.
+- If test truth drifted during the work, recommend running the `tests` skill.
 - This skill is a verifier, not an implementer. It can suggest fixes, but its
   main job is to judge the target honestly.
+
+## Verdict Rubric
+
+- `pass`: no material findings; required checks passed or baseline issues were
+  clearly unrelated
+- `pass with risks`: no blocking defect, but there are meaningful residual
+  risks, weak coverage, or blocked checks
+- `fail`: concrete correctness, regression, or policy-compliance issues remain

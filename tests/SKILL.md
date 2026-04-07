@@ -35,6 +35,8 @@ This skill is the testing analogue of `specs`:
      - existing coverage that is stale, thin, or absent
      - applicable test tiers for this work
      - useful existing helpers and patterns to reuse
+     - other repo-specific layers such as smoke, contract, browser, visual, or
+       performance tests if they already exist
 
 3. Consult before broad or uncertain test work.
    - If it is unclear which layers matter most, or the affected system is
@@ -51,9 +53,14 @@ This skill is the testing analogue of `specs`:
      behavior.
    - After writing tests, adversarially check for important uncovered paths or
      false confidence.
+   - If unrelated failures already exist, separate that baseline from problems
+     introduced by the current work.
 
 5. Sync the suite with reality.
    - Add or update tests at every applicable existing layer.
+   - Match changed behavior to the layers the repo already expects; do not stop
+     at unit tests when integration, e2e, browser, or contract coverage is
+     clearly required.
    - Reuse existing helpers, fixtures, factories, and patterns.
    - Do not invent new testing infrastructure unless the repo clearly needs it
      and the user asked for it.
@@ -78,5 +85,8 @@ Return a short summary with:
 - Match the repo's existing test style before adding new tests.
 - Treat missing required test layers as a real gap.
 - Prefer behavior-oriented tests over implementation-detail tests.
+- Prefer proportional fixes. Unrelated legacy test debt should be surfaced, but
+  should only be absorbed into the current work when it blocks safe
+  verification.
 - If the testing policy in `AGENTS.md` or `specs/` is stale, recommend running
   the `specs` skill after the test work is complete.
