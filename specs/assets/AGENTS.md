@@ -15,10 +15,9 @@
 
 ## Local Agent Toolbox
 
-This repo uses the local `.agents/` directory as its provider-agnostic agent
-toolbox and workflow layer.
+This repo uses the local `.agents/skills/` directory as its provider-agnostic
+agent toolbox and workflow layer.
 
-- Read `.agents/README.md` for the workflow.
 - Use `.agents/skills/consult/SKILL.md` when ambiguity, architecture, or
   tradeoffs block progress, or when a task benefits from independent
   multi-angle analysis before implementation.
