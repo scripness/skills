@@ -15,6 +15,18 @@ is clearly blocked by weak or missing repo truth.
 This skill replaces separate "write specs", "reverse engineer specs", and
 "sync specs" workflows with one repo-truth skill.
 
+This is the only skill that should create or modify the codebase harness layer:
+
+- `AGENTS.md`
+- `CLAUDE.md` symlink
+- `specs/`
+
+Bootstrap assets live alongside this skill in:
+
+- `assets/AGENTS.md`
+- `assets/specs/README.md`
+- `assets/specs/spec-template.md`
+
 ## Inputs
 
 - the user task, if there is one
@@ -61,10 +73,12 @@ This skill replaces separate "write specs", "reverse engineer specs", and
 
 5. Update the truth layer.
    - Read `AGENTS.md` and `specs/README.md` first.
-   - If `AGENTS.md` is missing, create it from the template and immediately
-     specialize it to the repo.
-   - If `specs/` is missing, create it, create `specs/README.md`, and create
-     the first topic specs needed for the codebase.
+   - If `AGENTS.md` is missing, create it from `assets/AGENTS.md` and
+     immediately specialize it to the repo.
+   - Ensure `CLAUDE.md` points to `AGENTS.md` when the provider expects it.
+   - If `specs/` is missing, create it from `assets/specs/README.md` and
+     `assets/specs/spec-template.md`, then create the first topic specs needed
+     for the codebase.
    - Bootstrap minimally: create only the docs needed to make safe work
      possible, not a speculative doc forest.
    - Refine an existing spec when the topic already exists.
@@ -96,8 +110,8 @@ Return a short summary with:
 - On mature repos, existing harness quality is the floor. Preserve and extend
   the local house style rather than normalizing rich docs down to the generic
   template.
-- Use templates as scaffolding for missing structure, not as a reason to thin
-  or flatten already-strong specs.
+- Use the local skill assets as scaffolding for missing structure, not as a
+  reason to thin or flatten already-strong specs.
 - User-facing role: bootstrap or sync. Task-scoped spec preparation is an
   internal behavior of this same skill when clearly needed.
 - Prefer proportional fixes. Small unrelated drift should usually be noted, not
