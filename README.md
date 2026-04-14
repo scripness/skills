@@ -122,8 +122,19 @@ Owns living task plans.
 
 Will own implementation after it ships.
 
+- trigger when the user wants implementation now and either the task is still
+  locally clear or there is already one explicit `plans/*.md` path to execute
+- do not use when the next move still needs clarification, tradeoff analysis,
+  or a recommendation; use `consult`
+- do not use when the work now needs durable task state but no explicit plan
+  file exists yet; use `plan`
+- do not use for adversarial sign-off, fact-checking, or final judgment; use
+  `verify`
 - direct mode: implement a bounded task only when it is still locally clear and
   does not need durable task state
+- if direct-mode work stops being locally clear or starts needing durable task
+  state, stop and hand off to `plan` rather than improvising a hidden plan in
+  chat
 - plan-driven mode: implement only from one explicit `plans/*.md` path from
   `plan`; never guess the latest plan file
 - in plan-driven mode, implement only the next milestone or other bounded slice
@@ -233,14 +244,27 @@ Do not promote based on task size alone.
 Make it a self-contained living task plan that a fresh session can resume from.
 ```
 
+Execute directly:
+
+```text
+Use execute.
+Read AGENTS.md, relevant specs, tests, and the current code.
+Implement <bounded task> directly because it is still locally clear and does
+not need durable task state.
+Run the smallest meaningful mechanical checks, sync specs/tests if the work
+changed durable truth, then stop and hand off to verify.
+```
+
 Execute from a plan:
 
 ```text
 Use execute.
 Read AGENTS.md, relevant specs, tests, and
 plans/2026-04-14-short-task-slug.md.
-Implement only the next milestone.
-Update the plan before stopping.
+Implement only the next milestone or other bounded slice from that exact plan
+path.
+Update the plan with progress, discoveries, decisions, blockers, verification
+notes, and any required specs/tests follow-through before stopping.
 ```
 
 Review the work:

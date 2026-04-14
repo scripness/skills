@@ -125,8 +125,19 @@ Planned `execute` contract for this repo:
 
 - `execute` owns implementation and bounded mechanical checks only; `verify`
   owns adversarial review
+- invoke `execute` when the user wants implementation now and either the work
+  is still locally clear or `plan` already produced an explicit plan path
+- do not invoke `execute` when the next move is still unclear and needs
+  clarification, option comparison, or a recommendation; use `consult`
+- do not invoke `execute` to create or recover durable task state when no
+  explicit plan path exists yet; use `plan`
+- do not invoke `execute` for adversarial sign-off, final judgment, or fact
+  checking; use `verify`
 - direct mode is only for bounded work that is still locally clear and does not
   need durable task state
+- if direct-mode work stops being locally clear or starts needing durable task
+  state, stop and hand off to `plan` rather than improvising a hidden plan in
+  chat
 - plan-driven mode must start from one explicit `plans/*.md` path produced by
   `plan`; never guess the latest plan file
 - in plan-driven mode, implement only one milestone or other bounded slice in a

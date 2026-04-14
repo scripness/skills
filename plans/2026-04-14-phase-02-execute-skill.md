@@ -119,6 +119,18 @@ improvised prompts.
   the roadmap.
 - [2026-04-14] Ran `git diff --check` after the Milestone 1 doc edits; it
   passed with no whitespace or patch-format issues.
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `TODO.md` after the
+  Milestone 2 edits and confirmed they now align on the positive `execute`
+  trigger ("implementation now"), the anti-triggers that hand unclear work
+  back to `consult`, durable-state setup back to `plan`, and adversarial
+  judgment back to `verify`, while keeping `execute` clearly marked as planned
+  rather than shipped.
+- [2026-04-14] Ran
+  `rg -n 'invoke \`execute\` when the user wants implementation now|do not invoke \`execute\`|trigger when the user wants implementation now|do not use when the next move still needs clarification|Execute directly:|improvising a hidden plan in chat' AGENTS.md README.md`
+  and confirmed the tightened trigger language and direct-mode promotion rule
+  are present in repo truth.
+- [2026-04-14] Ran `git diff --check` after the Milestone 2 doc edits; it
+  passed with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -143,7 +155,7 @@ improvised prompts.
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
+- [x] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
@@ -153,6 +165,13 @@ Milestone 1 note:
 - Completed as a doc-contract slice in `AGENTS.md` and `README.md`.
 - Left the `execute/` scaffold and broader sync-gate behavior to later
   milestones so the repo does not imply that `execute` is already shipped.
+
+Milestone 2 note:
+
+- Completed as a doc-contract slice in `AGENTS.md` and `README.md`.
+- Locked positive triggers, anti-triggers, direct-to-`plan` promotion rules,
+  and clearer direct versus plan-driven invocation examples without shipping
+  the `execute/` scaffold yet.
 
 ## Decision Log
 
@@ -165,6 +184,10 @@ Milestone 1 note:
   `AGENTS.md` and `README.md` with the existing `TODO.md` boundary before
   creating any `execute/` files, so the repo does not imply that `execute` is
   already shipped.
+- [2026-04-14] Treat Milestone 2 as a second doc-contract slice before
+  creating `execute/`: make the trigger explicit in repo truth, name the
+  anti-triggers versus `consult`, `plan`, and `verify`, and add direct and
+  plan-driven invocation examples in `README.md`.
 
 ## Discoveries
 
@@ -179,11 +202,17 @@ Milestone 1 note:
 - [2026-04-14] The missing contract details were the explicit split between
   direct and plan-driven modes, the "never guess the latest plan file" rule,
   and the explicit `execute` -> `verify` handoff.
+- [2026-04-14] Even after Milestone 1, `execute` was still less discoverable
+  than the shipped skills because repo truth lacked an explicit
+  "implementation now" trigger and explicit anti-triggers.
+- [2026-04-14] The strongest missing invocation cue was a direct-mode example;
+  the repo already had a plan-driven example, but not a matching direct
+  bounded-execution example.
 
 ## Outcomes / Retrospective
 
-- Milestone 1 completed with doc-only contract sync; repo truth now makes the
-  future `execute` boundary explicit without shipping the `execute/` scaffold
-  early.
-- Remaining milestones still own trigger tightening, the actual `execute`
-  scaffold, sync-gate encoding, and final shipped-doc alignment.
+- Milestones 1 and 2 completed as doc-only contract slices; repo truth now
+  makes the future `execute` boundary and invocation guidance explicit without
+  shipping the `execute/` scaffold early.
+- Remaining milestones now focus on the actual `execute` scaffold, sync-gate
+  encoding, and final shipped-doc alignment.
