@@ -25,28 +25,59 @@ improvised prompts.
 ## Owned TODO Sections
 
 - `4. Add The Execute Skill`
-- Minimal doc sync needed to keep `README.md` and `TODO.md` truthful after
-  shipping `execute`
+- The `execute` parts of `5. Improve The Six Core Skills`
+- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `TODO.md`
+  truthful after shipping `execute`
 
 ## Deliverables
 
 - `execute/SKILL.md`
 - `execute/agents/openai.yaml`
-- Minimal updates to docs if the shipped behavior differs from the current
-  roadmap wording
+- Minimal updates to `AGENTS.md` and `README.md` needed to keep the shipped
+  `execute` contract truthful
+- Minimal updates to `TODO.md` if the delivered `execute` behavior changes the
+  current roadmap wording or assumptions for later phases
+
+## Repo Context
+
+- Task source: `TODO.md` section `4. Add The Execute Skill`, plus the
+  `execute`-specific trigger and boundary work in section
+  `5. Improve The Six Core Skills`
+- Owning code paths: `execute/`, with boundary-alignment touchpoints in
+  `plan/SKILL.md`, `consult/SKILL.md`, `verify/SKILL.md`, and any prompt or
+  doc files that still describe the pre-`execute` bootstrap loop
+- Owning spec paths: `AGENTS.md` as the authoritative workflow contract and
+  `README.md` as shipped usage guidance; `TODO.md` remains the roadmap and must
+  stay consistent where shipped behavior would otherwise make its wording false
+- Owning test paths: no formal automated suite exists yet in this repo; use the
+  repo command guidance in `AGENTS.md` plus bounded mechanical checks for the
+  shipped skill and doc sync
+- Related docs, commands, or external dependencies:
+  `PROMPT_execute.md`, `PROMPT_verify.md`, `rg --files .`, `rg "execute" .`,
+  `git status --short`, and `git diff --check`
 
 ## Dependencies
 
 - Completed Phase 01 or equivalent delivered `plan` skill contract
 - Existing `consult`, `specs`, `tests`, and `verify` skill boundaries
-- Existing `README.md` and `TODO.md`
+- Existing `AGENTS.md`, `README.md`, and `TODO.md`
+- Existing bootstrap prompts: `PROMPT_execute.md` and `PROMPT_verify.md`
 
 ## Sync Expectations
 
-- `specs`: required if shipping `execute` changes durable repo truth about
-  implementation flow, stop/restart behavior, or truth-sync responsibilities.
-- `tests`: not expected in this phase unless executable helpers or validators
-  are introduced during implementation.
+- `specs`: required in this phase because shipping `execute` changes durable
+  repo truth about the canonical implementation flow, stop/update/restart
+  behavior, plan-path handoff, and `specs`/`tests` sync responsibilities; in
+  this repo that means updating `AGENTS.md` first as the authoritative
+  contract, then keeping `README.md` aligned with the shipped `execute` skill,
+  and updating `TODO.md` only where the roadmap wording would otherwise become
+  false or misleading after the ship.
+- `tests`: no dedicated automated test layer is expected in this phase unless
+  the implementation introduces executable helpers, validators, or eval
+  scaffolding earlier than planned; until then, the required follow-through is
+  bounded mechanical verification of the shipped skill and doc sync, including
+  file-presence checks, contract re-reads against `AGENTS.md` and `README.md`,
+  and `git diff --check`
 
 ## Milestones
 
@@ -63,6 +94,11 @@ improvised prompts.
 
 ## Verification
 
+- Confirm the Phase 02 deliverables exist with the intended narrow scaffold:
+  `execute/SKILL.md` and `execute/agents/openai.yaml`.
+- Re-read `execute/SKILL.md`, `AGENTS.md`, `README.md`, and `TODO.md` together
+  after each contract-changing slice and confirm they stay aligned on shipped
+  versus planned workflow.
 - Confirm `execute` never guesses the latest plan file.
 - Confirm `execute` stops after one bounded slice and updates the plan before
   stopping in plan-driven mode.
@@ -71,6 +107,8 @@ improvised prompts.
   follow-through, not optional polish.
 - Confirm the `execute` trigger description is explicit enough that direct and
   plan-driven modes are both discoverable without overlapping other skills.
+- Run `git diff --check` after each edit set that changes the shipped skill or
+  doc contract.
 
 ## Risks
 
@@ -88,6 +126,10 @@ improvised prompts.
 - How much mechanical-check guidance should live in the generic skill versus be
   deferred to per-repo `AGENTS.md`?
 
+## Blockers
+
+- None currently.
+
 ## Progress
 
 - [ ] Milestone 1
@@ -100,11 +142,17 @@ improvised prompts.
 
 - [2026-04-14] `execute` should support both direct bounded execution and
   explicit plan-driven execution instead of splitting into two skills.
+- [2026-04-14] Phase 02 must treat `AGENTS.md` as required truth-sync follow-
+  through when `execute` ships, because `AGENTS.md` is this repo's highest-
+  priority workflow contract and cannot remain in the pre-`execute` state.
 
 ## Discoveries
 
 - [2026-04-14] A clean `execute` skill is the missing primitive that turns the
   roadmap into a reliable fresh-session implementation loop.
+- [2026-04-14] The Phase 02 plan itself needed explicit repo context,
+  blockers, and named `specs` ownership to satisfy the shipped `plan`
+  resumability contract before implementation starts.
 
 ## Outcomes / Retrospective
 
