@@ -121,6 +121,19 @@ Shipped `plan` contract for this repo:
 - hand off to `execute` and `verify` with the explicit plan path rather than
   asking a later session to guess the active plan
 
+Planned `execute` contract for this repo:
+
+- `execute` owns implementation and bounded mechanical checks only; `verify`
+  owns adversarial review
+- direct mode is only for bounded work that is still locally clear and does not
+  need durable task state
+- plan-driven mode must start from one explicit `plans/*.md` path produced by
+  `plan`; never guess the latest plan file
+- in plan-driven mode, implement only one milestone or other bounded slice in a
+  fresh session, then update the plan before stopping
+- hand off explicitly to `verify` after each slice rather than absorbing review
+  behavior into `execute`
+
 ## Working Loop For This Repo
 
 When working on the roadmap:

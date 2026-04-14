@@ -109,6 +109,16 @@ improvised prompts.
   plan-driven modes are both discoverable without overlapping other skills.
 - Run `git diff --check` after each edit set that changes the shipped skill or
   doc contract.
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `TODO.md` after the
+  Milestone 1 edits and confirmed they now align on `execute` supporting
+  direct bounded execution and explicit plan-driven execution, forbidding
+  latest-plan guessing, and handing adversarial review to `verify`.
+- [2026-04-14] Ran
+  `rg -n 'latest plan file|adversarial review|hand off explicitly|hand adversarial review back' AGENTS.md README.md TODO.md`
+  and confirmed the tightened boundary language is present in repo truth and
+  the roadmap.
+- [2026-04-14] Ran `git diff --check` after the Milestone 1 doc edits; it
+  passed with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -132,11 +142,17 @@ improvised prompts.
 
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
+
+Milestone 1 note:
+
+- Completed as a doc-contract slice in `AGENTS.md` and `README.md`.
+- Left the `execute/` scaffold and broader sync-gate behavior to later
+  milestones so the repo does not imply that `execute` is already shipped.
 
 ## Decision Log
 
@@ -145,6 +161,10 @@ improvised prompts.
 - [2026-04-14] Phase 02 must treat `AGENTS.md` as required truth-sync follow-
   through when `execute` ships, because `AGENTS.md` is this repo's highest-
   priority workflow contract and cannot remain in the pre-`execute` state.
+- [2026-04-14] Treat Milestone 1 as doc-contract tightening only: align
+  `AGENTS.md` and `README.md` with the existing `TODO.md` boundary before
+  creating any `execute/` files, so the repo does not imply that `execute` is
+  already shipped.
 
 ## Discoveries
 
@@ -153,7 +173,17 @@ improvised prompts.
 - [2026-04-14] The Phase 02 plan itself needed explicit repo context,
   blockers, and named `specs` ownership to satisfy the shipped `plan`
   resumability contract before implementation starts.
+- [2026-04-14] `TODO.md` already captured the intended `execute` boundary more
+  precisely than `AGENTS.md` and `README.md`, so Milestone 1 only needed truth
+  sync rather than roadmap edits.
+- [2026-04-14] The missing contract details were the explicit split between
+  direct and plan-driven modes, the "never guess the latest plan file" rule,
+  and the explicit `execute` -> `verify` handoff.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Milestone 1 completed with doc-only contract sync; repo truth now makes the
+  future `execute` boundary explicit without shipping the `execute/` scaffold
+  early.
+- Remaining milestones still own trigger tightening, the actual `execute`
+  scaffold, sync-gate encoding, and final shipped-doc alignment.

@@ -122,13 +122,17 @@ Owns living task plans.
 
 Will own implementation after it ships.
 
-- implement a bounded task directly when it is still locally clear
-- implement the next milestone from an explicit plan file when durable task
-  state is needed
+- direct mode: implement a bounded task only when it is still locally clear and
+  does not need durable task state
+- plan-driven mode: implement only from one explicit `plans/*.md` path from
+  `plan`; never guess the latest plan file
+- in plan-driven mode, implement only the next milestone or other bounded slice
+  in a fresh session, then update the plan before stopping
+- own implementation and bounded mechanical checks only; hand adversarial
+  review back to `verify`
 - take over after `plan` has produced an explicit path; do not own plan
   creation or task-shaping
 - read repo truth before editing
-- update the plan before stopping when working from a plan
 - stop cleanly when blocked or when the session has become noisy enough to
   reduce reasoning quality
 
