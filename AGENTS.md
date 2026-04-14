@@ -66,8 +66,20 @@ In this repo, the skills live at the repo root:
 - [tests/SKILL.md](tests/SKILL.md)
 - [verify/SKILL.md](verify/SKILL.md)
 
-When these skills are installed into a target repo, they are intended to live
+When these skills are copied into a target repo, they are intended to live
 under `.agents/skills/`.
+
+## Target-Repo Refresh Workflow
+
+`AGENTS.md` owns the authoritative refresh-workflow contract for this repo.
+
+- Use manual copy as the initial distribution and refresh workflow.
+- Copy the shipped skill directories from this repo into `.agents/skills/` in
+  the target repo.
+- Refresh a target repo by re-copying the skill directories and supporting
+  assets that changed here.
+- Keep install helpers, subtree wiring, and provider-specific plugins optional
+  future accelerators only; they are not baseline workflow requirements.
 
 Use the current shipped skills as follows:
 
@@ -86,15 +98,21 @@ workflow in fresh sessions.
 
 Planned `plan` contract for this repo:
 
-- trigger `plan` when work needs durable task state across sessions,
-  milestones, review loops, or fresh-session restarts; do not promote based on
+- invoke `plan` when work needs durable task state across sessions,
+  milestone checkpoints, review loops, or fresh-session restarts
+- do not invoke `plan` for simple lookups, short clarification work, or
+  bounded implementation that is still locally clear; do not promote based on
   abstract task size alone
-- `consult` owns clarification and recommendation; `plan` starts once the next
-  move is clear enough to structure execution
+- `consult` owns clarification and recommendation; `plan` starts only once the
+  next move is clear enough to structure execution
+- each invocation should create or update one explicit
+  `plans/YYYY-MM-DD-short-task-slug.md` path rather than leaving the active
+  plan implied in chat
 - `plan` owns task-local files under `plans/`; it does not own durable repo
   truth (`specs`), and `execute` owns implementation from an explicit plan path
-- use `plans/YYYY-MM-DD-short-task-slug.md` as the default plan filename
 - every plan must be resumable from repo truth plus the plan file alone
+- hand off to `execute` and `verify` with the explicit plan path rather than
+  asking a later session to guess the active plan
 
 ## Working Loop For This Repo
 

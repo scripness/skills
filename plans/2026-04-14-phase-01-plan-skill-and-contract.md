@@ -99,16 +99,14 @@ contract.
 
 ## Open Questions
 
-- Which refresh workflow should be the initial default: manual copy, install
-  helper, subtree, or another sync mechanism?
 - Should the first shipped `plan` skill include examples beyond the core plan
   template, or stay minimal?
 
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
-- [ ] Milestone 3
+- [x] Milestone 2
+- [x] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
 - [ ] Milestone 6
@@ -126,6 +124,12 @@ contract.
   `plans/YYYY-MM-DD-short-task-slug.md`.
 - [2026-04-14] Every `plan` artifact must be resumable from repo truth plus the
   plan file alone.
+- [2026-04-14] Use manual copy into `.agents/skills/` as the initial
+  target-repo refresh workflow, and keep install helpers, subtree wiring, and
+  provider-specific plugins optional future accelerators only.
+- [2026-04-14] Milestone 3 is a doc-contract slice only: tighten positive
+  triggers, anti-triggers, and explicit plan-path handoff guidance in shipped
+  docs before adding the actual `plan/` scaffold in Milestone 4.
 
 ## Discoveries
 
@@ -134,6 +138,13 @@ contract.
 - [2026-04-14] The existing `consult` skill already forbids owning long-lived
   task state, so the `consult` -> `plan` boundary could be locked with
   proportional doc edits rather than a broader skill rewrite.
+- [2026-04-14] `README.md` already named `.agents/skills/` as the canonical
+  target-repo path, but the repo had not yet named an authoritative refresh
+  method or owning doc for that contract.
+- [2026-04-14] The repo already had the positive `plan` trigger, but it lacked
+  equally explicit anti-triggers and an explicit "hand off the exact
+  `plans/*.md` path" rule, which left invocation guidance looser than the
+  planned execution flow needed.
 
 ## Verification Log
 
@@ -143,12 +154,34 @@ contract.
   hands implementation off to `execute` via an explicit plan path, uses
   `plans/YYYY-MM-DD-short-task-slug.md`, and must support fresh-session
   resumption from repo truth plus the plan file.
+- [2026-04-14] Verified Milestone 2 doc sync: `AGENTS.md` now names itself as
+  the authoritative refresh-workflow contract, and `AGENTS.md`, `README.md`,
+  and `TODO.md` all say the initial default is manual copy into
+  `.agents/skills/`, with install helpers, subtree wiring, and
+  provider-specific plugins remaining optional.
+- [2026-04-14] Re-ran Milestone 2 verification after adding the missing
+  `TODO.md` pointer: `README.md` and `TODO.md` both now explicitly name
+  `AGENTS.md` as the owning refresh-workflow contract, so the owner location is
+  captured in shipped docs rather than implied.
 - [2026-04-14] Deferred milestone-specific verification that depends on the
   shipped `plan` skill, template, and refresh workflow to later milestones in
   this phase.
+- [2026-04-14] Verified Milestone 3 trigger tightening by re-reading
+  `AGENTS.md`, `README.md`, and `TODO.md`: all now say `plan` is for durable
+  task-state need, not abstract size; they explicitly name anti-triggers for
+  short clarification or locally clear bounded work; and they require an
+  explicit `plans/*.md` path for handoff to `execute` and `verify`.
+- [2026-04-14] Ran `git diff --check` after the doc edits; it passed with no
+  whitespace or patch-format issues.
 
 ## Outcomes / Retrospective
 
 - Milestone 1 completed with minimal doc sync only; later milestones still own
   refresh-workflow decisions, trigger phrasing inside the shipped skill, and
   the actual `plan/` scaffold.
+- Milestone 2 completed with proportional doc-only changes; the refresh
+  workflow is now explicit without introducing required automation before there
+  is real distribution pressure.
+- Milestone 3 completed with proportional doc-only changes; invocation guidance
+  is now explicit enough to support a narrow `plan` skill without prematurely
+  shipping the scaffold itself.

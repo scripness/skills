@@ -10,10 +10,11 @@ workflow you can bring to any codebase:
 - skills = workflow
 - repo files = durable state
 
-Install these skills into `.agents/skills/` in any target repo and invoke them
-from a normal interactive session with the strongest model and effort setting
-you want. The workflow should not depend on provider plan modes, plugins,
-auto-memory, or any other client-specific feature.
+Manually copy the shipped skill directories from this repo into
+`.agents/skills/` in any target repo and invoke them from a normal interactive
+session with the strongest model and effort setting you want. The workflow
+should not depend on provider plan modes, plugins, auto-memory, or any other
+client-specific feature.
 
 Current shipped skills are:
 
@@ -54,6 +55,17 @@ The repo should stay in a state where a fresh agent can get oriented quickly,
 find the right code paths, and make correct changes with the highest practical
 chance of success.
 
+## Refresh Workflow
+
+The authoritative refresh-workflow contract lives in `AGENTS.md`.
+
+- Current default: manually copy the shipped skill directories from this repo
+  into `.agents/skills/` in the target repo.
+- Refresh by re-copying only the skill directories and supporting assets that
+  changed here.
+- Treat install helpers, git subtree wiring, and provider-specific plugins as
+  optional future accelerators, not baseline workflow requirements.
+
 ## Skill Roles
 
 ### `specs`
@@ -92,13 +104,17 @@ Will own living task plans after it ships.
 
 - trigger when work needs durable state across sessions, milestones, review
   loops, or fresh-session restarts
+- do not trigger for simple lookups, short clarification, or bounded
+  implementation that is still locally clear
 - do not trigger only because a task sounds large; promote based on the need
   to preserve task state
+- start once the next move is clear enough to structure execution
 - own task-local plan files only, not durable repo truth or implementation
-- create or update `plans/YYYY-MM-DD-short-task-slug.md`
+- create or update one explicit `plans/YYYY-MM-DD-short-task-slug.md` path
 - create the `plans/` directory when missing
 - make each plan resumable from repo truth plus the plan file alone
 - hold milestones, verification, discoveries, decisions, blockers, and progress
+- hand off to `execute` and `verify` with that explicit plan path
 
 ### `execute` (planned)
 
@@ -129,8 +145,8 @@ This is the intended workflow after `plan` and `execute` ship. Until then, use
 the shipped four-skill set plus explicit `plans/*.md` files and the bootstrap
 prompts in this repo.
 
-1. Install `scripness/skills` into `.agents/skills/` in the repo you want to
-   work on.
+1. Manually copy the shipped skill directories from `scripness/skills` into
+   `.agents/skills/` in the repo you want to work on.
 2. Run `specs` when repo truth is weak, missing, stale, or the codebase is not
    organized cleanly enough for reliable agent work.
 3. Run `tests` when test truth is weak, missing, stale, or clearly below what
@@ -139,12 +155,13 @@ prompts in this repo.
    specs, options, and risks.
 5. If the task is still bounded and does not need durable task state, use
    `execute` directly, then run `verify`.
-6. If the task starts needing durable state across milestones, discoveries, or
-   restarts, run `plan` and create or update
-   `plans/YYYY-MM-DD-short-task-slug.md`.
-   Promote based on durable-state need, not abstract task size.
+6. If the task starts needing durable state across milestones, discoveries,
+   review loops, or restarts, run `plan` and create or update one explicit
+   `plans/YYYY-MM-DD-short-task-slug.md` path.
+   Promote based on durable-state need, not abstract task size, and skip
+   `plan` when the work is still locally clear enough to execute directly.
 7. Run `verify` on the plan before implementation when the task is plan-driven.
-8. Start a fresh session and invoke `execute` against the explicit plan file.
+8. Start a fresh session and invoke `execute` against that exact plan path.
    Implement only the next milestone or bounded slice.
 9. After each slice, update the plan with progress, discoveries, decisions,
    blockers, and verification results.
@@ -201,8 +218,11 @@ Write a plan:
 
 ```text
 Use plan.
-Create or update plans/2026-04-13-short-task-slug.md.
-Make it a self-contained living task plan.
+The direction is already clear, but this work now needs durable task state
+across sessions, milestones, or review loops.
+Create or update plans/2026-04-14-short-task-slug.md.
+Do not promote based on task size alone.
+Make it a self-contained living task plan that a fresh session can resume from.
 ```
 
 Execute from a plan:
@@ -210,7 +230,7 @@ Execute from a plan:
 ```text
 Use execute.
 Read AGENTS.md, relevant specs, tests, and
-plans/2026-04-13-short-task-slug.md.
+plans/2026-04-14-short-task-slug.md.
 Implement only the next milestone.
 Update the plan before stopping.
 ```

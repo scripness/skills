@@ -8,14 +8,17 @@
   provider = runtime shell, model = intelligence level, skills = workflow,
   repo files = durable state.
 - Document target-repo usage explicitly:
-  copy or install these skills into `.agents/skills/` as the cross-client
-  canonical path and invoke them from a normal interactive session in any
-  compatible client.
+  manually copy the shipped skills from this repo into `.agents/skills/` as the
+  cross-client canonical path and invoke them from a normal interactive session
+  in any compatible client.
 - Treat provider-native locations and mirrors as optional compatibility shims
   only; keep `.agents/` and `AGENTS.md` as the authoritative provider-agnostic
   surface.
-- Decide the target-repo refresh workflow: manual copy, install script, subtree,
-  plugin, or another sync mechanism.
+- Name `AGENTS.md` as the authoritative refresh-workflow contract for this
+  repo.
+- Use manual copy as the initial target-repo refresh workflow, and keep install
+  scripts, subtree wiring, plugins, or other sync helpers optional future
+  accelerators rather than baseline requirements.
 - Keep provider-specific features additive only; do not require plan mode,
   plugins, auto memory, or other client-only mechanisms.
 
@@ -96,6 +99,11 @@
   - applicable test layers and expected coverage follow-through
   - when `specs` sync is required
   - when `tests` sync is required
+- Make the trigger and invocation contract explicit:
+  - use `plan` only when the work now needs durable task state
+  - do not promote simple lookups, short clarification, or bounded locally
+    clear implementation
+  - hand off to `execute` and `verify` with one explicit `plans/*.md` path
 - Define promotion triggers based on need for durable state, not abstract task
   size.
 - Define resumption rules so a fresh session can continue from repo truth plus
