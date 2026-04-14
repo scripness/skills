@@ -84,6 +84,18 @@ Until `plan` and `execute` are shipped, use the phase plans plus
 `PROMPT_execute.md` and `PROMPT_verify.md` to emulate the future plan-driven
 workflow in fresh sessions.
 
+Planned `plan` contract for this repo:
+
+- trigger `plan` when work needs durable task state across sessions,
+  milestones, review loops, or fresh-session restarts; do not promote based on
+  abstract task size alone
+- `consult` owns clarification and recommendation; `plan` starts once the next
+  move is clear enough to structure execution
+- `plan` owns task-local files under `plans/`; it does not own durable repo
+  truth (`specs`), and `execute` owns implementation from an explicit plan path
+- use `plans/YYYY-MM-DD-short-task-slug.md` as the default plan filename
+- every plan must be resumable from repo truth plus the plan file alone
+
 ## Working Loop For This Repo
 
 When working on the roadmap:

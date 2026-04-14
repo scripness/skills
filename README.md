@@ -83,14 +83,21 @@ Owns research and clarification.
 - understand the current code and specs
 - compare options, risks, and tradeoffs
 - recommend the safest next move
+- hand off to `plan` only when durable task state is needed after the direction
+  is already clear
 
 ### `plan` (planned)
 
 Will own living task plans after it ships.
 
+- trigger when work needs durable state across sessions, milestones, review
+  loops, or fresh-session restarts
+- do not trigger only because a task sounds large; promote based on the need
+  to preserve task state
+- own task-local plan files only, not durable repo truth or implementation
 - create or update `plans/YYYY-MM-DD-short-task-slug.md`
 - create the `plans/` directory when missing
-- capture the durable state needed to survive fresh-session restarts
+- make each plan resumable from repo truth plus the plan file alone
 - hold milestones, verification, discoveries, decisions, blockers, and progress
 
 ### `execute` (planned)
@@ -100,6 +107,8 @@ Will own implementation after it ships.
 - implement a bounded task directly when it is still locally clear
 - implement the next milestone from an explicit plan file when durable task
   state is needed
+- take over after `plan` has produced an explicit path; do not own plan
+  creation or task-shaping
 - read repo truth before editing
 - update the plan before stopping when working from a plan
 - stop cleanly when blocked or when the session has become noisy enough to
@@ -133,6 +142,7 @@ prompts in this repo.
 6. If the task starts needing durable state across milestones, discoveries, or
    restarts, run `plan` and create or update
    `plans/YYYY-MM-DD-short-task-slug.md`.
+   Promote based on durable-state need, not abstract task size.
 7. Run `verify` on the plan before implementation when the task is plan-driven.
 8. Start a fresh session and invoke `execute` against the explicit plan file.
    Implement only the next milestone or bounded slice.

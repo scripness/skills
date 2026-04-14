@@ -106,7 +106,7 @@ contract.
 
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
@@ -117,12 +117,38 @@ contract.
 
 - [2026-04-14] Use one phase plan per coherent workstream rather than one giant
   master implementation plan.
+- [2026-04-14] `plan` promotion is based on durable task-state need across
+  sessions, milestones, review loops, or restarts, not on abstract task size.
+- [2026-04-14] `plan` owns task-local files under `plans/`; `consult` owns
+  clarification and recommendation, and `execute` owns implementation from an
+  explicit plan path.
+- [2026-04-14] The default plan filename contract is
+  `plans/YYYY-MM-DD-short-task-slug.md`.
+- [2026-04-14] Every `plan` artifact must be resumable from repo truth plus the
+  plan file alone.
 
 ## Discoveries
 
 - [2026-04-14] `TODO.md` is the roadmap, not the execution artifact; later
   phases should execute from explicit `plans/*.md` files.
+- [2026-04-14] The existing `consult` skill already forbids owning long-lived
+  task state, so the `consult` -> `plan` boundary could be locked with
+  proportional doc edits rather than a broader skill rewrite.
+
+## Verification Log
+
+- [2026-04-14] Verified `AGENTS.md`, `README.md`, and `TODO.md` all capture the
+  same Milestone 1 contract: `plan` triggers on durable-state need, starts
+  after `consult` has clarified the next move, owns only task-local plan files,
+  hands implementation off to `execute` via an explicit plan path, uses
+  `plans/YYYY-MM-DD-short-task-slug.md`, and must support fresh-session
+  resumption from repo truth plus the plan file.
+- [2026-04-14] Deferred milestone-specific verification that depends on the
+  shipped `plan` skill, template, and refresh workflow to later milestones in
+  this phase.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Milestone 1 completed with minimal doc sync only; later milestones still own
+  refresh-workflow decisions, trigger phrasing inside the shipped skill, and
+  the actual `plan/` scaffold.

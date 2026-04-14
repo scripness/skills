@@ -49,7 +49,10 @@
 - `consult`: clarify, research, compare options, and recommend the best next
   move; do not own long-lived task state.
 - `plan`: create and maintain living task plans in `plans/*.md` when work
-  needs durable state across sessions, milestones, or review loops.
+  needs durable state across sessions, milestones, review loops, or
+  fresh-session restarts; do not promote based on abstract task size alone.
+- `plan`: own task-level plan documents only; `consult` owns clarification and
+  recommendation, and `execute` owns implementation from an explicit plan path.
 - `execute`: implement bounded work directly when it is still locally clear, or
   implement the next milestone from an explicit plan file in a fresh session.
 - `verify`: adversarially verify plans, implementations, claims, and final
@@ -66,8 +69,8 @@
   only.
 - Bake the planning protocol into the skill instead of requiring a repo-level
   `PLANS.md`.
-- Store live plans under `plans/*.md`; decide naming, creation, and update
-  rules.
+- Store live plans under `plans/*.md`; use the default filename format
+  `plans/YYYY-MM-DD-short-task-slug.md` and keep each plan updated in place.
 - `plan` should create the `plans/` directory when it is missing in a target
   repo.
 - Add `plan/assets/plan-template.md` for a self-contained living plan.
