@@ -107,9 +107,16 @@ contract.
 - [x] Milestone 1
 - [x] Milestone 2
 - [x] Milestone 3
-- [ ] Milestone 4
+- [x] Milestone 4
 - [ ] Milestone 5
 - [ ] Milestone 6
+
+Milestone 6 note:
+
+- Minimal `AGENTS.md` and `README.md` truth sync was completed as required
+  follow-through for shipping Milestone 4, but the full doc-sync milestone
+  remains open until the plan template lands and the final phase-wide doc pass
+  is done.
 
 ## Decision Log
 
@@ -130,6 +137,10 @@ contract.
 - [2026-04-14] Milestone 3 is a doc-contract slice only: tighten positive
   triggers, anti-triggers, and explicit plan-path handoff guidance in shipped
   docs before adding the actual `plan/` scaffold in Milestone 4.
+- [2026-04-14] Ship Milestone 4 with only `plan/SKILL.md`,
+  `plan/agents/openai.yaml`, and the minimum shipped-truth doc edits needed to
+  avoid leaving `AGENTS.md` and `README.md` stale; defer the reusable plan
+  template asset to Milestone 5.
 
 ## Discoveries
 
@@ -145,8 +156,15 @@ contract.
   equally explicit anti-triggers and an explicit "hand off the exact
   `plans/*.md` path" rule, which left invocation guidance looser than the
   planned execution flow needed.
+- [2026-04-14] The existing skill house style is lightweight but consistent:
+  frontmatter plus `Inputs`, `Process`, `Output`, and rule/quality sections,
+  so the new `plan` skill could be added proportionally without inventing a
+  different scaffold shape.
+- [2026-04-14] Shipping `plan/` immediately made the old "plan is still
+  planned" wording in `AGENTS.md` and `README.md` false, while `TODO.md`
+  remained valid because it is the roadmap rather than the shipped-state index.
 
-## Verification Log
+## Verification
 
 - [2026-04-14] Verified `AGENTS.md`, `README.md`, and `TODO.md` all capture the
   same Milestone 1 contract: `plan` triggers on durable-state need, starts
@@ -173,6 +191,23 @@ contract.
   explicit `plans/*.md` path for handoff to `execute` and `verify`.
 - [2026-04-14] Ran `git diff --check` after the doc edits; it passed with no
   whitespace or patch-format issues.
+- [2026-04-14] Re-read `plan/SKILL.md`, `AGENTS.md`, and `README.md` after the
+  Milestone 4 edits and confirmed they align on `plan` owning task-local plan
+  files only, durable-state-based promotion, the `consult` -> `plan` ->
+  `execute`/`verify` boundary, the default
+  `plans/YYYY-MM-DD-short-task-slug.md` path, and explicit `specs`/`tests`
+  sync expectations inside each plan.
+- [2026-04-14] Ran `find plan -maxdepth 3 -type f | sort` and confirmed the
+  Milestone 4 scaffold is intentionally narrow: `plan/SKILL.md` and
+  `plan/agents/openai.yaml` only. `plan/assets/plan-template.md` remains
+  deferred to Milestone 5.
+- [2026-04-14] Re-ran `git diff --check` after adding the `plan/` scaffold and
+  doc truth-sync edits; it passed with no whitespace or patch-format issues.
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `plan/SKILL.md` after the
+  follow-up doc fix and confirmed the shipped contract now stays aligned on two
+  previously drifting points: plans must record explicit `specs`/`tests`
+  follow-through, and plans must preserve material blockers for fresh-session
+  resumption.
 
 ## Outcomes / Retrospective
 
@@ -185,3 +220,6 @@ contract.
 - Milestone 3 completed with proportional doc-only changes; invocation guidance
   is now explicit enough to support a narrow `plan` skill without prematurely
   shipping the scaffold itself.
+- Milestone 4 completed with a narrow shipped `plan` scaffold that matches the
+  existing skill house style, keeps the contract provider-agnostic, and avoids
+  spilling into Milestone 5's reusable template work.

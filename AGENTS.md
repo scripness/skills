@@ -15,13 +15,13 @@ system that should let a fresh agent go from `0 -> 100` in any target repo:
 Shipped skills today:
 
 - `consult`
+- `plan`
 - `specs`
 - `tests`
 - `verify`
 
-Planned next skills:
+Planned next skill:
 
-- `plan`
 - `execute`
 
 Current roadmap:
@@ -62,6 +62,7 @@ Important:
 In this repo, the skills live at the repo root:
 
 - [consult/SKILL.md](consult/SKILL.md)
+- [plan/SKILL.md](plan/SKILL.md)
 - [specs/SKILL.md](specs/SKILL.md)
 - [tests/SKILL.md](tests/SKILL.md)
 - [verify/SKILL.md](verify/SKILL.md)
@@ -85,6 +86,8 @@ Use the current shipped skills as follows:
 
 - `consult`: clarify repo direction, workflow design, tradeoffs, and roadmap
   decisions before implementation.
+- `plan`: create or maintain living task plans when work needs durable state
+  across sessions, milestones, review loops, or fresh-session restarts.
 - `specs`: bootstrap or sync repo truth when `AGENTS.md`, spec assets, or
   durable workflow docs drift from the shipped system.
 - `tests`: bootstrap or sync executable truth when this repo starts gaining real
@@ -92,11 +95,11 @@ Use the current shipped skills as follows:
 - `verify`: adversarially review plans, docs, implementation, and claimed
   workflow behavior.
 
-Until `plan` and `execute` are shipped, use the phase plans plus
-`PROMPT_execute.md` and `PROMPT_verify.md` to emulate the future plan-driven
-workflow in fresh sessions.
+Until `execute` is shipped, use the phase plans, the shipped `plan` skill, and
+`PROMPT_execute.md` plus `PROMPT_verify.md` to emulate the future
+plan-driven execution workflow in fresh sessions.
 
-Planned `plan` contract for this repo:
+Shipped `plan` contract for this repo:
 
 - invoke `plan` when work needs durable task state across sessions,
   milestone checkpoints, review loops, or fresh-session restarts
@@ -110,6 +113,10 @@ Planned `plan` contract for this repo:
   plan implied in chat
 - `plan` owns task-local files under `plans/`; it does not own durable repo
   truth (`specs`), and `execute` owns implementation from an explicit plan path
+- every plan must make `specs` and `tests` follow-through explicit: name the
+  owning specs or missing specs, the applicable test layers, and when sync is
+  required
+- every plan must capture blockers that matter for fresh-session resumption
 - every plan must be resumable from repo truth plus the plan file alone
 - hand off to `execute` and `verify` with the explicit plan path rather than
   asking a later session to guess the active plan
@@ -121,7 +128,7 @@ When working on the roadmap:
 1. Read `AGENTS.md`, `TODO.md`, and the active phase plan.
 2. Use a fresh session per bounded milestone or slice.
 3. Use [PROMPT_execute.md](PROMPT_execute.md) with the explicit plan path for
-   implementation.
+   implementation while `execute` is still not shipped here.
 4. Use [PROMPT_verify.md](PROMPT_verify.md) with the same plan path for review.
 5. Update the plan before stopping.
 6. Move to the next phase only after the current phase is actually complete.
@@ -171,6 +178,7 @@ Never:
 ├── PROMPT_execute.md
 ├── PROMPT_verify.md
 ├── consult/
+├── plan/
 ├── specs/
 ├── tests/
 ├── verify/
@@ -202,8 +210,8 @@ commands here and keep them current.
 - Keep `AGENTS.md` concise and operational.
 - Keep durable roadmap and contract truth in `TODO.md` and `README.md`.
 - Keep phase-local state in `plans/*.md`.
-- Keep temporary execution protocol in `PROMPT_execute.md` and
-  `PROMPT_verify.md` until the real `plan` and `execute` skills ship.
+- Keep temporary plan-driven execution protocol in `PROMPT_execute.md` and
+  `PROMPT_verify.md` until the real `execute` skill ships.
 - Use ASCII by default.
 - Prefer proportional edits over broad rewrites.
 

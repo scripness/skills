@@ -19,19 +19,19 @@ client-specific feature.
 Current shipped skills are:
 
 - `consult`
+- `plan`
 - `specs`
 - `tests`
 - `verify`
 
-Planned next skills are:
+Planned next skill is:
 
-- `plan`
 - `execute`
 
-Until `plan` and `execute` ship, this repo uses explicit `plans/*.md` files
-plus [PROMPT_execute.md](./PROMPT_execute.md) and
-[PROMPT_verify.md](./PROMPT_verify.md) to emulate the plan-driven loop in fresh
-sessions.
+Until `execute` ships, this repo uses the shipped `plan` skill plus explicit
+`plans/*.md` files and [PROMPT_execute.md](./PROMPT_execute.md) plus
+[PROMPT_verify.md](./PROMPT_verify.md) to emulate the plan-driven execution
+loop in fresh sessions.
 
 The intended six-skill end-state is:
 
@@ -98,9 +98,9 @@ Owns research and clarification.
 - hand off to `plan` only when durable task state is needed after the direction
   is already clear
 
-### `plan` (planned)
+### `plan`
 
-Will own living task plans after it ships.
+Owns living task plans.
 
 - trigger when work needs durable state across sessions, milestones, review
   loops, or fresh-session restarts
@@ -112,6 +112,8 @@ Will own living task plans after it ships.
 - own task-local plan files only, not durable repo truth or implementation
 - create or update one explicit `plans/YYYY-MM-DD-short-task-slug.md` path
 - create the `plans/` directory when missing
+- make `specs` and `tests` follow-through explicit inside the plan: owning or
+  missing specs, applicable test layers, and when sync is required
 - make each plan resumable from repo truth plus the plan file alone
 - hold milestones, verification, discoveries, decisions, blockers, and progress
 - hand off to `execute` and `verify` with that explicit plan path
@@ -141,9 +143,9 @@ Owns adversarial review.
 
 ## Target 0 -> 100 Flow
 
-This is the intended workflow after `plan` and `execute` ship. Until then, use
-the shipped four-skill set plus explicit `plans/*.md` files and the bootstrap
-prompts in this repo.
+This is the intended workflow after `execute` ships. Today this repo already
+ships `plan`, but still bootstraps the plan-driven execution step with explicit
+`plans/*.md` files and the bootstrap prompts in this repo.
 
 1. Manually copy the shipped skill directories from `scripness/skills` into
    `.agents/skills/` in the repo you want to work on.
@@ -164,7 +166,8 @@ prompts in this repo.
 8. Start a fresh session and invoke `execute` against that exact plan path.
    Implement only the next milestone or bounded slice.
 9. After each slice, update the plan with progress, discoveries, decisions,
-   blockers, and verification results.
+   blockers, verification results, and any changed `specs` or `tests`
+   follow-through.
 10. If the session leaves the smart working zone, stop, persist truth to the
     plan, and restart from a fresh session rather than relying on compaction or
     chat memory.
@@ -185,9 +188,10 @@ prompts in this repo.
 
 ## Example Invocation Pattern
 
-The `plan` and `execute` examples below describe the target workflow after
-those skills ship. Today this repo still bootstraps those steps with explicit
-plan files plus [PROMPT_execute.md](./PROMPT_execute.md) and
+The `execute` example below describes the target workflow after that skill
+ships. Today this repo already ships `plan`, but still bootstraps
+plan-driven implementation with explicit plan files plus
+[PROMPT_execute.md](./PROMPT_execute.md) and
 [PROMPT_verify.md](./PROMPT_verify.md).
 
 Bootstrap repo truth:
