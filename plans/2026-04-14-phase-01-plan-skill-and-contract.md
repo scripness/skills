@@ -4,7 +4,9 @@
 
 Establish the provider-agnostic contract for this repo, lock the six-skill
 workflow shape, and add the missing `plan` skill so later phases can execute
-against explicit living plan files instead of only against `TODO.md`.
+against explicit living plan files instead of only against `TODO.md`, while
+keeping `AGENTS.md`, `README.md`, and `TODO.md` aligned with the shipped
+contract.
 
 ## Scope
 
@@ -25,18 +27,21 @@ against explicit living plan files instead of only against `TODO.md`.
 - `1. Define Repo Contract`
 - `2. Define The Six-Skill Workflow`
 - `3. Add The Plan Skill`
-- Minimal doc sync needed to keep `README.md` truthful after shipping `plan`
+- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `TODO.md`
+  truthful after shipping `plan`
 
 ## Deliverables
 
 - `plan/SKILL.md`
 - `plan/agents/openai.yaml`
 - `plan/assets/plan-template.md`
-- Minimal updates to `README.md` and `TODO.md` only if the shipped `plan` skill
-  changes the documented truth
+- Minimal updates to `AGENTS.md`, `README.md`, and `TODO.md` needed to keep the
+  shipped contract and refresh workflow truth aligned with the delivered
+  `plan` skill
 
 ## Dependencies
 
+- Existing `AGENTS.md`
 - Existing `README.md`
 - Existing `TODO.md`
 - Existing shipped skills for boundary alignment:
@@ -44,10 +49,11 @@ against explicit living plan files instead of only against `TODO.md`.
 
 ## Sync Expectations
 
-- `specs`: required only if shipping `plan` changes durable repo truth about the
-  canonical workflow, skill boundaries, or task-state model; in this repo that
-  means keeping `README.md` and `TODO.md` aligned with the delivered `plan`
-  skill.
+- `specs`: required in this phase because shipping `plan` changes durable repo
+  truth about the canonical workflow, skill boundaries, and task-state model;
+  in this repo that means updating `AGENTS.md` first as the authoritative
+  contract, then keeping `README.md` and `TODO.md` aligned with the delivered
+  `plan` skill and the chosen refresh workflow.
 - `tests`: not expected in this phase unless the implementation introduces
   executable helpers, validators, or other behavior that should be covered now.
 
@@ -64,23 +70,24 @@ against explicit living plan files instead of only against `TODO.md`.
    provider-agnostic scope.
 5. Add `plan/assets/plan-template.md` with the full self-contained living-plan
    structure required by the roadmap.
-6. Sync repo docs minimally so the shipped skill set and workflow contract stay
+6. Sync repo docs minimally so `AGENTS.md`, `README.md`, and `TODO.md` stay
    truthful, while keeping the bootstrap asymmetry explicit until `execute`
    exists.
 
 ## Verification
 
-- Read the shipped `plan` skill against `README.md` and `TODO.md` and confirm
-  the boundaries are consistent.
+- Read the shipped `plan` skill against `AGENTS.md`, `README.md`, and `TODO.md`
+  and confirm the boundaries are consistent.
 - Confirm the plan template includes goal, scope, non-goals, milestones,
   verification, risks, open questions, progress, decision log, discoveries, and
   outcomes/retrospective.
 - Confirm the skill requires explicit sync expectations for `specs` and `tests`
   inside each task plan.
 - Confirm the target-repo refresh workflow decision is captured explicitly in
-  shipped docs rather than left implied.
-- Confirm the docs say this repo still uses temporary bootstrap prompts until
-  both `plan` and `execute` are delivered here.
+  shipped docs, with the owning doc location named rather than left implied.
+- Confirm the docs say `plan` is shipped, `execute` is not, and this repo still
+  uses temporary bootstrap prompts for the plan-driven execution step until
+  `execute` is delivered here.
 
 ## Risks
 

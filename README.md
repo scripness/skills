@@ -22,7 +22,17 @@ Current shipped skills are:
 - `tests`
 - `verify`
 
-The intended end-state workflow uses six core skills:
+Planned next skills are:
+
+- `plan`
+- `execute`
+
+Until `plan` and `execute` ship, this repo uses explicit `plans/*.md` files
+plus [PROMPT_execute.md](./PROMPT_execute.md) and
+[PROMPT_verify.md](./PROMPT_verify.md) to emulate the plan-driven loop in fresh
+sessions.
+
+The intended six-skill end-state is:
 
 - `specs`
 - `tests`
@@ -74,18 +84,18 @@ Owns research and clarification.
 - compare options, risks, and tradeoffs
 - recommend the safest next move
 
-### `plan`
+### `plan` (planned)
 
-Owns living task plans.
+Will own living task plans after it ships.
 
 - create or update `plans/YYYY-MM-DD-short-task-slug.md`
 - create the `plans/` directory when missing
 - capture the durable state needed to survive fresh-session restarts
 - hold milestones, verification, discoveries, decisions, blockers, and progress
 
-### `execute`
+### `execute` (planned)
 
-Owns implementation.
+Will own implementation after it ships.
 
 - implement a bounded task directly when it is still locally clear
 - implement the next milestone from an explicit plan file when durable task
@@ -104,7 +114,11 @@ Owns adversarial review.
 - verify final diffs or PRs as a code reviewer
 - keep findings grounded in code, specs, tests, and command evidence
 
-## The 0 -> 100 Flow
+## Target 0 -> 100 Flow
+
+This is the intended workflow after `plan` and `execute` ship. Until then, use
+the shipped four-skill set plus explicit `plans/*.md` files and the bootstrap
+prompts in this repo.
 
 1. Install `scripness/skills` into `.agents/skills/` in the repo you want to
    work on.
@@ -143,6 +157,11 @@ Owns adversarial review.
 - Prefer fresh sessions for serious plan-driven execution.
 
 ## Example Invocation Pattern
+
+The `plan` and `execute` examples below describe the target workflow after
+those skills ship. Today this repo still bootstraps those steps with explicit
+plan files plus [PROMPT_execute.md](./PROMPT_execute.md) and
+[PROMPT_verify.md](./PROMPT_verify.md).
 
 Bootstrap repo truth:
 
