@@ -108,15 +108,19 @@ contract.
 - [x] Milestone 2
 - [x] Milestone 3
 - [x] Milestone 4
-- [ ] Milestone 5
-- [ ] Milestone 6
+- [x] Milestone 5
+- [x] Milestone 6
 
 Milestone 6 note:
 
 - Minimal `AGENTS.md` and `README.md` truth sync was completed as required
-  follow-through for shipping Milestone 4, but the full doc-sync milestone
-  remains open until the plan template lands and the final phase-wide doc pass
-  is done.
+  follow-through for shipping Milestone 4.
+- Milestone 5 did not require new doc edits because the shipped template
+  matches the existing `AGENTS.md`, `README.md`, `TODO.md`, and `plan/SKILL.md`
+  contract rather than changing it.
+- Milestone 6 closed after the final phase-wide doc pass confirmed the shipped
+  docs remained truthful and the reusable template no longer contained the raw
+  angle-bracket placeholders called out during verification.
 
 ## Decision Log
 
@@ -141,6 +145,9 @@ Milestone 6 note:
   `plan/agents/openai.yaml`, and the minimum shipped-truth doc edits needed to
   avoid leaving `AGENTS.md` and `README.md` stale; defer the reusable plan
   template asset to Milestone 5.
+- [2026-04-14] Ship the reusable `plan` template as plain Markdown that matches
+  the existing living-plan house style, rather than introducing frontmatter or
+  provider-specific metadata requirements.
 
 ## Discoveries
 
@@ -163,6 +170,21 @@ Milestone 6 note:
 - [2026-04-14] Shipping `plan/` immediately made the old "plan is still
   planned" wording in `AGENTS.md` and `README.md` false, while `TODO.md`
   remained valid because it is the roadmap rather than the shipped-state index.
+- [2026-04-14] The existing phase plans already provided a stable reusable
+  shape for the template: goal, scope, non-goals, sync expectations,
+  milestones, verification, blockers, progress, decision log, discoveries, and
+  outcomes/retrospective, with only repo-specific sections needing
+  generalization.
+- [2026-04-14] The reusable template can make `specs` and `tests`
+  follow-through more explicit without changing shipped repo truth, because the
+  current docs and `plan` skill already require those obligations.
+- [2026-04-14] Raw angle-bracket placeholders render poorly in Markdown
+  previews, so the reusable template should use plain bracketed placeholder
+  text instead of HTML-like markers.
+- [2026-04-14] The final Phase 01 doc pass found that the template and plan log
+  had drifted slightly after Milestone 5: the template still used raw angle-
+  bracket placeholders and the Milestone 6 note still described pre-template
+  state.
 
 ## Verification
 
@@ -208,6 +230,32 @@ Milestone 6 note:
   previously drifting points: plans must record explicit `specs`/`tests`
   follow-through, and plans must preserve material blockers for fresh-session
   resumption.
+- [2026-04-14] Re-read `plan/assets/plan-template.md`, `plan/SKILL.md`,
+  `AGENTS.md`, `README.md`, and `TODO.md` after adding the template and
+  confirmed the reusable plan skeleton includes goal, scope, non-goals,
+  deliverables, repo context, dependencies, explicit `specs`/`tests` sync
+  expectations, milestones, verification, risks, open questions, blockers,
+  progress, decision log, discoveries, and outcomes/retrospective.
+- [2026-04-14] Confirmed the template explicitly tells future execution work to
+  keep repo truth and test truth aligned, including naming when `specs` or
+  `tests` sync is required and when either is not currently required.
+- [2026-04-14] Ran `git diff --check` after adding `plan/assets/plan-template.md`
+  and updating this phase plan; it passed with no whitespace or patch-format
+  issues.
+- [2026-04-14] Re-ran `git diff --check` after replacing raw angle-bracket
+  placeholders in `plan/assets/plan-template.md` with plain bracketed text; it
+  passed with no whitespace or patch-format issues.
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, `TODO.md`, `plan/SKILL.md`,
+  and `plan/assets/plan-template.md` during the final Phase 01 verification
+  pass and confirmed the shipped contract still aligns on `plan` being shipped,
+  `execute` remaining unshipped, manual copy into `.agents/skills/` as the
+  default refresh workflow, explicit `specs`/`tests` sync expectations inside
+  each plan, and bootstrap prompt usage until `execute` lands.
+- [2026-04-14] Ran `rg -n '<[^>]+>' plan/assets/plan-template.md` during the
+  final Phase 01 verification pass; it returned no matches after the placeholder
+  cleanup.
+- [2026-04-14] Re-ran `git diff --check` after closing the Phase 01 plan drift;
+  it passed with no whitespace or patch-format issues.
 
 ## Outcomes / Retrospective
 
@@ -223,3 +271,10 @@ Milestone 6 note:
 - Milestone 4 completed with a narrow shipped `plan` scaffold that matches the
   existing skill house style, keeps the contract provider-agnostic, and avoids
   spilling into Milestone 5's reusable template work.
+- Milestone 5 completed with a reusable `plan/assets/plan-template.md` that
+  packages the repo's living-plan contract into a portable template without
+  expanding scope into final phase-wide doc cleanup.
+- Milestone 6 completed with a final truth pass that closed the remaining plan
+  drift, confirmed the shipped docs still matched the delivered `plan` skill
+  and template, and kept the bootstrap asymmetry explicit until `execute`
+  exists.
