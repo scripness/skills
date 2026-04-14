@@ -11,6 +11,8 @@ against explicit living plan files instead of only against `TODO.md`.
 - Define and ship the first version of the `plan` skill.
 - Make the repo contract and six-skill workflow explicit in the shipped docs.
 - Keep the implementation grounded in the current roadmap and source guidance.
+- Decide and document the target-repo refresh workflow for distributing these
+  skills into other repos.
 
 ## Non-Goals
 
@@ -54,12 +56,17 @@ against explicit living plan files instead of only against `TODO.md`.
 1. Finalize the contract that `plan` owns:
    trigger conditions, boundaries versus `consult` and `execute`, default file
    naming, and resumption requirements.
-2. Add the `plan/` skill scaffold and write `plan/SKILL.md` with a narrow,
+2. Decide and document the target-repo refresh workflow:
+   manual copy, install script, subtree, plugin, or another sync mechanism.
+3. Tighten the trigger description and invocation guidance for the future
+   `plan` skill so activation is explicit and reliable.
+4. Add the `plan/` skill scaffold and write `plan/SKILL.md` with a narrow,
    provider-agnostic scope.
-3. Add `plan/assets/plan-template.md` with the full self-contained living-plan
+5. Add `plan/assets/plan-template.md` with the full self-contained living-plan
    structure required by the roadmap.
-4. Sync repo docs minimally so the shipped skill set and workflow contract stay
-   truthful.
+6. Sync repo docs minimally so the shipped skill set and workflow contract stay
+   truthful, while keeping the bootstrap asymmetry explicit until `execute`
+   exists.
 
 ## Verification
 
@@ -70,6 +77,25 @@ against explicit living plan files instead of only against `TODO.md`.
   outcomes/retrospective.
 - Confirm the skill requires explicit sync expectations for `specs` and `tests`
   inside each task plan.
+- Confirm the target-repo refresh workflow decision is captured explicitly in
+  shipped docs rather than left implied.
+- Confirm the docs say this repo still uses temporary bootstrap prompts until
+  both `plan` and `execute` are delivered here.
+
+## Risks
+
+- Over-designing the refresh workflow before there is real distribution usage.
+- Writing a `plan` skill that overlaps too much with `consult` or anticipates
+  `execute` details too aggressively.
+- Updating docs in a way that implies the full six-skill system is already
+  shipped.
+
+## Open Questions
+
+- Which refresh workflow should be the initial default: manual copy, install
+  helper, subtree, or another sync mechanism?
+- Should the first shipped `plan` skill include examples beyond the core plan
+  template, or stay minimal?
 
 ## Progress
 
@@ -77,6 +103,8 @@ against explicit living plan files instead of only against `TODO.md`.
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
+- [ ] Milestone 5
+- [ ] Milestone 6
 
 ## Decision Log
 
@@ -88,3 +116,6 @@ against explicit living plan files instead of only against `TODO.md`.
 - [2026-04-14] `TODO.md` is the roadmap, not the execution artifact; later
   phases should execute from explicit `plans/*.md` files.
 
+## Outcomes / Retrospective
+
+- Pending.

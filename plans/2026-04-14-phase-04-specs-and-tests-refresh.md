@@ -14,6 +14,7 @@ without hardcoded layout assumptions.
   expectations, and sync/bootstrap behavior.
 - Use `cryptoli` as a real-world reference shape for the design, without turning
   this phase into the full eval harness.
+- Make the trigger-description refinement for `specs` and `tests` explicit.
 
 ## Non-Goals
 
@@ -53,11 +54,13 @@ without hardcoded layout assumptions.
 
 1. Refresh `specs` for repo-topology discovery, agentic-readiness evaluation,
    and proportional organization guidance.
-2. Refresh `tests` for test-topology discovery, layered coverage expectations,
+2. Tighten the trigger descriptions and invocation guidance for `specs` and
+   `tests` so activation is clear across bootstrap, sync, and gap-driven use.
+3. Refresh `tests` for test-topology discovery, layered coverage expectations,
    and honest gap reporting across repo shapes.
-3. Update any shipped bootstrap assets that now drift from the refreshed skill
+4. Update any shipped bootstrap assets that now drift from the refreshed skill
    behavior.
-4. Sync docs minimally so the shipped truth matches the refreshed behavior.
+5. Sync docs minimally so the shipped truth matches the refreshed behavior.
 
 ## Verification
 
@@ -66,6 +69,22 @@ without hardcoded layout assumptions.
 - Confirm both skills ignore vendor/generated noise by default.
 - Confirm the refreshed guidance still keeps code as the ultimate source of
   truth and uses docs/tests as synchronized truth layers.
+- Confirm the trigger descriptions make it clear when `specs` or `tests` should
+  be invoked proactively versus manually.
+
+## Risks
+
+- Overfitting `specs` and `tests` to `cryptoli` and accidentally narrowing
+  portability.
+- Making topology discovery too abstract to be actionable for agents.
+- Letting repo-bootstrap concerns crowd out sync behavior on mature repos.
+
+## Open Questions
+
+- How much real-repo shape detail from `cryptoli` should become generic skill
+  guidance versus remain only an eval/reference input?
+- Should `specs/assets/*` evolve now for the refreshed contract or wait for the
+  later eval phase to validate the changes first?
 
 ## Progress
 
@@ -73,6 +92,7 @@ without hardcoded layout assumptions.
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
+- [ ] Milestone 5
 
 ## Decision Log
 
@@ -85,3 +105,6 @@ without hardcoded layout assumptions.
   discovery that gets polluted by `node_modules`, build outputs, and copied
   artifacts.
 
+## Outcomes / Retrospective
+
+- Pending.

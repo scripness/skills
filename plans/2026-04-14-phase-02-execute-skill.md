@@ -12,6 +12,8 @@ improvised prompts.
 - Support both direct bounded execution and explicit plan-driven execution.
 - Encode the `specs` and `tests` sync gates and the explicit handoff to
   `verify`.
+- Tighten the trigger description and invocation guidance for the future
+  `execute` skill.
 
 ## Non-Goals
 
@@ -51,11 +53,13 @@ improvised prompts.
 1. Finalize the `execute` boundary:
    direct mode versus plan-driven mode, explicit plan-path requirements, and
    handoff rules to `verify`.
-2. Write `execute/SKILL.md` with one-bounded-slice execution, required
+2. Tighten the trigger description and invocation guidance for `execute` so it
+   is clearly distinguishable from `consult`, `plan`, and `verify`.
+3. Write `execute/SKILL.md` with one-bounded-slice execution, required
    mechanical checks, and mandatory plan updates for plan-driven work.
-3. Encode the sync gates for `specs` and `tests`, including direct-mode
+4. Encode the sync gates for `specs` and `tests`, including direct-mode
    inference from repo truth when no plan file exists.
-4. Sync docs minimally so the shipped skill contract stays truthful.
+5. Sync docs minimally so the shipped skill contract stays truthful.
 
 ## Verification
 
@@ -65,6 +69,24 @@ improvised prompts.
 - Confirm `execute` does not self-invoke adversarial `verify`.
 - Confirm `execute` treats missing required `specs` or `tests` sync as blocking
   follow-through, not optional polish.
+- Confirm the `execute` trigger description is explicit enough that direct and
+  plan-driven modes are both discoverable without overlapping other skills.
+
+## Risks
+
+- Letting `execute` silently absorb review behavior that should stay in
+  `verify`.
+- Making direct mode too broad and encouraging plan-skipping on work that
+  really needs durable state.
+- Encoding sync gates too vaguely, which would leave `specs` or `tests`
+  follow-through inconsistent.
+
+## Open Questions
+
+- Should the first shipped `execute` skill include explicit examples for direct
+  mode and plan-driven mode in the skill body?
+- How much mechanical-check guidance should live in the generic skill versus be
+  deferred to per-repo `AGENTS.md`?
 
 ## Progress
 
@@ -72,6 +94,7 @@ improvised prompts.
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
+- [ ] Milestone 5
 
 ## Decision Log
 
@@ -83,3 +106,6 @@ improvised prompts.
 - [2026-04-14] A clean `execute` skill is the missing primitive that turns the
   roadmap into a reliable fresh-session implementation loop.
 
+## Outcomes / Retrospective
+
+- Pending.

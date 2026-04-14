@@ -61,6 +61,20 @@ six-skill system cleanly once the skills and eval harness exist.
 - Confirm the docs describe the durable-state model and six-skill workflow
   accurately.
 
+## Risks
+
+- Adding wrappers that quietly become required for normal workflow use.
+- Final docs drifting into aspirational claims instead of shipped truth.
+- Polishing tooling before the eval harness and skill contracts are stable
+  enough.
+
+## Open Questions
+
+- Should the first maintenance surface be a `Makefile`, shell scripts, or a
+  different minimal interface?
+- Which helper scripts, if any, actually earn their place after the earlier
+  phases are complete?
+
 ## Progress
 
 - [ ] Milestone 1
@@ -77,3 +91,6 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-14] The right time to add wrappers is after the skills and eval
   contracts exist, not before.
 
+## Outcomes / Retrospective
+
+- Pending.

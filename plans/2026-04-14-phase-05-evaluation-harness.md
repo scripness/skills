@@ -12,6 +12,9 @@ of judged only by intuition.
   artifact contract.
 - Use the canonical eval runtime for gating while keeping it configurable later.
 - Use pinned `cryptoli` as the first official real-repo fixture.
+- Make the remaining evaluation-governance rules explicit in the implementation:
+  train/validation splits, repeated trials, pass/fail thresholds, grading
+  protocol, must-run regression surface, and regression artifact review.
 
 ## Non-Goals
 
@@ -30,6 +33,8 @@ of judged only by intuition.
 - Pinned `cryptoli` fixture reference for real-repo evals
 - Repeatable local eval runners or the first thin scaffolding required to run
   them
+- Documented baseline comparison policy, pass/fail thresholds, and regression
+  review procedure
 
 ## Dependencies
 
@@ -48,11 +53,14 @@ of judged only by intuition.
 
 1. Define the tracked eval layout, baseline comparison policy, artifact
    contract, and runtime configuration surface.
-2. Add the first trigger and workflow eval definitions for the six-skill
+2. Define the governance layer explicitly:
+   train/validation splits, repeated-run policy, grading protocol, pass/fail
+   thresholds, must-run regression surface, and regression artifact review.
+3. Add the first trigger and workflow eval definitions for the six-skill
    workflow.
-3. Add the pinned `cryptoli` real-repo fixture handling and must-run regression
+4. Add the pinned `cryptoli` real-repo fixture handling and must-run regression
    cases.
-4. Add the first repeatable local runner surface and document how regression
+5. Add the first repeatable local runner surface and document how regression
    results are reviewed.
 
 ## Verification
@@ -63,6 +71,26 @@ of judged only by intuition.
 - Confirm `cryptoli` is pinned for repeatability.
 - Confirm the harness compares against previous-skill-version baselines and uses
   no-skill comparisons only where they add signal.
+- Confirm train/validation splits, repeated trials, grading protocol, pass/fail
+  thresholds, and the must-run regression surface are explicit rather than only
+  implied.
+- Confirm regression artifact review is required before accepting a skill
+  change.
+
+## Risks
+
+- Building a harness that looks rigorous but still leaves too much room for
+  unreviewed drift.
+- Making the initial harness too heavy before the six-skill system stabilizes.
+- Mixing runtime/provider changes into skill comparisons and corrupting the
+  signal.
+
+## Open Questions
+
+- How much of the grading should be automated assertions versus reviewer rubric
+  in the first version?
+- Should the initial repeated-run policy apply to every must-run case or only to
+  the highest-signal cases first?
 
 ## Progress
 
@@ -70,6 +98,7 @@ of judged only by intuition.
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
+- [ ] Milestone 5
 
 ## Decision Log
 
@@ -81,3 +110,6 @@ of judged only by intuition.
 - [2026-04-14] Without concrete eval artifacts and pinned fixtures, skill drift
   is too easy to miss or misattribute to provider/runtime changes.
 
+## Outcomes / Retrospective
+
+- Pending.

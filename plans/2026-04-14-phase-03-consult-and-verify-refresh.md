@@ -12,6 +12,8 @@ review.
 - Tighten the verification targets, verdict rules, and evidence requirements for
   `verify`.
 - Align both skills with the new `plan` and `execute` contracts.
+- Make the trigger-description refinement for both skills explicit rather than
+  implied.
 
 ## Non-Goals
 
@@ -48,9 +50,11 @@ review.
 
 1. Refresh `consult` so it stays evidence-backed, bounded, and explicit about
    what should be carried into a durable plan.
-2. Refresh `verify` so it treats plans, implementations, and claims as distinct
+2. Tighten the trigger descriptions and invocation guidance for `consult` and
+   `verify` so activation stays clear and reliable.
+3. Refresh `verify` so it treats plans, implementations, and claims as distinct
    targets with findings-first output and honest blocked-check reporting.
-3. Align both skills with the new workflow boundaries and minimal doc truth.
+4. Align both skills with the new workflow boundaries and minimal doc truth.
 
 ## Verification
 
@@ -60,12 +64,29 @@ review.
   `fail` when the obligation is clear.
 - Confirm both skills point to code/spec references rather than opinion-only
   guidance.
+- Confirm the trigger descriptions are explicit enough to reduce overlap with
+  `plan`, `execute`, `specs`, and `tests`.
+
+## Risks
+
+- Making `consult` too verbose or too research-heavy for bounded tasks.
+- Making `verify` too broad and turning it into a fixer instead of a reviewer.
+- Tightening triggers in a way that weakens proactive use when it is genuinely
+  helpful.
+
+## Open Questions
+
+- Should `verify` explicitly mention plan-only verification examples once the
+  `plan` skill exists?
+- Should `consult` include a stronger rule for when it must surface “this
+  belongs in a plan file”?
 
 ## Progress
 
 - [ ] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
+- [ ] Milestone 4
 
 ## Decision Log
 
@@ -78,3 +99,6 @@ review.
   workflow and deserve their own refresh phase rather than being spread across
   unrelated work.
 
+## Outcomes / Retrospective
+
+- Pending.
