@@ -1,13 +1,195 @@
 # skills
 
-Canonical shared agent skills for use across projects.
+Provider-agnostic agent skills for end-to-end repository work.
 
-This repo contains the core portable skills:
+The goal of this repo is not to store prompts. It is to define a portable
+workflow you can bring to any codebase:
+
+- provider = runtime shell
+- model = intelligence level
+- skills = workflow
+- repo files = durable state
+
+Install these skills into `.agents/skills/` in any target repo and invoke them
+from a normal interactive session with the strongest model and effort setting
+you want. The workflow should not depend on provider plan modes, plugins,
+auto-memory, or any other client-specific feature.
+
+Current shipped skills are:
 
 - `consult`
 - `specs`
 - `tests`
 - `verify`
 
-See `TODO.md` for the next improvements, evaluation work, and grounding
-against official docs and best practices.
+The intended end-state workflow uses six core skills:
+
+- `specs`
+- `tests`
+- `consult`
+- `plan`
+- `execute`
+- `verify`
+
+See [TODO.md](./TODO.md) for the implementation roadmap.
+
+## Durable State
+
+- `AGENTS.md` and `specs/` = repo truth
+- tests = executable truth
+- `plans/*.md` = task truth
+- code = implemented reality
+
+The repo should stay in a state where a fresh agent can get oriented quickly,
+find the right code paths, and make correct changes with the highest practical
+chance of success.
+
+## Skill Roles
+
+### `specs`
+
+Owns repo truth.
+
+- bootstrap and sync `AGENTS.md`, `CLAUDE.md` symlink, and `specs/`
+- evaluate codebase organization quality for agentic work
+- improve boundaries, naming, navigability, and discoverability when the
+  current structure reduces agent reliability
+- keep durable architecture and domain truth aligned with code reality
+
+### `tests`
+
+Owns test truth.
+
+- bootstrap or extend the test layers that make sense for the repo
+- sync tests with changed behavior over time
+- keep coverage honest across unit, integration, e2e, smoke, security,
+  performance, and other applicable layers
+
+### `consult`
+
+Owns research and clarification.
+
+- start from exploration, not blind implementation
+- understand the current code and specs
+- compare options, risks, and tradeoffs
+- recommend the safest next move
+
+### `plan`
+
+Owns living task plans.
+
+- create or update `plans/YYYY-MM-DD-short-task-slug.md`
+- create the `plans/` directory when missing
+- capture the durable state needed to survive fresh-session restarts
+- hold milestones, verification, discoveries, decisions, blockers, and progress
+
+### `execute`
+
+Owns implementation.
+
+- implement a bounded task directly when it is still locally clear
+- implement the next milestone from an explicit plan file when durable task
+  state is needed
+- read repo truth before editing
+- update the plan before stopping when working from a plan
+- stop cleanly when blocked or when the session has become noisy enough to
+  reduce reasoning quality
+
+### `verify`
+
+Owns adversarial review.
+
+- verify plans before implementation
+- verify implementation slices after coding
+- verify final diffs or PRs as a code reviewer
+- keep findings grounded in code, specs, tests, and command evidence
+
+## The 0 -> 100 Flow
+
+1. Install `scripness/skills` into `.agents/skills/` in the repo you want to
+   work on.
+2. Run `specs` when repo truth is weak, missing, stale, or the codebase is not
+   organized cleanly enough for reliable agent work.
+3. Run `tests` when test truth is weak, missing, stale, or clearly below what
+   the codebase needs.
+4. Start every task with `consult` to understand the current code, relevant
+   specs, options, and risks.
+5. If the task is still bounded and does not need durable task state, use
+   `execute` directly, then run `verify`.
+6. If the task starts needing durable state across milestones, discoveries, or
+   restarts, run `plan` and create or update
+   `plans/YYYY-MM-DD-short-task-slug.md`.
+7. Run `verify` on the plan before implementation when the task is plan-driven.
+8. Start a fresh session and invoke `execute` against the explicit plan file.
+   Implement only the next milestone or bounded slice.
+9. After each slice, update the plan with progress, discoveries, decisions,
+   blockers, and verification results.
+10. If the session leaves the smart working zone, stop, persist truth to the
+    plan, and restart from a fresh session rather than relying on compaction or
+    chat memory.
+11. Run `verify` again on the implementation slice and once more on the final
+    diff or PR.
+12. Run `specs` and `tests` again when durable repo truth or test truth has
+    changed.
+
+## Working Style
+
+- Prefer repo files over chat memory.
+- Keep `AGENTS.md` concise and operational.
+- Keep durable subsystem truth in `specs/`, not task plans.
+- Keep task-local state in `plans/*.md`, not in long conversations.
+- Use provider features such as plan modes or subagents only as optional
+  accelerators, never as workflow requirements.
+- Prefer fresh sessions for serious plan-driven execution.
+
+## Example Invocation Pattern
+
+Bootstrap repo truth:
+
+```text
+Use specs.
+Prepare this repo for reliable agentic work.
+Create or sync AGENTS.md, specs/, and any missing repo-truth guidance.
+Evaluate whether the codebase organization is clean enough for agents.
+```
+
+Bootstrap test truth:
+
+```text
+Use tests.
+Audit the current test layers and bring them up to the level this repo needs.
+```
+
+Research a task:
+
+```text
+Use consult.
+Read the repo, relevant specs, and tests.
+Clarify the safest next move for <task>.
+```
+
+Write a plan:
+
+```text
+Use plan.
+Create or update plans/2026-04-13-short-task-slug.md.
+Make it a self-contained living task plan.
+```
+
+Execute from a plan:
+
+```text
+Use execute.
+Read AGENTS.md, relevant specs, tests, and
+plans/2026-04-13-short-task-slug.md.
+Implement only the next milestone.
+Update the plan before stopping.
+```
+
+Review the work:
+
+```text
+Use verify.
+Review the plan, implementation, or final diff against repo truth and tests.
+Findings first.
+```
