@@ -171,6 +171,27 @@ The helper should remain:
 - non-interactive by default
 - honest about failure and stop conditions
 
+## Reference Grounding
+
+Future refinement work should keep essential references in this repo so both
+users and fresh agents can recover the best-practice context from repo truth
+alone.
+
+That means:
+
+- store the canonical source list in a stable in-repo location rather than only
+  in plans, prompts, or chat
+- make it obvious where to look for the repo's guiding best practices
+- summarize which best practices materially shaped the current `skills` repo,
+  not just the raw URLs
+- let future plans and helper-loop work point to that shared reference note and
+  record only task-specific application or deltas
+- avoid leaving critical source grounding implied, scattered, or dependent on
+  session memory
+
+The exact file can be chosen later, but it should be a durable repo-level note
+such as `SOURCES.md` or a similar shared reference document.
+
 ## Deferred Until After Current Plans
 
 This refinement is intentionally deferred until after the current roadmap phases
