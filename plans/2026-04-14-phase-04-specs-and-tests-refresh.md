@@ -31,7 +31,11 @@ without hardcoded layout assumptions.
 ## Deliverables
 
 - Updated `specs/SKILL.md`
+- Updated `specs/agents/openai.yaml` if the refreshed `specs` trigger or
+  default prompt changes shipped behavior
 - Updated `tests/SKILL.md`
+- Updated `tests/agents/openai.yaml` if the refreshed `tests` trigger or
+  default prompt changes shipped behavior
 - Updated `specs/assets/*` if the repo-truth bootstrap templates need to match
   the refreshed contract
 - Minimal doc sync if the shipped behavior changes current truth
@@ -71,6 +75,9 @@ without hardcoded layout assumptions.
   truth and uses docs/tests as synchronized truth layers.
 - Confirm the trigger descriptions make it clear when `specs` or `tests` should
   be invoked proactively versus manually.
+- Confirm `specs/agents/openai.yaml` and `tests/agents/openai.yaml` stay
+  aligned with the shipped `SKILL.md` contracts when their prompts or wrapper
+  descriptions are touched.
 
 ## Risks
 
