@@ -1,3 +1,3 @@
 display_name: Repo Truth Sync
-short_description: Bootstrap or sync AGENTS.md and specs
-default_prompt: Use this skill to bootstrap or sync the repo truth layer in AGENTS.md and specs.
+short_description: Bootstrap or sync AGENTS.md and specs from actual repo topology
+default_prompt: Use this skill to bootstrap or sync the repo truth layer in AGENTS.md and specs based on actual repo topology, owned code paths, and code reality.

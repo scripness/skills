@@ -144,6 +144,24 @@ without hardcoded layout assumptions.
 - Run bounded mechanical checks after each contract-changing slice: contract
   re-reads, targeted `rg` checks, file-presence checks, and `git diff --check`.
 
+### 2026-04-15 Milestone 1 results
+
+- Re-read `specs/SKILL.md` and `specs/agents/openai.yaml` after editing to
+  confirm the shipped `specs` surface now explicitly covers repo-topology
+  discovery, generated/vendor-noise pruning, and proportional organization
+  guidance.
+- `rg -n "topology|monorepo|generated|vendor|agent reliability|src/"
+  specs/SKILL.md specs/agents/openai.yaml` passed and showed the intended
+  contract language in the shipped skill surfaces.
+- `git diff --check` passed.
+- `test -f specs/SKILL.md && test -f specs/agents/openai.yaml && echo present`
+  passed.
+- `rg -n "Owns repo truth|evaluate codebase organization quality|improve
+  boundaries|discoverability|repo truth is weak|AGENTS.md and specs"
+  README.md` confirmed the current README still matches the refreshed
+  high-level `specs` role closely enough that Milestone 1 did not require
+  separate doc edits.
+
 ## Risks
 
 - Overfitting `specs` and `tests` to `cryptoli` and accidentally narrowing
@@ -160,7 +178,7 @@ without hardcoded layout assumptions.
 
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
@@ -176,6 +194,12 @@ without hardcoded layout assumptions.
 - [2026-04-15] Until Phase 05 pins `cryptoli`, use it only as a generic
   monorepo stress case for topology and layer discovery, not as a source of
   portable path-level defaults.
+- [2026-04-15] Keep Milestone 1 scoped to the shipped `specs` contract and the
+  aligned `specs/agents/openai.yaml` wrapper prompt; defer trigger tightening,
+  `tests`, asset refresh, and broader doc sync to later milestones.
+- [2026-04-15] Leave `README.md` unchanged in Milestone 1 because its current
+  `specs` description already remains accurate at a high level; revisit
+  minimal doc sync in Milestone 5 if later slices make the gap material.
 
 ## Discoveries
 
@@ -185,7 +209,17 @@ without hardcoded layout assumptions.
 - [2026-04-15] This repo still has no formal automated suite, so Phase 04 must
   make its bounded mechanical verification layer explicit or later
   `execute`/`verify` sessions can disagree about completion requirements.
+- [2026-04-15] The shipped `specs` skill already covered repo-truth ownership
+  and proportional updates, but it was still too generic about topology
+  discovery and default noise pruning to reliably prepare mixed-stack or
+  monorepo repos.
+- [2026-04-15] The current README already covers the high-level `specs` role
+  closely enough that Milestone 1 could stay bounded to the `specs` skill
+  contract and wrapper prompt without leaving obvious shipped-truth drift.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Milestone 1 completed by refreshing the shipped `specs` contract for
+  topology-aware repo inspection, agentic-readiness evaluation, and
+  proportional organization guidance. Remaining Phase 04 milestones are still
+  pending.
