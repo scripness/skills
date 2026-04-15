@@ -165,9 +165,9 @@ reality back into alignment in a fresh session.
    organized cleanly enough for reliable agent work.
 3. Run `tests` when test truth is weak, missing, stale, or clearly below what
    the codebase needs.
-4. Start every task with `consult` to understand the current code, relevant
-   specs, options, and risks.
-5. If the task is still bounded and does not need durable task state, use
+4. Run `consult` when the next move is not yet clear and you need grounded
+   clarification about the current code, relevant specs, options, or risks.
+5. If the task is already bounded and does not need durable task state, use
    `execute` directly, then run `verify`.
 6. If the task starts needing durable state across milestones, discoveries,
    review loops, or restarts, run `plan` and create or update one explicit

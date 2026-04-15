@@ -30,8 +30,13 @@ review.
 ## Deliverables
 
 - Updated `consult/SKILL.md`
+- Updated `consult/agents/openai.yaml` if the refreshed `consult` trigger or
+  default prompt changes shipped behavior
 - Updated `verify/SKILL.md`
-- Minimal updates to docs if shipped behavior changes current truth
+- Updated `verify/agents/openai.yaml` if the refreshed `verify` trigger or
+  default prompt changes shipped behavior
+- Minimal updates to `AGENTS.md` and `README.md` if shipped behavior changes
+  current truth
 
 ## Dependencies
 
@@ -39,12 +44,36 @@ review.
   and `execute`
 - Existing `README.md` and `TODO.md`
 
+## Repo Context
+
+- Task source: the `consult` and `verify` entries in `TODO.md` section
+  `5. Improve The Six Core Skills`, plus the relevant source-grounding work in
+  section `6. Ground The Skills In Official Sources`
+- Owning code paths: `consult/` and `verify/`, including both `SKILL.md` and
+  `agents/openai.yaml` because the agent wrapper prompts are part of the
+  shipped surface
+- Owning spec paths: `AGENTS.md` as the authoritative workflow contract and
+  `README.md` as shipped usage guidance; `TODO.md` remains roadmap truth and
+  should stay aligned where shipped behavior would otherwise make its wording
+  false or misleading
+- Owning test paths: there is still no formal automated suite in this repo, so
+  Phase 03 verification should use bounded mechanical checks such as contract
+  re-reads, targeted `rg` checks, file-presence checks, and `git diff --check`
+- Related docs or references: `PROMPT_verify.md`,
+  `plans/2026-04-14-phase-02-execute-skill.md`, and the official-source notes
+  relevant to `consult` and `verify`
+
 ## Sync Expectations
 
-- `specs`: required only if the refreshed skill contracts change durable repo
-  truth about how consultation or verification should operate.
-- `tests`: not expected unless this phase adds executable validators or eval
-  helpers that should be covered immediately.
+- `specs`: required if the refreshed `consult` or `verify` contracts change
+  durable repo truth about workflow boundaries, trigger guidance, verification
+  verdict rules, or the shipped invocation flow; in this repo that means
+  updating `AGENTS.md` first as the authoritative contract, then keeping
+  `README.md` aligned with the shipped skill and wrapper behavior
+- `tests`: no dedicated automated test layer is expected in this phase unless
+  the work adds executable validators or eval helpers earlier than planned;
+  until then, required follow-through is bounded mechanical verification of the
+  shipped skills, wrappers, and any truth-sync edits
 
 ## Milestones
 
@@ -66,6 +95,35 @@ review.
   guidance.
 - Confirm the trigger descriptions are explicit enough to reduce overlap with
   `plan`, `execute`, `specs`, and `tests`.
+- Confirm `consult/agents/openai.yaml` and `verify/agents/openai.yaml` stay
+  aligned with the shipped `SKILL.md` contracts when their prompts or wrapper
+  descriptions are touched.
+- Run bounded mechanical checks after each contract-changing slice:
+  contract re-reads, targeted `rg` checks, file-presence checks, and
+  `git diff --check`.
+- [2026-04-15] Re-read `consult/SKILL.md` and `consult/agents/openai.yaml`
+  after the Milestone 1 edits and confirmed they now align on evidence-backed
+  consultation, current-behavior grounding, bounded research, and explicit
+  plan carry-forward guidance without turning `consult` into `plan` or
+  `execute`.
+- [2026-04-15] Ran `find consult -maxdepth 3 -type f | sort` and confirmed the
+  shipped `consult/` surface remains intentionally narrow:
+  `consult/SKILL.md` and `consult/agents/openai.yaml`.
+- [2026-04-15] Ran
+  `rg -n 'current behavior|durable task state|research theater|Plan carry-forward|recommend .*plan|recommend .*execute|start from exploration|safest next move' consult/SKILL.md consult/agents/openai.yaml README.md AGENTS.md`
+  and confirmed the refreshed `consult` contract is present in the shipped
+  skill and wrapper, but this check alone was not sufficient to prove the full
+  `README.md` invocation flow still matched the refreshed trigger guidance.
+- [2026-04-15] Ran `git diff --check` after the Milestone 1 contract edits; it
+  passed with no whitespace or patch-format issues.
+- [2026-04-15] Re-read the shipped workflow in `README.md` and found one
+  invocation-flow mismatch: step 4 incorrectly said to start every task with
+  `consult`, which conflicted with the refreshed `consult` trigger that now
+  routes already-clear bounded work to `execute` and already-clear durable work
+  to `plan`.
+- [2026-04-15] Updated `README.md` so the shipped flow now invokes `consult`
+  only when the next move is not yet clear, then re-ran the contract re-reads,
+  targeted `rg` checks, file-presence check, and `git diff --check`.
 
 ## Risks
 
@@ -81,23 +139,56 @@ review.
 - Should `consult` include a stronger rule for when it must surface “this
   belongs in a plan file”?
 
+## Blockers
+
+- None currently. If Phase 03 truth sync widens beyond `consult`, `verify`,
+  `AGENTS.md`, and `README.md`, stop and ask before expanding scope.
+
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
+
+Milestone 1 note:
+
+- Refreshed `consult/SKILL.md` so it explicitly grounds consultation in current
+  repo truth, keeps the work bounded, and surfaces concrete plan carry-forward
+  data when durable task state is warranted.
+- Synced `consult/agents/openai.yaml` so the shipped wrapper prompt matches the
+  refreshed skill contract.
+- Updated `README.md` so the shipped invocation flow no longer requires
+  `consult` for already-clear tasks; `AGENTS.md` remained accurate without
+  changes in this slice.
 
 ## Decision Log
 
 - [2026-04-14] Keep `consult` and `verify` separate from planning and execution
   instead of collapsing them into broader meta-skills.
+- [2026-04-15] Keep Milestone 1 scoped to `consult/` and its wrapper only;
+  leave broader trigger-tightening and `verify` contract work to later
+  milestones unless repo-truth docs become false.
+- [2026-04-15] Make `consult` emit explicit `Plan carry-forward` guidance
+  instead of creating or updating plan files directly, so the boundary with
+  `plan` stays sharp while still preserving high-signal handoff material.
 
 ## Discoveries
 
 - [2026-04-14] `consult` and `verify` are the decision/review pair in the
   workflow and deserve their own refresh phase rather than being spread across
   unrelated work.
+- [2026-04-15] `consult/agents/openai.yaml` and `verify/agents/openai.yaml`
+  are part of the shipped skill surface, so Phase 03 should verify wrapper
+  prompts stay aligned whenever trigger descriptions or default prompts change.
+- [2026-04-15] The pre-refresh `consult` skill already had the right high-level
+  role, so Milestone 1 mainly needed sharper execution guidance around current
+  behavior, bounded research, and explicit plan handoff content rather than a
+  broader repo-truth rewrite.
+- [2026-04-15] `AGENTS.md` already described `consult` closely enough for
+  Milestone 1, but `README.md` still needed one invocation-flow fix once the
+  refreshed trigger boundary made the old "start every task with consult"
+  wording false.
 
 ## Outcomes / Retrospective
 
