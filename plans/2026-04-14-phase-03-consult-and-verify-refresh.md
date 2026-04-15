@@ -146,6 +146,34 @@ review.
   `verify/agents/openai.yaml` so the shipped wrapper prompts now explicitly
   match the Milestone 2 anti-trigger boundaries in the corresponding
   `SKILL.md` files, then re-ran the bounded contract checks and verification.
+- [2026-04-15] Re-read `AGENTS.md`, `README.md`, `verify/SKILL.md`, and
+  `verify/agents/openai.yaml` after the Milestone 3 edits and confirmed they
+  now align on distinct `plan`, `implementation`, and `claims` review
+  targets, findings-first output, honest blocked-check reporting, and explicit
+  `fail` handling when required `specs` or `tests` sync is missing.
+- [2026-04-15] Ran `find verify -maxdepth 3 -type f | sort` and confirmed the
+  shipped `verify/` surface remains intentionally narrow:
+  `verify/SKILL.md` and `verify/agents/openai.yaml`.
+- [2026-04-15] Ran
+  `rg -n 'distinct verification targets|findings first|blocked checks|required \`specs\` or \`tests\` sync is a failure|required \`specs\` or \`tests\` sync is \`fail\`|material claim unproven|plan, implementation, or claim review' AGENTS.md README.md verify/SKILL.md verify/agents/openai.yaml`
+  and confirmed the refreshed `verify` evidence and verdict contract is
+  present across the shipped skill, wrapper, and repo-truth docs.
+- [2026-04-15] Ran `git diff --check` after the Milestone 3 contract edits; it
+  passed with no whitespace or patch-format issues.
+- [2026-04-15] A follow-up verification pass found one remaining repo-truth
+  gap: `AGENTS.md` still described `verify` too generically and did not yet
+  name distinct plan, implementation, and claim review targets even though the
+  refreshed `README.md` and shipped `verify` surfaces did.
+- [2026-04-15] Updated `AGENTS.md` so the authoritative one-line `verify`
+  summary now matches the shipped target distinction, then re-ran the bounded
+  Phase 03 checks and verification.
+- [2026-04-15] Re-ran `git diff --check` after the `AGENTS.md` sync; it passed
+  with no whitespace or patch-format issues.
+- [2026-04-15] Re-ran
+  `rg -n 'treat plan review|implementation review, and claim review as distinct targets|identify whether the target is a plan, implementation, or claim review|return findings first|blocked checks|missing required \`specs\` or \`tests\` sync' AGENTS.md README.md verify/SKILL.md verify/agents/openai.yaml`
+  and confirmed the authoritative contract, shipped usage guidance, skill, and
+  wrapper now all expose the tightened `verify` target distinction and
+  findings-first evidence contract.
 
 ## Risks
 
@@ -156,8 +184,6 @@ review.
 
 ## Open Questions
 
-- Should `verify` explicitly mention plan-only verification examples once the
-  `plan` skill exists?
 - Should `consult` include a stronger rule for when it must surface “this
   belongs in a plan file”?
 
@@ -170,7 +196,7 @@ review.
 
 - [x] Milestone 1
 - [x] Milestone 2
-- [ ] Milestone 3
+- [x] Milestone 3
 - [ ] Milestone 4
 
 Milestone 1 note:
@@ -205,6 +231,23 @@ Milestone 2 note:
   `plan`, and implementation requests to `execute` in the same places as the
   refreshed skill contracts.
 
+Milestone 3 note:
+
+- Refreshed `verify/SKILL.md` so plan review, implementation review, and claim
+  checks are now distinct targets with target-specific obligations, findings-
+  first output, honest blocked-check reporting, and explicit `fail` handling
+  for missing required `specs` or `tests` sync.
+- Synced `verify/agents/openai.yaml` so the shipped wrapper prompt now matches
+  the refreshed skill contract on target selection, findings-first output,
+  blocked-check reporting, and missing-sync failure handling.
+- Updated the minimal durable repo truth in `AGENTS.md` and `README.md` so the
+  authoritative workflow summary and shipped usage guidance both reflect the
+  stricter `verify` verdict and evidence contract without pulling Milestone 4
+  boundary work forward.
+- Re-synced `AGENTS.md` after a follow-up verification pass found its one-line
+  `verify` summary still lagged behind the shipped target distinction, then
+  re-ran the bounded Phase 03 verification checks.
+
 ## Decision Log
 
 - [2026-04-14] Keep `consult` and `verify` separate from planning and execution
@@ -223,6 +266,14 @@ Milestone 2 note:
   guidance is durable workflow contract, not just wrapper copy; leaving
   `AGENTS.md` broad while the shipped skill surfaces became narrower would have
   left the repo's top-priority source of truth underspecified.
+- [2026-04-15] Treat `plan`, `implementation`, and `claims` as first-class
+  `verify` targets in the shipped contract instead of leaving that distinction
+  implicit in examples, so the review obligations and findings-first output
+  stay unambiguous.
+- [2026-04-15] Treat missing required `specs` or `tests` sync as `fail` when
+  the obligation is clear, because `verify` is the workflow gate that enforces
+  explicit follow-through from `plan` and `execute`, not a place to downgrade
+  those misses into optional risk notes.
 
 ## Discoveries
 
@@ -251,6 +302,17 @@ Milestone 2 note:
   just tightened positive trigger language; otherwise the shipped surface still
   leaves overlap ambiguity even when the underlying `SKILL.md` contracts are
   correct.
+- [2026-04-15] The shipped `verify` skill already had the right adversarial
+  posture, but its output and verdict contract was still too generic to make
+  blocked evidence and missing required sync reliably actionable.
+- [2026-04-15] `AGENTS.md` and the `README.md` verify summary both needed a
+  small Milestone 3 sync as well; otherwise the wrapper and `SKILL.md` would
+  claim stricter findings-first and fail-on-missing-sync behavior than the
+  authoritative repo truth.
+- [2026-04-15] The one-line `AGENTS.md` skill summaries need the same level of
+  target-shape specificity as the shipped `README.md` and `SKILL.md` files;
+  otherwise a later verification pass can correctly reject the slice even when
+  the deeper `verify` contract is already aligned.
 
 ## Outcomes / Retrospective
 

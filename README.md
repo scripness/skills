@@ -155,11 +155,18 @@ Owns adversarial review.
 
 - trigger when there is already a concrete plan, implementation slice, diff,
   doc change, or claim to judge
+- treat plans, implementation slices, and claims as distinct verification
+  targets
 - verify plans before implementation
 - verify implementation slices after coding
 - verify final diffs or PRs as a code reviewer
 - fact-check concrete technical claims when judgment, not exploration, is the
   task
+- return findings first
+- run the smallest meaningful mechanical checks and report blocked checks
+  honestly
+- missing required `specs` or `tests` sync is a failure when the obligation is
+  clear
 - do not use when the next move is still unclear; use `consult`
 - do not use to implement fixes or create plan files; use `execute` or `plan`
 - keep findings grounded in code, specs, tests, and command evidence
@@ -277,6 +284,7 @@ Review the work:
 ```text
 Use verify.
 Review <plan path>, <implementation slice>, <diff>, or <claim> against repo
-truth and tests.
-Findings first.
+truth, required sync, and the smallest meaningful checks.
+Identify the target type, return findings first, and say if checks were
+blocked.
 ```

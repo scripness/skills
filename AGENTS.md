@@ -96,8 +96,11 @@ Use the current shipped skills as follows:
 - `tests`: bootstrap or sync executable truth when this repo starts gaining real
   validators, eval runners, or other testable behavior.
 - `verify`: adversarially review a concrete plan, implementation slice, diff,
-  doc change, or claim against repo truth and checks; do not use it for
-  open-ended exploration or implementation.
+  doc change, or claim against repo truth and checks; treat plan review,
+  implementation review, and claim review as distinct targets; return findings
+  first, report blocked checks honestly, and treat missing required
+  `specs`/`tests` sync as `fail` when the obligation is clear; do not use it
+  for open-ended exploration or implementation.
 
 For roadmap execution in this repo, use the phase plans plus the shipped
 `execute` and `verify` skills in fresh sessions, and keep the legacy prompt
