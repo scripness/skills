@@ -15,14 +15,11 @@ system that should let a fresh agent go from `0 -> 100` in any target repo:
 Shipped skills today:
 
 - `consult`
+- `execute`
 - `plan`
 - `specs`
 - `tests`
 - `verify`
-
-Planned next skill:
-
-- `execute`
 
 Current roadmap:
 - [TODO.md](TODO.md)
@@ -35,7 +32,7 @@ Current execution plans for building the missing system:
 - [plans/2026-04-14-phase-05-evaluation-harness.md](plans/2026-04-14-phase-05-evaluation-harness.md)
 - [plans/2026-04-14-phase-06-tooling-and-final-docs.md](plans/2026-04-14-phase-06-tooling-and-final-docs.md)
 
-Temporary fresh-session prompts for executing that roadmap:
+Legacy bootstrap prompts preserved for reference:
 - [PROMPT_execute.md](PROMPT_execute.md)
 - [PROMPT_verify.md](PROMPT_verify.md)
 
@@ -62,6 +59,7 @@ Important:
 In this repo, the skills live at the repo root:
 
 - [consult/SKILL.md](consult/SKILL.md)
+- [execute/SKILL.md](execute/SKILL.md)
 - [plan/SKILL.md](plan/SKILL.md)
 - [specs/SKILL.md](specs/SKILL.md)
 - [tests/SKILL.md](tests/SKILL.md)
@@ -86,6 +84,10 @@ Use the current shipped skills as follows:
 
 - `consult`: clarify repo direction, workflow design, tradeoffs, and roadmap
   decisions before implementation.
+- `execute`: implement one bounded task directly when it is still locally
+  clear, or execute one bounded slice from an explicit plan path, run the
+  smallest meaningful checks, complete required `specs`/`tests` follow-through,
+  and hand off adversarial review to `verify`.
 - `plan`: create or maintain living task plans when work needs durable state
   across sessions, milestones, review loops, or fresh-session restarts.
 - `specs`: bootstrap or sync repo truth when `AGENTS.md`, spec assets, or
@@ -95,9 +97,9 @@ Use the current shipped skills as follows:
 - `verify`: adversarially review plans, docs, implementation, and claimed
   workflow behavior.
 
-Until `execute` is shipped, use the phase plans, the shipped `plan` skill, and
-`PROMPT_execute.md` plus `PROMPT_verify.md` to emulate the future
-plan-driven execution workflow in fresh sessions.
+For roadmap execution in this repo, use the phase plans plus the shipped
+`execute` and `verify` skills in fresh sessions, and keep the legacy prompt
+files as reference-only bootstrap artifacts.
 
 Shipped `plan` contract for this repo:
 
@@ -121,7 +123,7 @@ Shipped `plan` contract for this repo:
 - hand off to `execute` and `verify` with the explicit plan path rather than
   asking a later session to guess the active plan
 
-Planned `execute` contract for this repo:
+Shipped `execute` contract for this repo:
 
 - `execute` owns implementation and bounded mechanical checks only; `verify`
   owns adversarial review
@@ -142,6 +144,8 @@ Planned `execute` contract for this repo:
   `plan`; never guess the latest plan file
 - in plan-driven mode, implement only one milestone or other bounded slice in a
   fresh session, then update the plan before stopping
+- complete required `specs` or `tests` follow-through before claiming a slice
+  is done; if that follow-through is blocked, stop and report the blocker
 - hand off explicitly to `verify` after each slice rather than absorbing review
   behavior into `execute`
 
@@ -151,9 +155,9 @@ When working on the roadmap:
 
 1. Read `AGENTS.md`, `TODO.md`, and the active phase plan.
 2. Use a fresh session per bounded milestone or slice.
-3. Use [PROMPT_execute.md](PROMPT_execute.md) with the explicit plan path for
-   implementation while `execute` is still not shipped here.
-4. Use [PROMPT_verify.md](PROMPT_verify.md) with the same plan path for review.
+3. Use [execute/SKILL.md](execute/SKILL.md) with the explicit plan path for
+   implementation.
+4. Use [verify/SKILL.md](verify/SKILL.md) with the same plan path for review.
 5. Update the plan before stopping.
 6. Move to the next phase only after the current phase is actually complete.
 
@@ -202,6 +206,7 @@ Never:
 ├── PROMPT_execute.md
 ├── PROMPT_verify.md
 ├── consult/
+├── execute/
 ├── plan/
 ├── specs/
 ├── tests/
@@ -234,8 +239,8 @@ commands here and keep them current.
 - Keep `AGENTS.md` concise and operational.
 - Keep durable roadmap and contract truth in `TODO.md` and `README.md`.
 - Keep phase-local state in `plans/*.md`.
-- Keep temporary plan-driven execution protocol in `PROMPT_execute.md` and
-  `PROMPT_verify.md` until the real `execute` skill ships.
+- Keep `PROMPT_execute.md` and `PROMPT_verify.md` only as legacy bootstrap
+  artifacts now that the real `execute` skill is shipped.
 - Use ASCII by default.
 - Prefer proportional edits over broad rewrites.
 

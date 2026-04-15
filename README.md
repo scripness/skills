@@ -19,21 +19,17 @@ client-specific feature.
 Current shipped skills are:
 
 - `consult`
+- `execute`
 - `plan`
 - `specs`
 - `tests`
 - `verify`
 
-Planned next skill is:
+Legacy bootstrap prompts from the pre-`execute` loop are still checked in for
+reference at [PROMPT_execute.md](./PROMPT_execute.md) and
+[PROMPT_verify.md](./PROMPT_verify.md).
 
-- `execute`
-
-Until `execute` ships, this repo uses the shipped `plan` skill plus explicit
-`plans/*.md` files and [PROMPT_execute.md](./PROMPT_execute.md) plus
-[PROMPT_verify.md](./PROMPT_verify.md) to emulate the plan-driven execution
-loop in fresh sessions.
-
-The intended six-skill end-state is:
+The shipped six-skill workflow is:
 
 - `specs`
 - `tests`
@@ -118,9 +114,9 @@ Owns living task plans.
 - hold milestones, verification, discoveries, decisions, blockers, and progress
 - hand off to `execute` and `verify` with that explicit plan path
 
-### `execute` (planned)
+### `execute`
 
-Will own implementation after it ships.
+Owns implementation.
 
 - trigger when the user wants implementation now and either the task is still
   locally clear or there is already one explicit `plans/*.md` path to execute
@@ -141,6 +137,8 @@ Will own implementation after it ships.
   in a fresh session, then update the plan before stopping
 - own implementation and bounded mechanical checks only; hand adversarial
   review back to `verify`
+- complete required `specs` or `tests` follow-through before claiming the
+  slice is done
 - take over after `plan` has produced an explicit path; do not own plan
   creation or task-shaping
 - read repo truth before editing
@@ -158,9 +156,8 @@ Owns adversarial review.
 
 ## Target 0 -> 100 Flow
 
-This is the intended workflow after `execute` ships. Today this repo already
-ships `plan`, but still bootstraps the plan-driven execution step with explicit
-`plans/*.md` files and the bootstrap prompts in this repo.
+This is the shipped workflow for bringing the repo truth, task truth, and code
+reality back into alignment in a fresh session.
 
 1. Manually copy the shipped skill directories from `scripness/skills` into
    `.agents/skills/` in the repo you want to work on.
@@ -203,11 +200,8 @@ ships `plan`, but still bootstraps the plan-driven execution step with explicit
 
 ## Example Invocation Pattern
 
-The `execute` example below describes the target workflow after that skill
-ships. Today this repo already ships `plan`, but still bootstraps
-plan-driven implementation with explicit plan files plus
-[PROMPT_execute.md](./PROMPT_execute.md) and
-[PROMPT_verify.md](./PROMPT_verify.md).
+The examples below show the shipped workflow. The bootstrap prompt files remain
+in the repo only as reference artifacts from the pre-`execute` rollout.
 
 Bootstrap repo truth:
 
