@@ -60,8 +60,13 @@ review.
   Phase 03 verification should use bounded mechanical checks such as contract
   re-reads, targeted `rg` checks, file-presence checks, and `git diff --check`
 - Related docs or references: `PROMPT_verify.md`,
-  `plans/2026-04-14-phase-02-execute-skill.md`, and the official-source notes
-  relevant to `consult` and `verify`
+  `plans/2026-04-14-phase-02-execute-skill.md`, and the specific official
+  sources that shaped the refreshed `consult` and `verify` contracts:
+  `https://developers.openai.com/codex/skills`,
+  `https://developers.openai.com/cookbook/articles/codex_exec_plans`,
+  `https://agentskills.io/specification`,
+  `https://agentskills.io/skill-creation/best-practices`, and
+  `https://agentskills.io/skill-creation/optimizing-descriptions`
 
 ## Sync Expectations
 
@@ -74,6 +79,31 @@ review.
   the work adds executable validators or eval helpers earlier than planned;
   until then, required follow-through is bounded mechanical verification of the
   shipped skills, wrappers, and any truth-sync edits
+
+## Relevant Official-Source Grounding
+
+- `https://developers.openai.com/codex/skills` reinforced keeping skills
+  narrow, explicit about trigger boundaries, and grounded in concrete repo
+  inputs rather than vague role descriptions. Phase 03 applied that guidance by
+  tightening `consult` and `verify` triggers and anti-triggers in both
+  `SKILL.md` files and the shipped OpenAI wrappers.
+- `https://developers.openai.com/cookbook/articles/codex_exec_plans`
+  reinforced durable task state in files, fresh-session resumability, and
+  explicit handoff between planning, execution, and review. Phase 03 applied
+  that guidance by making `consult` emit plan carry-forward facts instead of
+  hidden plans in chat, and by making `verify` judge explicit plan,
+  implementation, and claim targets.
+- `https://agentskills.io/specification` reinforced concise skill contracts with
+  clear invocation semantics, required inputs, and bounded outputs. Phase 03
+  applied that guidance by spelling out the required inputs, findings-first
+  output, and explicit failure conditions for `verify`, plus the bounded
+  recommendation output for `consult`.
+- `https://agentskills.io/skill-creation/best-practices` and
+  `https://agentskills.io/skill-creation/optimizing-descriptions` reinforced
+  strong trigger descriptions, progressive disclosure, and avoiding overlapping
+  skill ownership. Phase 03 applied that guidance by sharpening the wrapper
+  descriptions, surfacing anti-trigger routing to `plan`/`execute`/`verify`,
+  and keeping minimal repo-truth sync proportional to shipped behavior.
 
 ## Milestones
 
@@ -174,6 +204,25 @@ review.
   and confirmed the authoritative contract, shipped usage guidance, skill, and
   wrapper now all expose the tightened `verify` target distinction and
   findings-first evidence contract.
+- [2026-04-15] Re-read `AGENTS.md`, `README.md`, `consult/SKILL.md`,
+  `consult/agents/openai.yaml`, `verify/SKILL.md`,
+  `verify/agents/openai.yaml`, and `PROMPT_verify.md` for the Milestone 4
+  close-out pass and confirmed the refreshed `consult` and `verify` contracts
+  already align with the new workflow boundaries and the minimal repo-truth
+  docs; no additional shipped contract edits were required in this slice.
+- [2026-04-15] Ran `find consult verify -maxdepth 3 -type f | sort`, then ran
+  `rg -n 'safest next move is not yet clear enough|do not use it to judge a concrete plan, implementation, diff, or claim|there is already a concrete plan, implementation slice, diff, or claim to judge|findings first|blocked checks|durable task state|create or maintain durable task state|implementation or claim|plan, implementation, or claim' AGENTS.md README.md consult/SKILL.md consult/agents/openai.yaml verify/SKILL.md verify/agents/openai.yaml PROMPT_verify.md`,
+  and confirmed the Phase 03 shipped surface remains narrow and the tightened
+  boundary language is still present across the skill contracts, wrappers, and
+  minimal repo-truth docs.
+- [2026-04-15] A follow-up verification pass found the plan still pointed at
+  unspecified official-source notes, which made the owned source-grounding
+  slice harder to audit from repo truth plus the plan alone.
+- [2026-04-15] Replaced that dangling source-note reference with explicit
+  official-source links and an in-file `Relevant Official-Source Grounding`
+  summary, then re-ran `git diff --check`, the targeted boundary-language
+  `rg` scan, and a targeted source-link `rg` scan to confirm the plan is now
+  self-contained enough for fresh-session verification.
 
 ## Risks
 
@@ -197,7 +246,7 @@ review.
 - [x] Milestone 1
 - [x] Milestone 2
 - [x] Milestone 3
-- [ ] Milestone 4
+- [x] Milestone 4
 
 Milestone 1 note:
 
@@ -248,6 +297,19 @@ Milestone 3 note:
   `verify` summary still lagged behind the shipped target distinction, then
   re-ran the bounded Phase 03 verification checks.
 
+Milestone 4 note:
+
+- Completed as a bounded close-out verification slice across `consult/`,
+  `verify/`, `AGENTS.md`, `README.md`, and the legacy `PROMPT_verify.md`
+  reference prompt.
+- Confirmed the earlier milestone edits already left the refreshed `consult`
+  and `verify` contracts aligned with the new workflow boundaries and the
+  minimum required repo-truth docs, so no additional shipped contract edits
+  were needed in this slice.
+- Left `PROMPT_verify.md` unchanged because it remains a compatible legacy
+  helper prompt for explicit plan-path review and widening Phase 03 truth sync
+  beyond the phase-owned shipped surfaces was unnecessary.
+
 ## Decision Log
 
 - [2026-04-14] Keep `consult` and `verify` separate from planning and execution
@@ -274,6 +336,13 @@ Milestone 3 note:
   the obligation is clear, because `verify` is the workflow gate that enforces
   explicit follow-through from `plan` and `execute`, not a place to downgrade
   those misses into optional risk notes.
+- [2026-04-15] Treat Milestone 4 as a close-out verification slice instead of
+  forcing another contract edit; once `consult/`, `verify/`, `AGENTS.md`, and
+  `README.md` were all aligned, extra truth-sync churn would not improve the
+  shipped Phase 03 surface.
+- [2026-04-15] Inline the relevant official-source grounding in this plan
+  instead of leaving a dangling external-note reference, so the Phase 03
+  source-grounding slice remains auditable from repo truth plus the plan file.
 
 ## Discoveries
 
@@ -313,7 +382,18 @@ Milestone 3 note:
   target-shape specificity as the shipped `README.md` and `SKILL.md` files;
   otherwise a later verification pass can correctly reject the slice even when
   the deeper `verify` contract is already aligned.
+- [2026-04-15] After the Milestone 3 sync, the remaining Phase 03 work was
+  plan closure rather than another shipped-surface rewrite; the minimal
+  repo-truth docs were already aligned with the refreshed skills.
+- [2026-04-15] Even when the shipped skill surfaces are aligned, the phase plan
+  still needs to carry its own durable source-grounding summary if that work is
+  in scope; otherwise the close-out claim is harder to verify fresh.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Phase 03 is complete: `consult` and `verify` now have refreshed shipped
+  contracts, aligned OpenAI wrappers, and matching minimal repo truth in
+  `AGENTS.md` and `README.md`.
+- The phase stayed proportional by tightening the skill surfaces and only
+  touching repo-truth docs when the shipped behavior would otherwise have been
+  false or underspecified.
