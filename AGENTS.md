@@ -82,8 +82,9 @@ under `.agents/skills/`.
 
 Use the current shipped skills as follows:
 
-- `consult`: clarify repo direction, workflow design, tradeoffs, and roadmap
-  decisions before implementation.
+- `consult`: clarify current behavior, viable options, key risks, and the
+  safest next move when the work is not yet clear enough to execute or plan;
+  do not use it for already-clear work or for judging a concrete target.
 - `execute`: implement one bounded task directly when it is still locally
   clear, or execute one bounded slice from an explicit plan path, run the
   smallest meaningful checks, complete required `specs`/`tests` follow-through,
@@ -94,8 +95,9 @@ Use the current shipped skills as follows:
   durable workflow docs drift from the shipped system.
 - `tests`: bootstrap or sync executable truth when this repo starts gaining real
   validators, eval runners, or other testable behavior.
-- `verify`: adversarially review plans, docs, implementation, and claimed
-  workflow behavior.
+- `verify`: adversarially review a concrete plan, implementation slice, diff,
+  doc change, or claim against repo truth and checks; do not use it for
+  open-ended exploration or implementation.
 
 For roadmap execution in this repo, use the phase plans plus the shipped
 `execute` and `verify` skills in fresh sessions, and keep the legacy prompt

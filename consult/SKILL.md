@@ -1,10 +1,11 @@
 ---
 name: consult
-description: Clarify current behavior, viable options, and key risks before planning or implementation when the safest next move is not clear yet.
+description: Clarify current behavior, viable options, and key risks when the safest next move is not yet clear enough to execute or plan.
 argument-hint: [question, topic, or task to clarify]
 ---
 
-Use this skill when the next move is not obvious yet.
+Use this skill when the next move is not yet clear enough to safely hand off to
+`execute` or `plan`.
 
 Examples:
 
@@ -19,6 +20,8 @@ Do not use this skill when:
 - the task is already clear
 - the answer is a simple file lookup
 - the user asked for implementation now
+- there is already a concrete plan, implementation slice, diff, or claim to
+  judge; use `verify`
 - the direction is already clear and the work mainly needs durable task state;
   use `plan`
 - the only open question is a narrow implementation detail that can be resolved

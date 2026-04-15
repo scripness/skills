@@ -1,11 +1,26 @@
 ---
 name: verify
-description: Adversarially verify a plan, implementation, or set of claims against repo truth and mechanical checks.
+description: Adversarially judge a concrete plan, implementation slice, or set of claims against repo truth and mechanical checks.
 argument-hint: [what to verify]
 ---
 
-Use this skill after implementation, on a proposed plan, or to fact-check a
-technical claim.
+Use this skill only when there is already a concrete target to judge: a plan,
+an implementation slice, a diff or PR, or a specific technical claim.
+
+Examples:
+
+- does this plan match repo reality and intended scope?
+- did this implementation slice actually do what it claims?
+- does this diff miss required specs/tests sync?
+- is claim X true in the current repo?
+
+Do not use this skill when:
+
+- the next move is still unclear and you need clarification or option analysis;
+  use `consult`
+- the task is to create or maintain durable task state; use `plan`
+- the user asked for implementation or fixes now; use `execute`
+- there is no concrete target yet to judge
 
 ## Inputs
 

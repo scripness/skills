@@ -124,6 +124,28 @@ review.
 - [2026-04-15] Updated `README.md` so the shipped flow now invokes `consult`
   only when the next move is not yet clear, then re-ran the contract re-reads,
   targeted `rg` checks, file-presence check, and `git diff --check`.
+- [2026-04-15] Re-read `AGENTS.md`, `README.md`, `consult/SKILL.md`,
+  `consult/agents/openai.yaml`, `verify/SKILL.md`, and
+  `verify/agents/openai.yaml` after the Milestone 2 edits and confirmed they
+  now align on `consult` only for unclear next moves, `verify` only for
+  concrete targets to judge, and explicit anti-triggers that hand plan-file
+  work back to `plan`, implementation back to `execute`, and clarification
+  back to `consult`.
+- [2026-04-15] Ran
+  `rg -n 'safest next move is not yet clear enough|concrete target to judge|do not use when the next move is still unclear|do not use for simple lookups|do not use to implement fixes|already a concrete plan, implementation slice, diff, or claim' AGENTS.md README.md consult/SKILL.md consult/agents/openai.yaml verify/SKILL.md verify/agents/openai.yaml`
+  and confirmed the tightened trigger language and anti-trigger guidance are
+  present across the shipped skill contracts, wrappers, and repo-truth docs.
+- [2026-04-15] Ran `git diff --check` after the Milestone 2 trigger and
+  invocation edits; it passed with no whitespace or patch-format issues.
+- [2026-04-15] A follow-up verification pass found the Milestone 2 wrapper
+  prompts still lagged behind the shipped skill anti-triggers: the `consult`
+  wrapper did not yet defer concrete judgment work to `verify`, and the
+  `verify` wrapper did not yet defer durable-state creation to `plan` or fix
+  requests to `execute`.
+- [2026-04-15] Updated `consult/agents/openai.yaml` and
+  `verify/agents/openai.yaml` so the shipped wrapper prompts now explicitly
+  match the Milestone 2 anti-trigger boundaries in the corresponding
+  `SKILL.md` files, then re-ran the bounded contract checks and verification.
 
 ## Risks
 
@@ -147,7 +169,7 @@ review.
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
+- [x] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
 
@@ -162,6 +184,27 @@ Milestone 1 note:
   `consult` for already-clear tasks; `AGENTS.md` remained accurate without
   changes in this slice.
 
+Milestone 2 note:
+
+- Tightened the shipped `consult` trigger and anti-trigger language in
+  `consult/SKILL.md` and `consult/agents/openai.yaml` so it now activates only
+  when the safest next move is still unclear and explicitly defers concrete
+  judgment work to `verify`.
+- Tightened the shipped `verify` trigger and invocation guidance in
+  `verify/SKILL.md` and `verify/agents/openai.yaml` so it now activates only
+  when there is already a concrete target to judge and explicitly defers
+  clarification, planning, and implementation back to `consult`, `plan`, and
+  `execute`.
+- Synced the minimal durable repo truth in `AGENTS.md` and `README.md` so the
+  authoritative workflow contract and usage guidance both reflect the sharper
+  activation boundaries without pulling Milestone 3 verdict or evidence work
+  forward.
+- Repaired the wrapper-level anti-trigger drift that a verification pass found
+  after the initial Milestone 2 edit set, so the shipped OpenAI wrappers now
+  explicitly redirect concrete judgment to `verify`, durable-state creation to
+  `plan`, and implementation requests to `execute` in the same places as the
+  refreshed skill contracts.
+
 ## Decision Log
 
 - [2026-04-14] Keep `consult` and `verify` separate from planning and execution
@@ -172,6 +215,14 @@ Milestone 1 note:
 - [2026-04-15] Make `consult` emit explicit `Plan carry-forward` guidance
   instead of creating or updating plan files directly, so the boundary with
   `plan` stays sharp while still preserving high-signal handoff material.
+- [2026-04-15] Keep Milestone 2 scoped to activation language, anti-triggers,
+  and invocation examples across the shipped skill surfaces and minimal
+  repo-truth docs; defer deeper `verify` verdict and evidence-contract changes
+  to Milestone 3.
+- [2026-04-15] Update `AGENTS.md` in this slice because tightened trigger
+  guidance is durable workflow contract, not just wrapper copy; leaving
+  `AGENTS.md` broad while the shipped skill surfaces became narrower would have
+  left the repo's top-priority source of truth underspecified.
 
 ## Discoveries
 
@@ -189,6 +240,17 @@ Milestone 1 note:
   Milestone 1, but `README.md` still needed one invocation-flow fix once the
   refreshed trigger boundary made the old "start every task with consult"
   wording false.
+- [2026-04-15] `verify` already had the right adversarial-review posture, but
+  it still lacked explicit anti-triggers; adding those at the skill and wrapper
+  layer reduced overlap with `consult`, `plan`, and `execute` without changing
+  the deeper review contract yet.
+- [2026-04-15] Once both `consult` and `verify` triggers became more explicit,
+  `AGENTS.md` needed a small sync after all because its one-line role summaries
+  are the authoritative cross-client contract for this repo.
+- [2026-04-15] The wrapper prompts need explicit anti-trigger routing, not
+  just tightened positive trigger language; otherwise the shipped surface still
+  leaves overlap ambiguity even when the underlying `SKILL.md` contracts are
+  correct.
 
 ## Outcomes / Retrospective
 

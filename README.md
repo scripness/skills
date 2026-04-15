@@ -87,10 +87,14 @@ Owns test truth.
 
 Owns research and clarification.
 
+- trigger when the safest next move is not yet clear enough to hand off to
+  `execute` or `plan`
 - start from exploration, not blind implementation
 - understand the current code and specs
 - compare options, risks, and tradeoffs
 - recommend the safest next move
+- do not use for simple lookups, already-clear work, or judging a concrete
+  plan, implementation, diff, or claim; use `verify` for judgment
 - hand off to `plan` only when durable task state is needed after the direction
   is already clear
 
@@ -149,9 +153,15 @@ Owns implementation.
 
 Owns adversarial review.
 
+- trigger when there is already a concrete plan, implementation slice, diff,
+  doc change, or claim to judge
 - verify plans before implementation
 - verify implementation slices after coding
 - verify final diffs or PRs as a code reviewer
+- fact-check concrete technical claims when judgment, not exploration, is the
+  task
+- do not use when the next move is still unclear; use `consult`
+- do not use to implement fixes or create plan files; use `execute` or `plan`
 - keep findings grounded in code, specs, tests, and command evidence
 
 ## Target 0 -> 100 Flow
@@ -223,6 +233,7 @@ Research a task:
 
 ```text
 Use consult.
+The safest next move is not clear yet.
 Read the repo, relevant specs, and tests.
 Clarify the safest next move for <task>.
 ```
@@ -265,6 +276,7 @@ Review the work:
 
 ```text
 Use verify.
-Review the plan, implementation, or final diff against repo truth and tests.
+Review <plan path>, <implementation slice>, <diff>, or <claim> against repo
+truth and tests.
 Findings first.
 ```
