@@ -70,9 +70,12 @@ Owns repo truth.
 
 - trigger when repo truth is missing, stale, or too weak for safe agent work
 - bootstrap and sync `AGENTS.md`, `CLAUDE.md` symlink, and `specs/`
+- discover the actual repo topology and owning paths before writing guidance
 - evaluate codebase organization quality for agentic work
 - improve boundaries, naming, navigability, and discoverability when the
   current structure reduces agent reliability
+- ignore generated, vendor, cache, and copied-artifact noise by default unless
+  the task explicitly targets it
 - keep durable architecture and domain truth aligned with code reality
 
 ### `tests`
@@ -80,10 +83,19 @@ Owns repo truth.
 Owns test truth.
 
 - trigger when test truth is missing, stale, or coverage gaps block safe work
-- bootstrap or extend the test layers that make sense for the repo
+- bootstrap, extend, or sync the test layers that make sense for the repo's
+  actual topology
+- discover suite roots, owning packages/apps/services, and runner commands
+  before changing coverage
 - sync tests with changed behavior over time
+- on weak repos, start from the smallest credible automated layer before
+  suggesting broader expansion
 - keep coverage honest across unit, integration, e2e, smoke, security,
   performance, and other applicable layers
+- report remaining blocked or uncovered layers explicitly instead of implying
+  full coverage
+- ignore generated, vendor, cache, and copied-artifact noise by default unless
+  the task explicitly targets it
 
 ### `consult`
 
@@ -227,7 +239,8 @@ Bootstrap repo truth:
 ```text
 Use specs.
 Prepare this repo for reliable agentic work.
-Create or sync AGENTS.md, specs/, and any missing repo-truth guidance.
+Map the real repo topology, ignore generated/vendor noise by default, and
+create or sync AGENTS.md, specs/, and any missing repo-truth guidance.
 Evaluate whether the codebase organization is clean enough for agents.
 ```
 
@@ -235,7 +248,8 @@ Bootstrap test truth:
 
 ```text
 Use tests.
-Audit the current test layers and bring them up to the level this repo needs.
+Audit the repo's actual test topology, choose the smallest credible layers
+that matter, and bring them up to the level this repo needs.
 ```
 
 Research a task:
