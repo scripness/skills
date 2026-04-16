@@ -1,8 +1,157 @@
 {
   "version": 1,
   "skill": "plan",
-  "status": "placeholder",
-  "description": "Milestone 1 entrypoint for plan eval definitions. Milestone 3 adds concrete trigger and workflow cases.",
-  "trigger_evals": [],
-  "workflow_evals": []
+  "status": "milestone_3_seeded",
+  "description": "First concrete plan trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "plan-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise plan's trigger boundary on tasks that need durable state.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "plan-trigger-multi-session-rollout",
+          "expected_outcome": "trigger",
+          "prompt": "Create a resumable plan file for a multi-milestone evaluation-harness rollout that will span fresh sessions and verification loops.",
+          "why": "The direction is already clear and durable task state is required."
+        },
+        {
+          "id": "plan-near-miss-simple-lookup",
+          "expected_outcome": "no_trigger",
+          "prompt": "Tell me which file defines the default eval runtime profile.",
+          "why": "A simple lookup should not promote into plan."
+        },
+        {
+          "id": "plan-near-miss-locally-clear-execute",
+          "expected_outcome": "no_trigger",
+          "prompt": "Fix one JSON typo in evals/runtime.json and stop.",
+          "why": "The work is still locally clear and bounded, so execute owns it."
+        }
+      ]
+    },
+    {
+      "id": "plan-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Protect plan's ownership of durable task state without absorbing consult or verify work.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "plan-trigger-explicit-plan-request",
+          "expected_outcome": "trigger",
+          "prompt": "Write plans/2026-04-20-phase-06-tooling.md for the remaining tooling work, including milestones, blockers, and specs/tests follow-through.",
+          "why": "The user explicitly requests a resumable plan path."
+        },
+        {
+          "id": "plan-near-miss-consult",
+          "expected_outcome": "no_trigger",
+          "prompt": "I am not sure whether the next move should be consult, specs, or tests. Read the repo and recommend the safest next move.",
+          "why": "The direction is still unclear, so consult owns it."
+        },
+        {
+          "id": "plan-near-miss-verify",
+          "expected_outcome": "no_trigger",
+          "prompt": "Review this existing plan for missing milestones or stale claims.",
+          "why": "Adversarial plan judgment belongs to verify."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "plan-workflow-train-create-plan",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge plan creation quality for a new multi-milestone task that needs durable state.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the plan skill materially improves resumable task-state structure over an unguided answer."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Create a new plan file for adding evaluation-harness tooling across multiple milestones and fresh-session handoffs.",
+        "repo_state": [
+          "AGENTS.md requires one explicit plans/YYYY-MM-DD-short-task-slug.md path.",
+          "The task will span implementation, verification, and documentation updates.",
+          "Specs and tests follow-through must be named explicitly inside the plan."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "TODO.md",
+          "README.md"
+        ]
+      },
+      "assertions": [
+        "Chooses one explicit plan path and uses it in the handoff.",
+        "Captures goal, scope, milestones, verification, blockers, and resumability details.",
+        "Names specs and tests follow-through explicitly instead of implying them.",
+        "Keeps the plan task-local rather than turning it into a repo-wide backlog."
+      ],
+      "review_questions": [
+        "Could a fresh session resume safely from repo truth plus the plan file alone?",
+        "Are the milestones bounded enough for execute to take one slice at a time?"
+      ]
+    },
+    {
+      "id": "plan-workflow-validation-update-existing-plan",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge plan update quality after a bounded implementation slice has finished.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the plan skill preserves in-place updates and resumability after a bounded slice."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Update plans/2026-04-14-phase-05-evaluation-harness.md after the Milestone 3 work and preserve resumability for the next fresh session.",
+        "repo_state": [
+          "Milestones 1 and 2 are already complete.",
+          "Milestone 3 has just been implemented in one bounded execute slice.",
+          "Milestones 4 and 5 remain pending."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "plans/2026-04-14-phase-05-evaluation-harness.md"
+        ]
+      },
+      "assertions": [
+        "Updates the existing plan in place instead of creating a duplicate.",
+        "Records Progress, Decision Log, Discoveries, Verification, and any new blockers.",
+        "Marks the current milestone accurately as complete, partial, or blocked.",
+        "Leaves the next handoff path explicit for execute and verify."
+      ],
+      "review_questions": [
+        "Does the updated plan remain compact but genuinely resumable?",
+        "Does it preserve only the task-local truth needed for the next session?"
+      ]
+    }
+  ]
 }

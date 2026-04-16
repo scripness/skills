@@ -164,6 +164,44 @@ of judged only by intuition.
   describe the same Milestone 2 governance rules.
 - [2026-04-16] Ran `git diff --check` after the Milestone 2 edits; it passed
   with no whitespace or patch-format issues.
+- [2026-04-16] Re-read `README.md`, `evals/README.md`, the six
+  `<skill>/evals/evals.json` files, and this plan after the Milestone 3 edits
+  and confirmed they now align on the first concrete skill-local trigger and
+  workflow definitions while still deferring pinned fixtures, must-run surface
+  selection, and runner helpers to Milestones 4 and 5.
+- [2026-04-16] Ran
+  `jq empty consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json evals/runtime.json`
+  and it passed after the Milestone 3 eval-definition edits.
+- [2026-04-16] Ran
+  `jq '{skill, status, trigger_packs: (.trigger_evals | length), workflow_cases: (.workflow_evals | length)}' consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and confirmed all six skills now carry two trigger packs and two workflow
+  cases with `milestone_3_seeded` status.
+- [2026-04-16] Ran
+  `rg -n "Milestones 1 through 3|must-run surface|skill-local trigger and workflow|placeholder" README.md evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and confirmed the shared docs now describe Milestone 3 honestly and no
+  shipped skill-local eval file still advertises placeholder-only state.
+- [2026-04-16] Ran `git diff --check` after the Milestone 3 edits; it passed
+  with no whitespace or patch-format issues.
+- [2026-04-16] Repaired one follow-up Milestone 3 policy gap by re-reading
+  `README.md`, `evals/README.md`, this plan, and the six
+  `<skill>/evals/evals.json` files, then converting workflow comparison
+  metadata from an unconditional flat list into required-vs-optional baselines
+  so the default previous-version comparison stays explicit and no-skill
+  baselines stay conditional.
+- [2026-04-16] Ran
+  `jq empty consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json evals/runtime.json`
+  and it passed after the comparison-metadata repair.
+- [2026-04-16] Ran
+  `jq '.workflow_evals[] | {id, comparison_targets}' consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and confirmed every workflow eval now records `previous_committed_skill_version`
+  as the required target while treating `no_skill_when_it_adds_signal` as an
+  optional target with an explicit reason.
+- [2026-04-16] Ran
+  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and confirmed the shared artifact-contract wording now matches the repaired
+  skill-local metadata.
+- [2026-04-16] Ran `git diff --check` after the comparison-metadata repair; it
+  passed with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -181,7 +219,7 @@ of judged only by intuition.
 
 - [x] Milestone 1
 - [x] Milestone 2
-- [ ] Milestone 3
+- [x] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
 
@@ -207,6 +245,24 @@ Milestone 2 note:
   shipped governance contract honestly while still deferring concrete eval
   cases, pinned fixtures, and runner helpers to later milestones.
 
+Milestone 3 note:
+
+- Replaced the six placeholder `<skill>/evals/evals.json` entrypoints with the
+  first concrete trigger and workflow definitions, using paired train and
+  validation trigger packs plus two workflow cases per shipped skill.
+- Encoded boundary-focused trigger near-misses and workflow comparison targets
+  directly in the tracked definitions so later runner work does not need to
+  guess baseline-vs-with-skill intent or the intended skill boundaries.
+- After follow-up verification found the no-skill baseline policy was still too
+  implicit, refined the workflow comparison metadata so previous-version
+  baselines are required while no-skill baselines remain explicitly optional
+  and justified per case.
+- Kept every Milestone 3 case non-must-run so Milestone 4 still owns the first
+  pinned-fixture and must-run surface decisions.
+- Synced `README.md` and `evals/README.md` so repo-facing docs now describe
+  the shipped first-case state honestly while still deferring pinned fixtures
+  and runner helpers to later milestones.
+
 ## Decision Log
 
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
@@ -226,6 +282,21 @@ Milestone 2 note:
 - [2026-04-16] Define the must-run surface contract in Milestone 2 even before
   Milestones 3 and 4 populate the concrete cases, so later slices inherit an
   explicit governance target instead of inventing one ad hoc.
+- [2026-04-16] Seed every shipped skill with the same initial Milestone 3
+  shape: one train trigger pack, one validation trigger pack, one train
+  workflow case, and one validation workflow case, so split policy and
+  boundary coverage are explicit before runner tooling exists.
+- [2026-04-16] Leave every Milestone 3 eval with `must_run: false` even on the
+  validation split so Milestone 4 can make the first deliberate must-run
+  surface decision alongside the pinned `cryptoli` fixture.
+- [2026-04-16] Record workflow `comparison_targets` in the skill-local
+  definitions now, including optional `no_skill_when_it_adds_signal`, so later
+  runner work inherits the baseline-vs-with-skill intent instead of inferring
+  it ad hoc.
+- [2026-04-16] Distinguish required comparison targets from optional ones in
+  the skill-local eval definitions so future runner work can honor the default
+  previous-version baseline while adding no-skill baselines only when the case
+  explicitly says they add signal.
 
 ## Discoveries
 
@@ -238,6 +309,18 @@ Milestone 2 note:
   dispositions before tooling exists; allowing the plan, PR, or equivalent
   change record keeps the review requirement honest without inventing a new
   tracked artifact prematurely.
+- [2026-04-16] Once concrete eval cases existed, the shared eval docs needed a
+  small repo-truth sync even though the main Milestone 3 deliverable lived in
+  skill-local JSON; otherwise the repo would keep implying that all concrete
+  cases were still future work.
+- [2026-04-16] A simple shared seed shape across all six skill-local
+  `evals/evals.json` files is enough to express split policy, boundary
+  coverage, and baseline intent without introducing runner-specific metadata
+  early.
+- [2026-04-16] A flat `comparison_targets` list was not enough to preserve the
+  conditional no-skill-baseline policy; the tracked definitions needed to
+  distinguish required and optional baselines explicitly to avoid pushing that
+  decision back onto future runner code.
 
 ## Blockers
 
@@ -245,10 +328,11 @@ Milestone 2 note:
 
 ## Outcomes / Retrospective
 
-- Milestones 1 and 2 completed by defining the tracked eval layout, the shared
-  artifact-storage contract, the canonical runtime profile, the ignored
-  generated-output root, and the explicit governance and regression-review
-  contract. Milestones 3 through 5 remain pending.
+- Milestones 1 through 3 completed by defining the tracked eval layout, the
+  shared artifact-storage contract, the canonical runtime profile, the ignored
+  generated-output root, the explicit governance and regression-review
+  contract, and the first concrete skill-local trigger and workflow cases.
+  Milestones 4 and 5 remain pending.
 
 ## Follow-up verification repair
 
@@ -265,3 +349,18 @@ Milestone 2 note:
   `git diff --check`, and
   `rg -n "author each <skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|<skill>/evals/evals.json" AGENTS.md README.md evals/README.md TODO.md plans/2026-04-14-phase-05-evaluation-harness.md`;
   they passed or confirmed the repaired contract wording.
+- [2026-04-16] Fresh verification then found one remaining Milestone 3 policy
+  gap: every workflow eval still listed `no_skill_when_it_adds_signal`
+  alongside the default previous-version baseline in one flat
+  `comparison_targets` list, which left future runner work to guess whether the
+  extra baseline was actually required.
+- [2026-04-16] Reworked the six skill-local eval definitions so workflow
+  comparison metadata now distinguishes required and optional baselines, keeps
+  `previous_committed_skill_version` as the required default, and records a
+  short per-case reason whenever `no_skill_when_it_adds_signal` is available as
+  an optional comparison.
+- [2026-04-16] Added the matching artifact-contract rule to `evals/README.md`
+  and re-ran `jq empty`, `jq '.workflow_evals[] | {id, comparison_targets}'`,
+  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`,
+  and `git diff --check`; they passed and confirmed the repaired baseline
+  policy is now explicit in tracked repo truth.

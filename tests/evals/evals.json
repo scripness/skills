@@ -1,8 +1,157 @@
 {
   "version": 1,
   "skill": "tests",
-  "status": "placeholder",
-  "description": "Milestone 1 entrypoint for tests eval definitions. Milestone 3 adds concrete trigger and workflow cases.",
-  "trigger_evals": [],
-  "workflow_evals": []
+  "status": "milestone_3_seeded",
+  "description": "First concrete tests trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "tests-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise tests' trigger boundary on behavior changes and stale executable truth.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "tests-trigger-changed-behavior-stale-coverage",
+          "expected_outcome": "trigger",
+          "prompt": "The parser now rejects empty names, but the existing unit tests still accept them. Sync the tests and run the smallest meaningful command.",
+          "why": "Changed behavior now needs executable-truth follow-through."
+        },
+        {
+          "id": "tests-near-miss-docs-only",
+          "expected_outcome": "no_trigger",
+          "prompt": "Update AGENTS.md so the Commands table matches the current repo.",
+          "why": "Durable repo-truth sync belongs to specs."
+        },
+        {
+          "id": "tests-near-miss-verify-diff",
+          "expected_outcome": "no_trigger",
+          "prompt": "Review this test diff for missing edge cases and give me a verdict.",
+          "why": "Adversarial judgment belongs to verify."
+        }
+      ]
+    },
+    {
+      "id": "tests-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Protect tests' ownership of executable truth without absorbing planning or consultation.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "tests-trigger-bootstrap-minimal-layer",
+          "expected_outcome": "trigger",
+          "prompt": "This repo has no automated coverage around the config loader, but execution work now depends on it. Add the smallest durable automated layer and report any blocked higher-layer gaps.",
+          "why": "Safe execution is blocked by missing executable truth, so tests owns the gap-close."
+        },
+        {
+          "id": "tests-near-miss-plan-file-request",
+          "expected_outcome": "no_trigger",
+          "prompt": "Create a durable plan file for the next two testing milestones and keep it resumable.",
+          "why": "Durable task-state ownership belongs to plan."
+        },
+        {
+          "id": "tests-near-miss-consult",
+          "expected_outcome": "no_trigger",
+          "prompt": "I do not know whether unit, integration, or smoke tests matter most here. Read the repo and recommend the safest next move.",
+          "why": "The decision is still unclear, so consult owns it."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "tests-workflow-train-sync-existing-suite",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether tests can sync an existing suite with changed behavior using the smallest applicable layer.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the tests skill materially improves layer selection and coverage sync on an existing suite."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "The parser now rejects empty names. Update the existing unit suite and run the smallest meaningful command.",
+        "repo_state": [
+          "The repo already has unit tests under tests/unit.",
+          "No integration or e2e layer is required for this isolated parser change.",
+          "AGENTS.md says to separate unrelated baseline failures from problems introduced by the current work."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "relevant specs",
+          "changed code",
+          "tests/unit"
+        ]
+      },
+      "assertions": [
+        "Identifies the applicable existing test layer before writing coverage.",
+        "Adds or updates tests for the changed behavior and the key edge case.",
+        "Runs a targeted command for the owning suite.",
+        "Reports unrelated baseline failures separately if they exist."
+      ],
+      "review_questions": [
+        "Do the tests prove behavior instead of implementation details?",
+        "Does the update stay proportional instead of inventing new infrastructure?"
+      ]
+    },
+    {
+      "id": "tests-workflow-validation-bootstrap-minimal-coverage",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether tests can bootstrap the minimum durable coverage on a weak repo without overstating what is now protected.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the tests skill bootstraps the smallest credible automated layer without overstating coverage."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "There is no automated coverage around the config loader, but execute work now depends on it. Add the smallest durable test layer.",
+        "repo_state": [
+          "The repo has no current tests for the config loader.",
+          "AGENTS.md prefers the smallest credible automated layer over a speculative overhaul.",
+          "Higher layers may still be relevant later but are not yet wired."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "relevant specs",
+          "config-loader code"
+        ]
+      },
+      "assertions": [
+        "Bootstraps a minimal durable automated layer instead of a full testing rewrite.",
+        "Uses the repo's existing structure and helpers when available.",
+        "States any blocked or still-uncovered higher layers explicitly."
+      ],
+      "review_questions": [
+        "Does the result improve safety without implying more coverage than was actually added?"
+      ]
+    }
+  ]
 }

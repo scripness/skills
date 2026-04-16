@@ -54,11 +54,16 @@ chance of success.
 
 ## Evaluation Harness
 
-Milestones 1 and 2 of the eval harness ship the tracked layout, storage
-contract, and governance policy.
+Milestones 1 through 3 of the eval harness ship the tracked layout, storage
+contract, governance policy, and the first concrete skill-local trigger and
+workflow definitions.
 
 - Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
   for trigger and workflow eval definitions.
+- The first concrete Milestone 3 cases live in those six skill-local
+  `evals/evals.json` files as train and validation seeds; Milestone 4 still
+  adds the initial pinned real-repo fixtures and selects the first must-run
+  regression surface.
 - `evals/runtime.json` pins the canonical default gating profile:
   `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
 - Use `train` splits for tuning and `validation` splits for regression gating;

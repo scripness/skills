@@ -1,9 +1,10 @@
 # Evaluation Harness
 
 This directory holds the tracked eval metadata for the six-skill workflow.
-Milestones 1 and 2 define the layout, artifact contract, governance rules, and
-canonical runtime profile. Later milestones add pinned fixtures and runnable
-helpers without changing the tracked-versus-generated split below.
+Milestones 1 through 3 define the layout, artifact contract, governance rules,
+canonical runtime profile, and the first skill-local trigger and workflow
+cases. Later milestones add pinned fixtures and runnable helpers without
+changing the tracked-versus-generated split below.
 
 ## Tracked Source
 
@@ -24,6 +25,10 @@ helpers without changing the tracked-versus-generated split below.
   that same skill by default.
 - Add a no-skill baseline only when it materially clarifies whether the skill
   itself is helping.
+- In skill-local eval definitions, record default baselines as required
+  comparison targets and record no-skill baselines as optional comparison
+  targets with a short reason, so later runner work does not guess when the
+  extra comparison is warranted.
 - Keep runtime changes explicit in `evals/runtime.json` so skill comparisons do
   not silently absorb runtime or model drift.
 
@@ -115,6 +120,7 @@ Each run should retain, at minimum:
 
 ## Scope Note
 
-Milestones 1 and 2 define layout, storage, baseline policy, governance, and
-review gates. Milestones 3 through 5 still own the concrete eval cases, pinned
-fixtures, and runnable helper surface.
+Milestones 1 through 3 define layout, storage, baseline policy, governance,
+review gates, and the first concrete skill-local cases. Milestones 4 and 5
+still own the pinned fixtures, initial must-run surface, and runnable helper
+surface.
