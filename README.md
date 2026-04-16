@@ -44,12 +44,29 @@ See [TODO.md](./TODO.md) for the implementation roadmap.
 
 - `AGENTS.md` and `specs/` = repo truth
 - tests = executable truth
+- `<skill>/evals/evals.json` and `evals/` = tracked eval truth
 - `plans/*.md` = task truth
 - code = implemented reality
 
 The repo should stay in a state where a fresh agent can get oriented quickly,
 find the right code paths, and make correct changes with the highest practical
 chance of success.
+
+## Evaluation Harness
+
+Milestone 1 of the eval harness ships the tracked layout and storage contract.
+
+- Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
+  for trigger and workflow eval definitions.
+- `evals/runtime.json` pins the canonical default gating profile:
+  `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
+- Compare a skill change against the previous committed version of that skill
+  by default; add a no-skill baseline only when it materially improves the
+  signal.
+- Keep generated outputs, transcripts, and temporary fixture clones under
+  ignored `.tmp/evals/`, not in tracked source.
+
+See [evals/README.md](./evals/README.md) for the shared artifact contract.
 
 ## Refresh Workflow
 

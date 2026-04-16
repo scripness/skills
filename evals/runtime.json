@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "default_profile": "canonical",
+  "profiles": {
+    "canonical": {
+      "runtime": "codex",
+      "model": "gpt-5.4",
+      "reasoning_effort": "xhigh",
+      "purpose": "Default regression-gating profile for the six-skill evaluation harness."
+    }
+  },
+  "configuration_surface": {
+    "allow_additional_profiles": true,
+    "override_axes": [
+      "runtime",
+      "model",
+      "reasoning_effort"
+    ],
+    "notes": [
+      "Keep the canonical profile pinned for default gating.",
+      "Add future profiles here instead of rewriting skill-local eval definitions."
+    ]
+  }
+}

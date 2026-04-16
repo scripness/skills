@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "skill": "specs",
+  "status": "placeholder",
+  "description": "Milestone 1 entrypoint for specs eval definitions. Milestone 3 adds concrete trigger and workflow cases.",
+  "trigger_evals": [],
+  "workflow_evals": []
+}

@@ -68,6 +68,20 @@ In this repo, the skills live at the repo root:
 When these skills are copied into a target repo, they are intended to live
 under `.agents/skills/`.
 
+## Evaluation Harness Layout
+
+- Tracked eval definitions live with the skills they validate under
+  `<skill>/evals/evals.json`.
+- Shared harness metadata lives under repo-root `evals/`;
+  `evals/README.md` owns the artifact contract and `evals/runtime.json` pins
+  the default gating profile.
+- Future shared fixture manifests and thin runner helpers also belong under
+  repo-root `evals/`.
+- Generated eval outputs, temporary fixture clones, and other run artifacts
+  must stay outside tracked source under ignored `.tmp/evals/`.
+- Compare against the previous committed version of the same skill by default;
+  add a no-skill baseline only when it adds signal.
+
 ## Target-Repo Refresh Workflow
 
 `AGENTS.md` owns the authoritative refresh-workflow contract for this repo.
@@ -213,6 +227,7 @@ Never:
 ├── PROMPT_execute.md
 ├── PROMPT_verify.md
 ├── consult/
+├── evals/
 ├── execute/
 ├── plan/
 ├── specs/
@@ -222,6 +237,7 @@ Never:
 ```
 
 Bootstrap assets live under `specs/assets/`.
+Generated eval outputs live under ignored `.tmp/evals/`.
 
 ## Commands
 

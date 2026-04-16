@@ -133,6 +133,24 @@ of judged only by intuition.
   change.
 - Confirm the exact local eval-runner commands are documented in `AGENTS.md`
   once the runner surface exists.
+- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `TODO.md`, and this plan after
+  the Milestone 1 edits and confirmed they now align on the tracked eval
+  layout, baseline comparison policy, canonical runtime profile, and ignored
+  `.tmp/evals/` generated-output root without claiming that runners or
+  governance policy already ship.
+- [2026-04-16] Ran
+  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and it passed.
+- [2026-04-16] Ran
+  `rg -n 'Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|<skill>/evals/evals.json' AGENTS.md README.md evals/README.md`
+  and confirmed the repo-truth docs and shared harness contract describe the
+  same Milestone 1 layout and baseline policy.
+- [2026-04-16] Ran
+  `find consult/evals execute/evals plan/evals specs/evals tests/evals verify/evals evals -maxdepth 2 -type f | sort`
+  and confirmed the new tracked eval skeleton exists only at the intended
+  Milestone 1 paths.
+- [2026-04-16] Ran `git diff --check` after the Milestone 1 edits; it passed
+  with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -151,22 +169,63 @@ of judged only by intuition.
 
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
 
+Milestone 1 note:
+
+- Added the shared harness skeleton at repo root with `evals/README.md`,
+  `evals/runtime.json`, and the ignored `.tmp/evals/` generated-output root.
+- Added placeholder `evals/evals.json` entrypoints under each shipped skill so
+  the tracked layout is defined without pulling real eval cases forward from
+  Milestone 3.
+- Synced `AGENTS.md` and `README.md` so repo truth now describes the eval
+  layout, artifact contract, and default baseline policy honestly.
+
 ## Decision Log
 
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
   runtime, but keep it intentionally configurable later.
+- [2026-04-16] Define the per-skill eval layout in Milestone 1 with placeholder
+  `<skill>/evals/evals.json` entrypoints instead of real cases so the repo can
+  ship the storage contract now without collapsing Milestones 1 and 3.
+- [2026-04-16] Keep the baseline comparison policy and generated-output root in
+  repo-facing docs now, but defer split policy, repeated runs, thresholds, and
+  must-run governance to Milestone 2 as planned.
 
 ## Discoveries
 
 - [2026-04-14] Without concrete eval artifacts and pinned fixtures, skill drift
   is too easy to miss or misattribute to provider/runtime changes.
+- [2026-04-16] This repo had no existing ignore coverage, so introducing the
+  generated eval root required adding repo-level `.gitignore` coverage in the
+  same slice rather than relying on convention alone.
+
+## Blockers
+
+- None currently.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Milestone 1 completed by defining the tracked eval layout, the shared
+  artifact-storage contract, the canonical runtime profile, and the ignored
+  generated-output root. Milestones 2 through 5 remain pending.
+
+## Follow-up verification repair
+
+- [2026-04-16] Fresh verification found one remaining Milestone 1 repo-truth
+  sync gap: `evals/README.md` described the tracked eval layout but did not
+  explicitly say that each `<skill>/evals/evals.json` is hand-authored tracked
+  input rather than generated output.
+- [2026-04-16] Added that missing contract rule to `evals/README.md` so the
+  shipped artifact contract now matches `TODO.md`'s Milestone 1 intent and the
+  plan's completion claim.
+- [2026-04-16] Re-ran
+  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`,
+  `git check-ignore -v .tmp/evals/example-run/artifact.json`,
+  `git diff --check`, and
+  `rg -n "author each <skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|<skill>/evals/evals.json" AGENTS.md README.md evals/README.md TODO.md plans/2026-04-14-phase-05-evaluation-harness.md`;
+  they passed or confirmed the repaired contract wording.

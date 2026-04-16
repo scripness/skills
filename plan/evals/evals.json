@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "skill": "plan",
+  "status": "placeholder",
+  "description": "Milestone 1 entrypoint for plan eval definitions. Milestone 3 adds concrete trigger and workflow cases.",
+  "trigger_evals": [],
+  "workflow_evals": []
+}
