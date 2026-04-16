@@ -54,19 +54,29 @@ chance of success.
 
 ## Evaluation Harness
 
-Milestone 1 of the eval harness ships the tracked layout and storage contract.
+Milestones 1 and 2 of the eval harness ship the tracked layout, storage
+contract, and governance policy.
 
 - Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
   for trigger and workflow eval definitions.
 - `evals/runtime.json` pins the canonical default gating profile:
   `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
+- Use `train` splits for tuning and `validation` splits for regression gating;
+  reserve must-run cases for the validation split.
+- Run must-run validation cases three times for both candidate and baseline,
+  aggregate by majority or median as appropriate, and keep the compared runtime
+  profile identical.
+- Grade each eval as `assertion`, `rubric`, or `hybrid`, fail the gate on
+  unexplained must-run regressions or increased unresolved severe findings, and
+  require artifact review before accepting a skill change.
 - Compare a skill change against the previous committed version of that skill
   by default; add a no-skill baseline only when it materially improves the
   signal.
 - Keep generated outputs, transcripts, and temporary fixture clones under
   ignored `.tmp/evals/`, not in tracked source.
 
-See [evals/README.md](./evals/README.md) for the shared artifact contract.
+See [evals/README.md](./evals/README.md) for the shared artifact contract,
+governance rules, and review procedure.
 
 ## Refresh Workflow
 

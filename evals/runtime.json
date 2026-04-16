@@ -20,5 +20,75 @@
       "Keep the canonical profile pinned for default gating.",
       "Add future profiles here instead of rewriting skill-local eval definitions."
     ]
+  },
+  "governance": {
+    "split_policy": {
+      "allowed_splits": [
+        "train",
+        "validation"
+      ],
+      "rules": [
+        "Tune skill wording and fixture design against train only.",
+        "Hold validation cases back from skill tuning and use them for regression gating.",
+        "Mark must-run cases on the validation split only."
+      ]
+    },
+    "repeated_trials": {
+      "default_train_trials": 1,
+      "default_validation_trials": 1,
+      "must_run_trials": 3,
+      "aggregation": {
+        "binary_cases": "majority outcome across repeated trials",
+        "scored_cases": "median score across repeated trials"
+      },
+      "notes": [
+        "Run candidate and baseline with the same profile and trial count.",
+        "Increase trial count only deliberately and record the reason in review notes."
+      ]
+    },
+    "grading": {
+      "allowed_modes": [
+        "assertion",
+        "rubric",
+        "hybrid"
+      ],
+      "requirements": [
+        "Use assertion grading where deterministic checks are credible.",
+        "Use rubric grading where judgment is required and retain reviewer notes.",
+        "Use hybrid grading when both objective checks and reviewer judgment matter."
+      ]
+    },
+    "gating": {
+      "default_baseline": "previous_committed_skill_version",
+      "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+      "fail_conditions": [
+        "Missing required artifacts or incomplete required trials.",
+        "Any unexplained regression on the must-run validation surface.",
+        "Any increase in unresolved severe findings on must-run real-repo fixtures."
+      ]
+    },
+    "must_run_surface": {
+      "required_validation_categories": [
+        "one trigger pack per skill",
+        "one workflow case per skill",
+        "all pinned real-repo fixture cases once introduced"
+      ],
+      "notes": [
+        "Milestone 3 populates the first trigger and workflow cases.",
+        "Milestone 4 adds the first pinned real-repo cases, starting with cryptoli."
+      ]
+    },
+    "artifact_review": {
+      "required": true,
+      "review_inputs": [
+        "outputs",
+        "timing.json",
+        "grading.json",
+        "benchmark.json",
+        "feedback.json",
+        "execution transcripts or equivalent logs"
+      ],
+      "acceptance_rule": "Do not accept a skill change until a reviewer inspects the material deltas and records whether regressions are real, expected, or blocked on harness follow-up."
+    }
   }
 }

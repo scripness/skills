@@ -151,6 +151,19 @@ of judged only by intuition.
   Milestone 1 paths.
 - [2026-04-16] Ran `git diff --check` after the Milestone 1 edits; it passed
   with no whitespace or patch-format issues.
+- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `TODO.md`, `evals/README.md`,
+  `evals/runtime.json`, and this plan after the Milestone 2 edits and
+  confirmed they now align on the shipped governance contract without claiming
+  that concrete eval cases, pinned fixtures, or runner helpers already exist.
+- [2026-04-16] Ran
+  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and it passed after the Milestone 2 governance updates.
+- [2026-04-16] Ran
+  `rg -n 'Milestones 1 and 2|train splits|validation split|artifact review|governance|must-run' AGENTS.md README.md evals/README.md evals/runtime.json`
+  and confirmed the repo-truth docs and machine-readable runtime metadata all
+  describe the same Milestone 2 governance rules.
+- [2026-04-16] Ran `git diff --check` after the Milestone 2 edits; it passed
+  with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -162,15 +175,12 @@ of judged only by intuition.
 
 ## Open Questions
 
-- How much of the grading should be automated assertions versus reviewer rubric
-  in the first version?
-- Should the initial repeated-run policy apply to every must-run case or only to
-  the highest-signal cases first?
+- None currently.
 
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
+- [x] Milestone 2
 - [ ] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
@@ -185,6 +195,18 @@ Milestone 1 note:
 - Synced `AGENTS.md` and `README.md` so repo truth now describes the eval
   layout, artifact contract, and default baseline policy honestly.
 
+Milestone 2 note:
+
+- Expanded `evals/README.md` from a layout-only contract into the explicit
+  governance source of truth for split policy, repeated trials, grading modes,
+  pass/fail thresholds, must-run surface rules, and regression artifact review.
+- Extended `evals/runtime.json` with matching machine-readable governance
+  defaults so later runner work can enforce the same policy without inventing a
+  second source of truth.
+- Synced `AGENTS.md` and `README.md` so repo-facing docs now describe the
+  shipped governance contract honestly while still deferring concrete eval
+  cases, pinned fixtures, and runner helpers to later milestones.
+
 ## Decision Log
 
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
@@ -195,6 +217,15 @@ Milestone 1 note:
 - [2026-04-16] Keep the baseline comparison policy and generated-output root in
   repo-facing docs now, but defer split policy, repeated runs, thresholds, and
   must-run governance to Milestone 2 as planned.
+- [2026-04-16] Encode the Milestone 2 governance contract in both
+  `evals/README.md` and `evals/runtime.json` so human review and future runner
+  defaults stay aligned.
+- [2026-04-16] Apply the initial repeated-run policy to every must-run
+  validation case, not only a hand-picked subset, so the first gating surface
+  stays simple and honest.
+- [2026-04-16] Define the must-run surface contract in Milestone 2 even before
+  Milestones 3 and 4 populate the concrete cases, so later slices inherit an
+  explicit governance target instead of inventing one ad hoc.
 
 ## Discoveries
 
@@ -203,6 +234,10 @@ Milestone 1 note:
 - [2026-04-16] This repo had no existing ignore coverage, so introducing the
   generated eval root required adding repo-level `.gitignore` coverage in the
   same slice rather than relying on convention alone.
+- [2026-04-16] The governance layer needed a durable place for review
+  dispositions before tooling exists; allowing the plan, PR, or equivalent
+  change record keeps the review requirement honest without inventing a new
+  tracked artifact prematurely.
 
 ## Blockers
 
@@ -210,9 +245,10 @@ Milestone 1 note:
 
 ## Outcomes / Retrospective
 
-- Milestone 1 completed by defining the tracked eval layout, the shared
-  artifact-storage contract, the canonical runtime profile, and the ignored
-  generated-output root. Milestones 2 through 5 remain pending.
+- Milestones 1 and 2 completed by defining the tracked eval layout, the shared
+  artifact-storage contract, the canonical runtime profile, the ignored
+  generated-output root, and the explicit governance and regression-review
+  contract. Milestones 3 through 5 remain pending.
 
 ## Follow-up verification repair
 
