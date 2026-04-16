@@ -5,7 +5,9 @@ Last verified: [YYYY-MM-DD]
 
 # [Spec Title]
 
-> Source of truth: `[primary code paths or package paths]`
+> Source of truth: `[primary code paths, packages, apps, or services]`
+> Non-owning trees to ignore unless explicitly in scope:
+> `[generated/vendor/cache/copied paths or n/a]`
 > If this spec contradicts the code, the code is correct — update this spec.
 
 <!-- Review when [path] changes -->
@@ -13,7 +15,7 @@ Last verified: [YYYY-MM-DD]
 
 ## Overview
 
-[What this area owns, how it fits into the system, and why it exists.]
+[What this area owns, how it fits into the repo topology, and why it exists.]
 
 ## Non-Goals
 
@@ -27,11 +29,13 @@ Last verified: [YYYY-MM-DD]
 - [important edge or operational rule]
 
 <!-- Add topic-specific sections as needed. Examples:
+## Topology And Boundaries
 ## Endpoint Reference
 ## Data Flow
 ## Frontend Client
 ## Operational Constraints
 ## Test Infrastructure Requirements
+## Generated And Vendor Exclusions
 ## File Placement
 ## Boundaries
 ## Key Structures

@@ -20,23 +20,30 @@
 This repo uses the local `.agents/skills/` directory as its provider-agnostic
 agent toolbox and workflow layer.
 
-- Use `.agents/skills/consult/SKILL.md` when ambiguity, architecture, or
-  tradeoffs block progress, or when a task benefits from independent
-  multi-angle analysis before implementation.
-- Use `.agents/skills/verify/SKILL.md` as a review and final verification step
-  for plans, implementations, or technical claims.
 - Use `.agents/skills/specs/SKILL.md` when repo truth is missing or stale:
   missing `AGENTS.md`, missing `specs/`, missing owning spec for the current
-  task, stale spec guidance, stale `specs/README.md`, or repo-wide operating
-  guidance that no longer matches reality.
+  task, stale spec guidance, stale `specs/README.md`, repo topology that is
+  poorly documented, or repo-wide operating guidance that no longer matches
+  reality.
 - Use `.agents/skills/tests/SKILL.md` when changed behavior is not clearly
-  covered by the repo's existing test layers or when tests have drifted from
-  current code behavior.
+  covered by the repo's existing test layers, when the test topology is weak
+  or stale, or when tests have drifted from current code behavior.
+- Use `.agents/skills/consult/SKILL.md` when ambiguity, architecture, tradeoffs,
+  or unclear repo behavior block safe implementation.
+- Use `.agents/skills/plan/SKILL.md` when the work needs durable task state
+  across milestones, review loops, blockers, or fresh-session restarts.
+- Use `.agents/skills/execute/SKILL.md` when the implementation is still
+  locally clear or there is already one explicit `plans/*.md` file to execute.
+- Use `.agents/skills/verify/SKILL.md` as the adversarial review and final
+  verification step for plans, implementation slices, diffs, or technical
+  claims.
 
 Agents may invoke `consult` and `verify` proactively when the trigger
 conditions are met. Treat `specs` and `tests` as manual-first, but invoke them
-when missing or stale repo truth is clearly blocking good work or safe
-verification.
+when missing or stale repo truth, weak topology guidance, or missing test truth
+is clearly blocking safe planning, execution, or verification. Promote to
+`plan` only when the work needs durable task state. Use `execute` for bounded
+implementation work, not long-lived task planning or final judgment.
 
 ## Commands
 
@@ -54,30 +61,37 @@ verification.
 Fill these first:
 
 - exact dev/build/test/typecheck/lint commands
-- repo boundaries
-- architecture tree
+- repo topology, ownership boundaries, and architecture tree
+- generated, vendor, cache, and copied-artifact paths agents should ignore
 - specs index
-- testing tiers and shared helpers
+- testing layers, owning suite roots, shared helpers, and targeted commands
 
 ## Boundaries
 
 **Always:** Search the codebase before adding new code. Run the required checks
 before marking work done. Write or update tests at every applicable tier.
 
-**Ask first:** Changes to `specs/`. Changes affecting multiple apps or services.
-Major dependency upgrades. New packages or modules.
+**Ask first:** Changes to `specs/` or `AGENTS.md`. Changes affecting multiple
+apps, packages, or services. Major dependency upgrades. New packages, modules,
+or services.
 
 **Never:** Commit secrets or `.env` files. Push directly to `main`. Modify
 generated files or migrations by hand unless the project explicitly requires it.
 
 ## Architecture
 
+Document the real repo topology, not an assumed single-app layout. Capture the
+top-level owning apps, packages, services, and shared systems that agents need
+to navigate, and call out any major generated or vendor trees that should not
+drive repo guidance.
+
 ```text
 [top-level structure, 8-12 entries max]
 ```
 
-Entry: `[main entrypoint]` | Config: `[config location]` | Schema:
-`[schema location if applicable]`
+Entrypoints: `[main app or service entrypoints]` | Config roots:
+`[config locations]` | Schemas/migrations: `[schema or migration locations if
+applicable]` | Generated/vendor roots to ignore: `[paths or n/a]`
 
 ## Conventions
 
@@ -101,17 +115,21 @@ Full index with summaries: [specs/README.md](specs/README.md)
 
 ## Testing
 
-Document the test tiers the repo actually uses.
+Document only the test layers the repo actually uses. A repo may have per-app,
+per-package, per-service, or shared suites; do not invent a single shared test
+root if the codebase does not have one.
 
-| Tier | Location | What it tests | When required |
-|------|----------|---------------|---------------|
-| Unit | `[path]` | `[scope]` | `[when required]` |
-| Integration | `[path]` | `[scope]` | `[when required]` |
-| E2E | `[path]` | `[scope]` | `[when required]` |
+| Layer | Owning path or suite root | Command | What it tests | When required |
+|-------|----------------------------|---------|---------------|---------------|
+| `[unit/integration/e2e/etc.]` | `[path or package]` | `[command]` | `[scope]` | `[when required]` |
+| `[unit/integration/e2e/etc.]` | `[path or package]` | `[command]` | `[scope]` | `[when required]` |
+| `[unit/integration/e2e/etc.]` | `[path or package]` | `[command]` | `[scope]` | `[when required]` |
 
 List shared helpers, fixtures, factories, and app-specific testing rules here.
 Add non-standard layers here too: smoke, browser, contract, visual,
-performance, or CI-only checks if the repo uses them.
+performance, security, or CI-only checks if the repo uses them. Note any
+generated, vendor, cache, or coverage-report paths that should not be treated
+as owning test surfaces.
 
 ## Git
 

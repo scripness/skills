@@ -205,6 +205,24 @@ without hardcoded layout assumptions.
 - `test -f tests/SKILL.md && test -f tests/agents/openai.yaml && echo present`
   passed.
 
+### 2026-04-16 Milestone 4 results
+
+- Re-read `specs/assets/AGENTS.md`, `specs/assets/specs/README.md`, and
+  `specs/assets/specs/spec-template.md` after editing to confirm the shipped
+  bootstrap scaffolding now reflects the six-skill workflow, topology-aware
+  ownership guidance, generated/vendor-noise exclusions, and non-assumptive
+  test-layer documentation.
+- `rg -n "plan/SKILL|execute/SKILL|topology|generated|vendor|copied-artifact|Owning paths|suite root|security|single shared test root|apps, packages, or services" specs/assets`
+  passed and showed the intended bootstrap language across the refreshed asset
+  templates.
+- `git diff -- specs/assets/AGENTS.md specs/assets/specs/README.md
+  specs/assets/specs/spec-template.md` was reviewed to confirm this slice
+  stayed limited to the shipped bootstrap assets rather than pulling Milestone
+  5's broader repo-facing doc sync forward.
+- `git diff --check` passed.
+- `test -f specs/assets/AGENTS.md && test -f specs/assets/specs/README.md &&
+  test -f specs/assets/specs/spec-template.md && echo present` passed.
+
 ## Risks
 
 - Overfitting `specs` and `tests` to `cryptoli` and accidentally narrowing
@@ -216,15 +234,13 @@ without hardcoded layout assumptions.
 
 - How much real-repo shape detail from `cryptoli` should become generic skill
   guidance versus remain only an eval/reference input?
-- Should `specs/assets/*` evolve now for the refreshed contract or wait for the
-  later eval phase to validate the changes first?
 
 ## Progress
 
 - [x] Milestone 1
 - [x] Milestone 2
 - [x] Milestone 3
-- [ ] Milestone 4
+- [x] Milestone 4
 - [ ] Milestone 5
 
 ## Decision Log
@@ -257,6 +273,12 @@ without hardcoded layout assumptions.
 - [2026-04-16] Treat weak-repo bootstrap as establishing the smallest credible
   automated layer plus explicit gap reporting, not as a requirement to build
   broad new testing infrastructure in one pass.
+- [2026-04-16] Refresh `specs/assets/*` in Milestone 4 because the shipped
+  bootstrap surface had material drift from the refreshed `specs` and `tests`
+  contracts; do not defer that drift to the later eval phase.
+- [2026-04-16] Keep Milestone 4 limited to bootstrap scaffolding updates under
+  `specs/assets/*`; defer repo-facing README sync and any broader shipped-truth
+  edits to Milestone 5.
 
 ## Discoveries
 
@@ -285,6 +307,14 @@ without hardcoded layout assumptions.
 - [2026-04-16] Wrapper metadata also needs the topology and gap-reporting
   language or provider-facing surfaces under-describe the shipped `tests`
   behavior even when `SKILL.md` is accurate.
+- [2026-04-16] The shipped bootstrap `specs/assets/AGENTS.md` had material
+  contract drift after Milestones 1 through 3: it still omitted `plan` and
+  `execute` from the toolbox guidance and nudged fresh repos toward a fixed
+  unit/integration/e2e testing table rather than discovered suite topology.
+- [2026-04-16] The existing `specs/assets/specs/README.md` and
+  `specs/assets/specs/spec-template.md` already had a usable house style, so
+  Milestone 4 only needed targeted ownership and exclusion-language refreshes
+  instead of a larger asset redesign.
 
 ## Outcomes / Retrospective
 
@@ -299,3 +329,7 @@ without hardcoded layout assumptions.
   topology-aware suite discovery, proportional layer selection, weak-repo
   bootstrap guidance, and explicit uncovered-gap reporting across repo shapes.
   Remaining Phase 04 milestones are still pending.
+- Milestone 4 completed by refreshing the shipped bootstrap assets in
+  `specs/assets/*` so fresh repos inherit the six-skill workflow, topology-
+  aware ownership language, and non-assumptive test-layer scaffolding. Only
+  Milestone 5 doc sync remains pending for Phase 04.
