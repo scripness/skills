@@ -91,10 +91,12 @@ Use the current shipped skills as follows:
   and hand off adversarial review to `verify`.
 - `plan`: create or maintain living task plans when work needs durable state
   across sessions, milestones, review loops, or fresh-session restarts.
-- `specs`: bootstrap or sync repo truth when `AGENTS.md`, spec assets, or
-  durable workflow docs drift from the shipped system.
-- `tests`: bootstrap or sync executable truth when this repo starts gaining real
-  validators, eval runners, or other testable behavior.
+- `specs`: bootstrap or sync repo truth when `AGENTS.md`, `specs/`, or other
+  durable workflow guidance is missing, stale, or too weak to support safe
+  planning, execution, or verification.
+- `tests`: bootstrap or sync executable truth when test coverage is missing,
+  stale, or clearly below what the repo needs for safe execution and
+  verification.
 - `verify`: adversarially review a concrete plan, implementation slice, diff,
   doc change, or claim against repo truth and checks; treat plan review,
   implementation review, and claim review as distinct targets; return findings

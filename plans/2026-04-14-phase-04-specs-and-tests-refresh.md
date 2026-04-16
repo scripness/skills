@@ -162,6 +162,49 @@ without hardcoded layout assumptions.
   high-level `specs` role closely enough that Milestone 1 did not require
   separate doc edits.
 
+### 2026-04-15 Milestone 2 results
+
+- Re-read `AGENTS.md`, `README.md`, `specs/SKILL.md`,
+  `specs/agents/openai.yaml`, `tests/SKILL.md`, and
+  `tests/agents/openai.yaml` after editing to confirm the shipped trigger and
+  invocation surfaces now cover bootstrap, sync, and gap-driven use for both
+  skills.
+- `rg -n "trigger when repo truth|trigger when test truth|three user-facing
+  situations|gap-close|coverage gaps|safe execution and verification|safe
+  planning, execution, or verification" AGENTS.md README.md specs/SKILL.md
+  specs/agents/openai.yaml tests/SKILL.md tests/agents/openai.yaml` passed and
+  showed the intended activation language across repo-facing docs, skill
+  contracts, and wrapper metadata.
+- `git diff -- AGENTS.md README.md specs/SKILL.md specs/agents/openai.yaml
+  tests/SKILL.md tests/agents/openai.yaml` was reviewed to confirm this slice
+  stayed limited to trigger and invocation semantics rather than pulling
+  Milestone 3's deeper `tests` contract refresh forward.
+- `git diff --check` passed.
+- `test -f specs/SKILL.md && test -f specs/agents/openai.yaml && test -f
+  tests/SKILL.md && test -f tests/agents/openai.yaml && echo present` passed.
+
+### 2026-04-16 Milestone 3 results
+
+- Re-read `tests/SKILL.md` and `tests/agents/openai.yaml` after editing to
+  confirm the shipped `tests` surface now explicitly covers topology-aware
+  suite discovery, generated/vendor-noise pruning, layered coverage selection,
+  weak-repo bootstrap guidance, and honest uncovered-gap reporting across repo
+  shapes.
+- `rg -n "topology|monorepo|single package|per-app|per-package|per-service|unit|integration|e2e|smoke|browser|contract|visual|security|performance|vendor|generated|coverage gaps|false-confidence|shared test root" tests/SKILL.md tests/agents/openai.yaml`
+  passed and showed the intended contract language in the shipped `tests`
+  skill surfaces.
+- After follow-up verification flagged provider-facing under-description,
+  `tests/agents/openai.yaml` was tightened so the shipped wrapper metadata now
+  explicitly covers bootstrap, sync, and concrete coverage-gap closure rather
+  than reading as sync-only.
+- `git diff -- tests/SKILL.md tests/agents/openai.yaml` was reviewed to
+  confirm this slice stayed limited to the `tests` contract and aligned wrapper
+  metadata rather than pulling Milestone 4 asset refresh or Milestone 5 doc
+  sync forward.
+- `git diff --check` passed.
+- `test -f tests/SKILL.md && test -f tests/agents/openai.yaml && echo present`
+  passed.
+
 ## Risks
 
 - Overfitting `specs` and `tests` to `cryptoli` and accidentally narrowing
@@ -179,8 +222,8 @@ without hardcoded layout assumptions.
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
-- [ ] Milestone 3
+- [x] Milestone 2
+- [x] Milestone 3
 - [ ] Milestone 4
 - [ ] Milestone 5
 
@@ -200,6 +243,20 @@ without hardcoded layout assumptions.
 - [2026-04-15] Leave `README.md` unchanged in Milestone 1 because its current
   `specs` description already remains accurate at a high level; revisit
   minimal doc sync in Milestone 5 if later slices make the gap material.
+- [2026-04-15] Keep Milestone 2 limited to activation semantics for `specs`
+  and `tests`; do not pull the deeper `tests` topology and coverage-contract
+  refresh forward from Milestone 3.
+- [2026-04-15] Sync `AGENTS.md`, `README.md`, and both `agents/openai.yaml`
+  wrappers in Milestone 2 because trigger wording is part of the shipped
+  provider-agnostic and wrapper-facing surface, not just an internal
+  `SKILL.md` detail.
+- [2026-04-16] Keep Milestone 3 scoped to `tests/SKILL.md` and
+  `tests/agents/openai.yaml`; defer asset refresh and broader doc sync to
+  Milestones 4 and 5 unless the refreshed `tests` contract exposes material
+  shipped-truth drift.
+- [2026-04-16] Treat weak-repo bootstrap as establishing the smallest credible
+  automated layer plus explicit gap reporting, not as a requirement to build
+  broad new testing infrastructure in one pass.
 
 ## Discoveries
 
@@ -216,6 +273,18 @@ without hardcoded layout assumptions.
 - [2026-04-15] The current README already covers the high-level `specs` role
   closely enough that Milestone 1 could stay bounded to the `specs` skill
   contract and wrapper prompt without leaving obvious shipped-truth drift.
+- [2026-04-15] The shipped `tests` surface was still biased toward
+  post-implementation sync and needed explicit bootstrap and gap-close entry
+  points before the deeper test-topology refresh in Milestone 3.
+- [2026-04-15] Trigger wording for `specs` and `tests` is duplicated across
+  `AGENTS.md`, `README.md`, `SKILL.md`, and wrapper metadata, so activation
+  clarity drifts unless the slice updates the whole shipped surface together.
+- [2026-04-16] The deeper `tests` refresh needed separate contract language for
+  topology discovery, minimal bootstrap on weak repos, and honest uncovered-gap
+  reporting; otherwise the skill still read like a post-change sync helper.
+- [2026-04-16] Wrapper metadata also needs the topology and gap-reporting
+  language or provider-facing surfaces under-describe the shipped `tests`
+  behavior even when `SKILL.md` is accurate.
 
 ## Outcomes / Retrospective
 
@@ -223,3 +292,10 @@ without hardcoded layout assumptions.
   topology-aware repo inspection, agentic-readiness evaluation, and
   proportional organization guidance. Remaining Phase 04 milestones are still
   pending.
+- Milestone 2 completed by making bootstrap, sync, and gap-driven activation
+  explicit for `specs` and `tests` across the skill docs, wrapper prompts, and
+  repo-facing workflow docs. Remaining Phase 04 milestones are still pending.
+- Milestone 3 completed by refreshing the shipped `tests` contract for
+  topology-aware suite discovery, proportional layer selection, weak-repo
+  bootstrap guidance, and explicit uncovered-gap reporting across repo shapes.
+  Remaining Phase 04 milestones are still pending.

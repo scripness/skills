@@ -1,13 +1,15 @@
 ---
 name: specs
-description: Prepare and maintain repo truth by creating, refining, indexing, and syncing AGENTS.md and specs/ against actual repo topology, task intent, and code reality.
+description: Bootstrap, sync, or repair repo truth in AGENTS.md and specs/ when current guidance is missing, stale, or too weak for safe work.
 argument-hint: [task to prepare or area to sync]
 ---
 
-Use this skill in two user-facing situations:
+Use this skill in three user-facing situations:
 
 1. bootstrap a repo that is missing `AGENTS.md`, `specs/`, or both
 2. sync `AGENTS.md` and `specs/` with current code reality
+3. close repo-truth gaps that are blocking safe planning, execution, or
+   verification even though the harness already exists
 
 This skill may also be auto-invoked during implementation when the current task
 is clearly blocked by weak or missing repo truth.
@@ -18,10 +20,10 @@ This skill replaces separate "write specs", "reverse engineer specs", and
 Specs are durable domain and system truth for provider-native agents. They are
 not task plans, execution plans, or TODO lists.
 
-Treat repo-topology discovery and agentic-readiness assessment as part of both
-bootstrap and sync work. Before writing guidance, determine what the repo
-actually owns, how it is organized, and which paths are real source-of-truth
-versus generated or vendor noise.
+Treat repo-topology discovery and agentic-readiness assessment as part of
+bootstrap, sync, and gap-close work. Before writing guidance, determine what
+the repo actually owns, how it is organized, and which paths are real
+source-of-truth versus generated or vendor noise.
 
 This is the only skill that should create or modify the codebase harness layer:
 
@@ -48,6 +50,8 @@ Bootstrap assets live alongside this skill in:
    - `bootstrap`: `AGENTS.md`, `specs/`, or core index docs are missing or too
      weak to support work
    - `sync`: docs may have drifted from code reality
+   - `gap-close`: the harness exists, but key repo truth is too weak for safe
+     planning, execution, or verification
    - if invoked automatically during a task, treat task-scoped fixes as part of
      syncing the repo truth needed for that work
 
@@ -167,8 +171,9 @@ Return a short summary with:
   breakdowns or implementation checklists.
 - Verification commands or concrete checks in specs are encouraged when they
   materially help future agents confirm reality.
-- User-facing role: bootstrap or sync. Task-scoped spec preparation is an
-  internal behavior of this same skill when clearly needed.
+- User-facing role: bootstrap, sync, or close repo-truth gaps. Task-scoped
+  spec preparation is an internal behavior of this same skill when clearly
+  needed.
 - Prefer proportional fixes. Small unrelated drift should usually be noted, not
   expanded into a broad rewrite.
 - Ignore vendor, generated, cache, and copied-artifact noise by default unless

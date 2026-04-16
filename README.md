@@ -68,6 +68,7 @@ The authoritative refresh-workflow contract lives in `AGENTS.md`.
 
 Owns repo truth.
 
+- trigger when repo truth is missing, stale, or too weak for safe agent work
 - bootstrap and sync `AGENTS.md`, `CLAUDE.md` symlink, and `specs/`
 - evaluate codebase organization quality for agentic work
 - improve boundaries, naming, navigability, and discoverability when the
@@ -78,6 +79,7 @@ Owns repo truth.
 
 Owns test truth.
 
+- trigger when test truth is missing, stale, or coverage gaps block safe work
 - bootstrap or extend the test layers that make sense for the repo
 - sync tests with changed behavior over time
 - keep coverage honest across unit, integration, e2e, smoke, security,
@@ -178,10 +180,10 @@ reality back into alignment in a fresh session.
 
 1. Manually copy the shipped skill directories from `scripness/skills` into
    `.agents/skills/` in the repo you want to work on.
-2. Run `specs` when repo truth is weak, missing, stale, or the codebase is not
-   organized cleanly enough for reliable agent work.
+2. Run `specs` when repo truth is weak, missing, stale, or blocking safe
+   planning, execution, or verification.
 3. Run `tests` when test truth is weak, missing, stale, or clearly below what
-   the codebase needs.
+   the codebase needs for safe execution and verification.
 4. Run `consult` when the next move is not yet clear and you need grounded
    clarification about the current code, relevant specs, options, or risks.
 5. If the task is already bounded and does not need durable task state, use
