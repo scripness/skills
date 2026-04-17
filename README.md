@@ -54,10 +54,10 @@ chance of success.
 
 ## Evaluation Harness
 
-Milestones 1 through 4 of the eval harness ship the tracked layout, storage
+Milestones 1 through 5 of the eval harness ship the tracked layout, storage
 contract, governance policy, the first concrete skill-local trigger and
-workflow definitions, the first pinned real-repo fixture, and the initial
-must-run regression surface.
+workflow definitions, the first pinned real-repo fixture, the initial must-run
+regression surface, and the first thin local runner helpers.
 
 - Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
   for trigger and workflow eval definitions.
@@ -67,6 +67,8 @@ must-run regression surface.
   official real-repo fixture for monorepo-aware workflow evaluation.
 - `evals/runtime.json` pins the canonical default gating profile:
   `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
+- `evals/scripts/harness.py` validates the tracked harness contract and
+  scaffolds repeatable local run workspaces under `.tmp/evals/<run-id>/`.
 - Use `train` splits for tuning and `validation` splits for regression gating;
   reserve must-run cases for the validation split.
 - The initial must-run surface uses the validation boundary trigger pack for
@@ -83,6 +85,9 @@ must-run regression surface.
   signal.
 - Keep generated outputs, transcripts, and temporary fixture clones under
   ignored `.tmp/evals/`, not in tracked source.
+- The Milestone 5 helper surface is still intentionally thin: it validates
+  tracked definitions and scaffolds run directories, but it does not yet
+  execute model calls or grade runs automatically.
 
 See [evals/README.md](./evals/README.md) for the shared artifact contract,
 governance rules, and review procedure.

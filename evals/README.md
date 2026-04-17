@@ -1,10 +1,10 @@
 # Evaluation Harness
 
 This directory holds the tracked eval metadata for the six-skill workflow.
-Milestones 1 through 4 define the layout, artifact contract, governance rules,
+Milestones 1 through 5 define the layout, artifact contract, governance rules,
 canonical runtime profile, the first skill-local trigger and workflow cases,
-the first pinned real-repo fixture, and the initial must-run surface. Later
-milestones add runnable helpers without changing the tracked-versus-generated
+the first pinned real-repo fixture, the initial must-run surface, and the
+first thin local runner helpers without changing the tracked-versus-generated
 split below.
 
 ## Tracked Source
@@ -21,7 +21,29 @@ split below.
   `evals/fixtures/cryptoli.json` is the first pinned fixture manifest.
 - Real-repo workflow cases should reference the owning manifest instead of
   inlining floating repo metadata in each skill-local definition.
-- Future thin shared runner helpers belong under `evals/scripts/`.
+- `evals/scripts/harness.py` is the first shared runner entrypoint; it
+  validates tracked harness truth and scaffolds repeatable local run
+  workspaces under `.tmp/evals/<run-id>/`.
+
+## Local Runner Surface
+
+Milestone 5 ships a deliberately thin local helper surface. It does not
+replace manual execution or review, but it makes the tracked harness
+repeatable before broader tooling exists.
+
+- Run `python3 evals/scripts/harness.py validate` to validate the tracked
+  eval definitions, fixture manifests, runtime metadata, must-run selection,
+  and `.tmp/evals/` ignore coverage.
+- Run `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
+  to scaffold `.tmp/evals/<run-id>/` with:
+  `run.json`, `review-template.md`, `outputs/`, `transcripts/`, and
+  `fixtures/`.
+- Add `--selection validation` to include the full validation surface or
+  `--selection all` to include both train and validation cases.
+- Add one or more `--skill <skill>` filters when you want a smaller run
+  manifest for one subset of the six-skill surface.
+- The helper surface does not yet execute model calls, clone fixtures, or
+  write grading artifacts automatically; that work remains explicit for now.
 
 ## Baseline Policy
 
@@ -104,6 +126,9 @@ future runners use the same rules.
 - Review changed `outputs/`, `timing.json`, `grading.json`, `benchmark.json`,
   `feedback.json`, and execution transcripts or equivalent logs before
   accepting the change.
+- Start each run review from the generated `review-template.md`, then record
+  whether regressions are real, expected, or blocked after inspecting the
+  material deltas.
 - Record whether observed regressions are real, expected, or blocked on harness
   follow-up in the plan, PR, or other durable change record.
 
@@ -125,7 +150,7 @@ Each run should retain, at minimum:
 
 ## Scope Note
 
-Milestones 1 through 4 define layout, storage, baseline policy, governance,
+Milestones 1 through 5 define layout, storage, baseline policy, governance,
 review gates, the first concrete skill-local cases, the first pinned fixture,
-and the initial must-run surface. Milestone 5 still owns the runnable helper
-surface.
+the initial must-run surface, and the thin validate-plus-scaffold helper
+surface. Broader execution and operator tooling still belongs to later work.

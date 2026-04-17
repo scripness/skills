@@ -77,8 +77,8 @@ under `.agents/skills/`.
   regression-review procedure, `evals/runtime.json` pins the default gating
   profile and the machine-readable default governance settings, and
   `evals/fixtures/cryptoli.json` pins the first official real-repo fixture.
-- Shared fixture manifests and future thin runner helpers also belong under
-  repo-root `evals/`.
+- Shared fixture manifests and thin runner helpers also live under repo-root
+  `evals/`; `evals/scripts/harness.py` is the first shared runner entrypoint.
 - Generated eval outputs, temporary fixture clones, and other run artifacts
   must stay outside tracked source under ignored `.tmp/evals/`.
 - Compare against the previous committed version of the same skill by default;
@@ -251,8 +251,8 @@ Generated eval outputs live under ignored `.tmp/evals/`.
 
 ## Commands
 
-There is currently no package manifest, CI, or formal test runner in this repo.
-Most work today is docs and skill-definition work.
+There is currently no package manifest or CI in this repo. Most work today is
+docs, skill-definition work, and thin eval-harness tooling.
 
 Useful local commands:
 
@@ -263,6 +263,8 @@ Useful local commands:
 | Inspect roadmap | `sed -n '1,260p' TODO.md` |
 | Inspect active plan | `sed -n '1,220p' plans/<file>.md` |
 | Check git status | `git status --short` |
+| Validate tracked eval definitions and must-run invariants | `python3 evals/scripts/harness.py validate` |
+| Scaffold a repeatable must-run eval workspace | `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run` |
 
 If a phase introduces executable helpers or eval runners, document the exact
 commands here and keep them current.

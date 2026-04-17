@@ -234,6 +234,30 @@ of judged only by intuition.
   `git ls-files --error-unmatch evals/fixtures/cryptoli.json` to confirm the
   Milestone 4 fixture now exists as tracked source instead of only as a local
   file.
+- [2026-04-17] Re-read `AGENTS.md`, `README.md`, `evals/README.md`, and this
+  plan after the Milestone 5 edits and confirmed they now align on the shipped
+  thin runner surface: tracked-harness validation, repeatable run scaffolding
+  under `.tmp/evals/<run-id>/`, exact local commands in `AGENTS.md`, and
+  review starting from a generated `review-template.md`.
+- [2026-04-17] Ran `python3 -m py_compile evals/scripts/harness.py` and it
+  passed.
+- [2026-04-17] Ran `python3 evals/scripts/harness.py validate` and it passed,
+  reporting 6 shipped skills, 12 trigger packs, 18 workflow cases, and 1
+  pinned fixture manifest after checking runtime, skill-local eval, must-run,
+  and ignore-coverage invariants.
+- [2026-04-17] Ran
+  `python3 evals/scripts/harness.py init-run --run-id milestone-5-smoke --selection must-run`,
+  `git check-ignore -v .tmp/evals/milestone-5-smoke/run.json`, and
+  `jq '{run_id, profile, selected_cases: (.selected_cases | length), fixtures}' .tmp/evals/milestone-5-smoke/run.json`;
+  they confirmed the smoke workspace is ignored, the scaffolded run manifest
+  selects the 12 current must-run cases, and the pinned `cryptoli` fixture is
+  projected into `.tmp/evals/milestone-5-smoke/fixtures/cryptoli`.
+- [2026-04-17] Ran
+  `rg -n 'harness.py|init-run --run-id|Milestones 1 through 5|review-template.md|Validate tracked eval definitions' AGENTS.md README.md evals/README.md`
+  and confirmed the repo-truth docs now describe the same Milestone 5 helper
+  surface and review flow.
+- [2026-04-17] Ran `git diff --check` after the Milestone 5 edits; it passed
+  with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -253,7 +277,7 @@ of judged only by intuition.
 - [x] Milestone 2
 - [x] Milestone 3
 - [x] Milestone 4
-- [ ] Milestone 5
+- [x] Milestone 5
 
 Milestone 1 note:
 
@@ -312,6 +336,18 @@ Milestone 4 note:
   `evals/fixtures/cryptoli.json` to tracked source, so the pinned fixture
   manifest now ships with the rest of the Milestone 4 harness changes.
 
+Milestone 5 note:
+
+- Added `evals/scripts/harness.py` as the first shared runner entrypoint with
+  two thin commands: `validate` for tracked-harness invariants and `init-run`
+  for repeatable local run scaffolding under `.tmp/evals/<run-id>/`.
+- Made the scaffolded run workspace explicit with `run.json`,
+  `review-template.md`, `outputs/`, `transcripts/`, and `fixtures/` so future
+  manual or automated runs have one predictable generated layout.
+- Synced `AGENTS.md`, `README.md`, and `evals/README.md` so repo truth now
+  documents the exact local commands, the thin-helper scope boundary, and the
+  regression-review flow honestly.
+
 ## Decision Log
 
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
@@ -358,6 +394,14 @@ Milestone 4 note:
   real-repo workflow cases and mirror the selected case ids in
   `evals/runtime.json` so future runner work can reuse one shared fixture
   manifest instead of duplicating repo metadata per skill.
+- [2026-04-17] Keep the first runner surface as one
+  `evals/scripts/harness.py` entrypoint with `validate` and `init-run`
+  subcommands so the phase ships repeatable local validation and run
+  scaffolding without pretending model execution or grading is already
+  automated.
+- [2026-04-17] Generate `review-template.md` alongside each scaffolded
+  `run.json` so artifact review stays explicit and repeatable without
+  inventing a new tracked review system before broader tooling exists.
 
 ## Discoveries
 
@@ -390,6 +434,9 @@ Milestone 4 note:
 - [2026-04-17] `cryptoli` already exposes enough durable repo truth and layered
   test topology at one pinned commit to stress repo-truth, test-truth, and
   plan/execute/verify workflows from a single monorepo fixture.
+- [2026-04-17] A generated `run.json` plus `review-template.md` is enough to
+  bridge tracked eval intent and ignored run artifacts in Phase 05; the repo
+  can now stage repeatable regression work without needing a full executor yet.
 
 ## Blockers
 
@@ -397,12 +444,13 @@ Milestone 4 note:
 
 ## Outcomes / Retrospective
 
-- Milestones 1 through 4 completed by defining the tracked eval layout, the
+- Milestones 1 through 5 completed by defining the tracked eval layout, the
   shared artifact-storage contract, the canonical runtime profile, the ignored
   generated-output root, the explicit governance and regression-review
   contract, the first concrete skill-local trigger and workflow cases, the
-  first pinned real-repo fixture, and the initial must-run surface. Milestone
-  5 remains pending.
+  first pinned real-repo fixture, the initial must-run surface, and the first
+  thin local runner helpers with documented commands and repeatable run
+  scaffolding.
 
 ## Follow-up verification repair
 
@@ -434,3 +482,20 @@ Milestone 4 note:
   `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`,
   and `git diff --check`; they passed and confirmed the repaired baseline
   policy is now explicit in tracked repo truth.
+- [2026-04-17] Fresh verification found two remaining Milestone 5 gaps: the
+  new validator did not yet enforce the shipped rule that all pinned real-repo
+  fixture workflow cases join the must-run surface by default, and the
+  `python3 -m py_compile evals/scripts/harness.py` smoke check left generated
+  `__pycache__` bytecode outside the intended `.tmp/evals/` artifact root.
+- [2026-04-17] Updated `evals/scripts/harness.py` so any workflow eval that
+  references a pinned fixture manifest must set `must_run: true`, added
+  repo-level ignore coverage for local `__pycache__/`, and removed the
+  generated bytecode created during verification.
+- [2026-04-17] Re-ran
+  `python3 evals/scripts/harness.py validate`,
+  `python3 evals/scripts/harness.py init-run --run-id milestone-5-repair-smoke --selection must-run`,
+  `git check-ignore -v .tmp/evals/milestone-5-repair-smoke/run.json`,
+  `python3 evals/scripts/harness.py init-run --run-id milestone-5-repair-verify --selection validation --skill verify`,
+  `find evals/scripts -maxdepth 2 -type f | sort`, and
+  `git diff --check`; they passed and confirmed the repaired Milestone 5
+  validator contract, helper surface, and repo hygiene.
