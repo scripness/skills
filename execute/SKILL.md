@@ -110,6 +110,18 @@ Return:
 - Stop when blocked, noisy, or correction-heavy rather than pretending the
   session is still sharp.
 
+## Optional Helper
+
+`scripts/plan_loop.py` is an optional local convenience wrapper for
+plan-driven work. It is not workflow truth and it does not replace the skill
+contract.
+
+When used, pass one explicit plan path and one explicit non-interactive
+external runner command. The helper expects that runner to accept
+`execute <plan>` and `verify <plan>` invocations, keep durable state in repo
+files plus the plan file, and map `verify` outcomes to exit codes the helper
+can judge: `0` = pass, `10` = pass with risks, `20` = fail.
+
 ## Quality Bar
 
 - Entry mode was chosen correctly and any anti-trigger was respected.

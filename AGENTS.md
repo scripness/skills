@@ -271,6 +271,8 @@ Useful local commands:
 | Show the direct harness CLI help | `python3 evals/scripts/harness.py --help` |
 | Run validation directly without the Makefile | `python3 evals/scripts/harness.py validate` |
 | Scaffold a repeatable must-run eval workspace directly | `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run` |
+| Show the optional plan-driven loop helper contract | `python3 execute/scripts/plan_loop.py --help` |
+| Dry-run the optional plan-driven execute/verify helper with an explicit external runner | `python3 execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
 
 If a phase introduces executable helpers or eval runners, document the exact
 commands here and keep them current.

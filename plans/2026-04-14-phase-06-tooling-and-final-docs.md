@@ -158,6 +158,47 @@ six-skill system cleanly once the skills and eval harness exist.
   `make eval-init-run RUN_ID=phase06-m1-gap-repair-make SELECTION=validation SKILL="execute verify"`
   and it passed, creating `.tmp/evals/phase06-m1-gap-repair-make/` with 6
   cases and the `cryptoli` fixture after the validator changes.
+- [2026-04-17] Ran `python3 execute/scripts/plan_loop.py --help` and it
+  passed, showing the helper contract, required runner shape, and documented
+  helper exit codes.
+- [2026-04-17] Ran `python3 -m py_compile execute/scripts/plan_loop.py` and it
+  passed.
+- [2026-04-17] Ran a temp-fixture smoke command that created a temporary plan
+  from `plan/assets/plan-template.md`, created a temporary fake external
+  runner that accepts `execute <plan>` and `verify <plan>`, then invoked both
+  `python3 execute/scripts/plan_loop.py --dry-run ...` and
+  `python3 execute/scripts/plan_loop.py --yes --max-iterations 3 ...`; it
+  passed with `dry_run_rc = 0`, `real_run_rc = 0`, `last_verdict = "pass"`,
+  and all three progress items marked complete in the temporary plan.
+- [2026-04-17] Ran `make validate` and it passed after the Milestone 2 helper
+  edits, confirming the existing repo-level validation surface still matches
+  tracked truth.
+- [2026-04-17] Ran `git diff --check` and it passed with no whitespace or
+  patch-format issues after the Milestone 2 helper and doc edits.
+- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` after the
+  malformed-plan repair and it passed, now documenting helper exit code `1`
+  for invalid plan state as well as blocked or unacceptable runs.
+- [2026-04-17] Re-ran a temp-fixture happy-path smoke command that created a
+  temporary plan from `plan/assets/plan-template.md`, created a temporary fake
+  external runner that marks one `## Progress` item complete per `execute`,
+  then invoked `python3 execute/scripts/plan_loop.py --yes --max-iterations 3 ...`;
+  it passed with `rc = 0`, `verification_verdict = "pass"` on each loop, and
+  all three progress items marked complete in the temporary plan after the
+  malformed-plan repair.
+- [2026-04-17] Ran a temp-fixture malformed-plan smoke command that created a
+  temporary plan from `plan/assets/plan-template.md`, created a temporary fake
+  external runner that deletes the `## Blockers` section during `execute`, then
+  invoked `python3 execute/scripts/plan_loop.py --yes ...`; it passed by
+  failing closed with structured stop event `invalid_plan_after_execute` and
+  `rc = 1` instead of surfacing a Python traceback.
+- [2026-04-17] Ran `make validate` after the malformed-plan repair and it
+  passed, confirming the existing repo-level validation surface still matches
+  tracked truth.
+- [2026-04-17] Ran
+  `make eval-init-run RUN_ID=phase06-m2-execute-eval-refresh SELECTION=validation SKILL="execute"`
+  and it passed, creating `.tmp/evals/phase06-m2-execute-eval-refresh/` with
+  3 selected execute validation cases and the `cryptoli` fixture, refreshing
+  the relevant execute eval workspace for this skill slice.
 
 ## Risks
 
@@ -168,8 +209,7 @@ six-skill system cleanly once the skills and eval harness exist.
 
 ## Open Questions
 
-- After the `Makefile` exists, does any plan-driven helper still earn inclusion,
-  or should Milestone 2 close by explicitly recording that no helper is needed?
+- None currently.
 
 ## Blockers
 
@@ -178,7 +218,7 @@ six-skill system cleanly once the skills and eval harness exist.
 ## Progress
 
 - [x] Milestone 1
-- [ ] Milestone 2
+- [x] Milestone 2
 - [ ] Milestone 3
 
 ## Decision Log
@@ -202,6 +242,18 @@ six-skill system cleanly once the skills and eval harness exist.
   back-solving the missing file into the Milestone 1 slice; the Milestone 1
   sync gate is the shipped maintenance surface in `AGENTS.md`, `README.md`,
   and `evals/README.md`.
+- [2026-04-17] Ship Milestone 2 as one optional helper at
+  `execute/scripts/plan_loop.py`; keep it dumb by requiring one explicit plan
+  path, one explicit external runner command, file-backed continuation checks,
+  and verify verdict exit codes instead of parsing model prose.
+- [2026-04-17] Treat malformed plan state after `execute` or `verify` as a
+  structured helper stop under exit code `1` rather than an uncaught
+  traceback, and include the pre-failure plan state plus runner log paths in
+  the emitted event for debugging.
+- [2026-04-17] For the current Milestone 5 harness surface, treat "refresh the
+  relevant eval reports" for a skill edit as scaffolding a fresh
+  `.tmp/evals/<run-id>/` workspace and review template for that skill, because
+  the repo still does not ship automated model execution or grading.
 
 ## Discoveries
 
@@ -228,6 +280,15 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] “Local asset integrity” needed a real implementation rather than
   presence-only file checks; the required asset templates already expose stable
   section markers that can be validated without adding a heavy schema layer.
+- [2026-04-17] The shipped `plan` template already provides enough file-backed
+  loop state for a thin helper through `## Progress` and `## Blockers`, but
+  helper continuation still needs an explicit external runner exit-code
+  contract because scraping free-form verify prose would hide workflow logic in
+  the wrapper.
+- [2026-04-17] The `execute` validation selection currently scaffolds 3 cases
+  plus the pinned `cryptoli` fixture, which is enough to refresh the relevant
+  eval workspace for this helper-and-skill slice without implying that grading
+  artifacts already exist.
 
 ## Outcomes / Retrospective
 

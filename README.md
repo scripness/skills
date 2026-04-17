@@ -109,6 +109,13 @@ governance rules, and review procedure.
   re-implementing harness logic in the wrapper.
 - `python3 evals/scripts/harness.py --help` shows the direct script interface
   behind the Makefile wrappers.
+- `python3 execute/scripts/plan_loop.py --help` shows the optional plan-driven
+  helper contract shipped with `execute/`.
+- `python3 execute/scripts/plan_loop.py --yes --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+  runs fresh `execute` and `verify` cycles against one explicit plan path. The
+  external runner must accept `execute <plan>` and `verify <plan>` and map
+  `verify` outcomes to exit codes the helper can judge: `0` = pass,
+  `10` = pass with risks, `20` = fail.
 
 ## Refresh Workflow
 
