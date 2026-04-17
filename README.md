@@ -67,8 +67,14 @@ regression surface, and the first thin local runner helpers.
   official real-repo fixture for monorepo-aware workflow evaluation.
 - `evals/runtime.json` pins the canonical default gating profile:
   `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
-- `evals/scripts/harness.py` validates the tracked harness contract and
-  scaffolds repeatable local run workspaces under `.tmp/evals/<run-id>/`.
+- Repo-root `Makefile` is the thin operator surface for local maintenance:
+  `make validate` runs repo-level validation and
+  `make eval-init-run RUN_ID=<run-id>` scaffolds repeatable local eval
+  workspaces under `.tmp/evals/<run-id>/`.
+- `evals/scripts/harness.py` remains the underlying helper entrypoint. Its
+  `validate` command now checks shipped skill structure, `SKILL.md`
+  frontmatter, local asset integrity, and the tracked eval contract before the
+  repo-level wrappers delegate to it.
 - Use `train` splits for tuning and `validation` splits for regression gating;
   reserve must-run cases for the validation split.
 - The initial must-run surface uses the validation boundary trigger pack for
@@ -91,6 +97,18 @@ regression surface, and the first thin local runner helpers.
 
 See [evals/README.md](./evals/README.md) for the shared artifact contract,
 governance rules, and review procedure.
+
+## Maintenance Surface
+
+- `make help` prints the repo-level maintenance targets.
+- `make validate` validates shipped skill metadata, local asset integrity,
+  tracked eval definitions, fixture manifests, runtime metadata, and must-run
+  invariants.
+- `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
+  scaffolds `.tmp/evals/<run-id>/` for a repeatable eval-refresh pass without
+  re-implementing harness logic in the wrapper.
+- `python3 evals/scripts/harness.py --help` shows the direct script interface
+  behind the Makefile wrappers.
 
 ## Refresh Workflow
 

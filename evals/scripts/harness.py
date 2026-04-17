@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Thin local runner helpers for the six-skill evaluation harness.
+"""Thin local maintenance helpers for the six-skill evaluation harness.
 
-This intentionally does two bounded things for Milestone 5:
+This intentionally does two bounded things:
 
-1. Validate the tracked eval contract and cross-file invariants.
+1. Validate the shipped skill metadata plus the tracked eval contract.
 2. Scaffold a repeatable local run workspace under .tmp/evals/<run-id>/.
 
 It does not execute model calls or grade runs automatically.
@@ -26,11 +26,67 @@ SKILLS = ("consult", "execute", "plan", "specs", "tests", "verify")
 ALLOWED_TRIGGER_OUTCOMES = {"trigger", "no_trigger"}
 REQUIRED_RUN_DIRECTORIES = ("outputs", "transcripts", "fixtures")
 REQUIRED_RUN_FILES = ("timing.json", "grading.json", "benchmark.json", "feedback.json")
+REQUIRED_SKILL_FRONTMATTER_FIELDS = ("name", "description", "argument-hint")
+REQUIRED_AGENT_FIELDS = ("display_name", "short_description", "default_prompt")
+SKILL_REQUIRED_LOCAL_ASSETS = {
+    "consult": (),
+    "execute": (),
+    "plan": ("assets/plan-template.md",),
+    "specs": (
+        "assets/AGENTS.md",
+        "assets/specs/README.md",
+        "assets/specs/spec-template.md",
+    ),
+    "tests": (),
+    "verify": (),
+}
+REQUIRED_LOCAL_ASSET_MARKERS = {
+    "plan": {
+        "assets/plan-template.md": (
+            "## Goal",
+            "## Scope",
+            "## Sync Expectations",
+            "## Milestones",
+            "## Verification",
+            "## Blockers",
+        ),
+    },
+    "specs": {
+        "assets/AGENTS.md": (
+            "## Specifications",
+            "## Local Agent Toolbox",
+            "## Commands",
+            "## Boundaries",
+        ),
+        "assets/specs/README.md": (
+            "## How To Use These Specs",
+            "## Product And Domain",
+            "## Architecture And Shared Systems",
+            "## Quality And Operations",
+        ),
+        "assets/specs/spec-template.md": (
+            "Status: Draft",
+            "Last verified: [YYYY-MM-DD]",
+            "## Overview",
+            "## Non-Goals",
+            "## Key Patterns",
+            "## Verification",
+        ),
+    },
+}
+
+
+def load_text(path: Path) -> str:
+    rel = path.relative_to(REPO_ROOT)
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ValueError(f"{rel} is not readable: {exc}") from exc
 
 
 def load_json(path: Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(load_text(path))
     except json.JSONDecodeError as exc:
         raise ValueError(f"{path.relative_to(REPO_ROOT)} is not valid JSON: {exc}") from exc
 
@@ -41,6 +97,128 @@ def utc_now() -> str:
 
 def full_eval_id(skill: str, eval_id: str) -> str:
     return f"{skill}:{eval_id}"
+
+
+def parse_scalar_mapping(lines: list[str], path: Path, context: str) -> dict[str, str]:
+    rel = path.relative_to(REPO_ROOT)
+    values: dict[str, str] = {}
+
+    for lineno, raw_line in enumerate(lines, start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if raw_line[:1].isspace():
+            raise ValueError(f"{rel}:{lineno}: indented lines are not supported in {context}")
+
+        key, separator, value = raw_line.partition(":")
+        if not separator:
+            raise ValueError(f"{rel}:{lineno}: expected 'key: value' in {context}")
+
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            raise ValueError(f"{rel}:{lineno}: key must not be empty in {context}")
+        if not value:
+            raise ValueError(f"{rel}:{lineno}: {key!r} must not be empty in {context}")
+        if key in values:
+            raise ValueError(f"{rel}:{lineno}: duplicate key {key!r} in {context}")
+        values[key] = value
+
+    if not values:
+        raise ValueError(f"{rel}: {context} must not be empty")
+
+    return values
+
+
+def load_markdown_frontmatter(path: Path) -> tuple[dict[str, str], str]:
+    rel = path.relative_to(REPO_ROOT)
+    text = load_text(path)
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise ValueError(f"{rel}: missing opening frontmatter delimiter")
+
+    end_index = None
+    for index in range(1, len(lines)):
+        if lines[index].strip() == "---":
+            end_index = index
+            break
+
+    if end_index is None:
+        raise ValueError(f"{rel}: missing closing frontmatter delimiter")
+
+    frontmatter = parse_scalar_mapping(lines[1:end_index], path, "frontmatter")
+    body = "\n".join(lines[end_index + 1 :])
+    return frontmatter, body
+
+
+def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
+    skill_root = REPO_ROOT / skill
+    if not skill_root.is_dir():
+        errors.append(f"{skill}: skill directory is missing")
+        return {"skill": skill, "local_assets": 0}
+
+    skill_doc = skill_root / "SKILL.md"
+    try:
+        frontmatter, body = load_markdown_frontmatter(skill_doc)
+    except ValueError as exc:
+        errors.append(str(exc))
+    else:
+        for field in REQUIRED_SKILL_FRONTMATTER_FIELDS:
+            value = frontmatter.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(
+                    f"{skill}/SKILL.md: frontmatter {field!r} must be a non-empty string"
+                )
+        if frontmatter.get("name") != skill:
+            errors.append(f"{skill}/SKILL.md: frontmatter name must be {skill!r}")
+        if not body.strip():
+            errors.append(f"{skill}/SKILL.md: skill body must not be empty")
+
+    agent_path = skill_root / "agents" / "openai.yaml"
+    try:
+        agent_metadata = parse_scalar_mapping(
+            load_text(agent_path).splitlines(),
+            agent_path,
+            "agent metadata",
+        )
+    except ValueError as exc:
+        errors.append(str(exc))
+    else:
+        for field in REQUIRED_AGENT_FIELDS:
+            value = agent_metadata.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(
+                    f"{skill}/agents/openai.yaml: {field!r} must be a non-empty string"
+                )
+
+    local_assets = 0
+    for asset_rel in SKILL_REQUIRED_LOCAL_ASSETS[skill]:
+        local_assets += 1
+        asset_path = skill_root / asset_rel
+        if not asset_path.exists():
+            errors.append(f"{skill}/{asset_rel} is missing")
+        elif not asset_path.is_file():
+            errors.append(f"{skill}/{asset_rel} must be a file")
+            continue
+        else:
+            try:
+                asset_text = load_text(asset_path)
+            except ValueError as exc:
+                errors.append(str(exc))
+                continue
+
+            if not asset_text.strip():
+                errors.append(f"{skill}/{asset_rel} must not be empty")
+                continue
+
+            required_markers = REQUIRED_LOCAL_ASSET_MARKERS.get(skill, {}).get(asset_rel, ())
+            for marker in required_markers:
+                if marker not in asset_text:
+                    errors.append(
+                        f"{skill}/{asset_rel} is missing required marker {marker!r}"
+                    )
+
+    return {"skill": skill, "local_assets": local_assets}
 
 
 def compare_target_map(entry: dict[str, Any]) -> tuple[list[str], list[dict[str, str]]]:
@@ -323,6 +501,10 @@ def validate_repo() -> dict[str, Any]:
         if manifest is not None:
             fixture_manifests[str(manifest_path.relative_to(REPO_ROOT))] = manifest
 
+    skill_metadata_summaries = [
+        validate_skill_metadata(skill, errors)
+        for skill in SKILLS
+    ]
     all_trigger_summaries: list[dict[str, Any]] = []
     all_workflow_summaries: list[dict[str, Any]] = []
     for skill in SKILLS:
@@ -384,11 +566,12 @@ def validate_repo() -> dict[str, Any]:
             errors.append(".gitignore must ignore .tmp/evals/")
 
     if errors:
-        raise SystemExit("Eval harness validation failed:\n- " + "\n- ".join(errors))
+        raise SystemExit("Repository validation failed:\n- " + "\n- ".join(errors))
 
     return {
         "runtime": runtime,
         "fixtures": fixture_manifests,
+        "skill_metadata": skill_metadata_summaries,
         "trigger_summaries": all_trigger_summaries,
         "workflow_summaries": all_workflow_summaries,
     }
@@ -539,11 +722,16 @@ def init_run(args: argparse.Namespace) -> int:
 
 def validate_command(_: argparse.Namespace) -> int:
     context = validate_repo()
+    skill_count = len(context["skill_metadata"])
+    local_asset_count = sum(summary["local_assets"] for summary in context["skill_metadata"])
     trigger_count = len(context["trigger_summaries"])
     workflow_count = len(context["workflow_summaries"])
     fixture_count = len(context["fixtures"])
-    print("Eval harness validation passed")
-    print(f"- skills: {len(SKILLS)}")
+    print("Repository validation passed")
+    print(f"- skills: {skill_count}")
+    print(f"- skill frontmatter files: {skill_count}")
+    print(f"- agent shims: {skill_count}")
+    print(f"- local assets: {local_asset_count}")
     print(f"- trigger packs: {trigger_count}")
     print(f"- workflow cases: {workflow_count}")
     print(f"- fixture manifests: {fixture_count}")
@@ -552,13 +740,16 @@ def validate_command(_: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Thin local runner helpers for the six-skill evaluation harness."
+        description="Thin local maintenance helpers for the six-skill evaluation harness."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     validate_parser = subparsers.add_parser(
         "validate",
-        help="Validate tracked eval definitions, fixture manifests, runtime metadata, and must-run invariants.",
+        help=(
+            "Validate shipped skill metadata, local asset integrity, tracked eval "
+            "definitions, fixture manifests, runtime metadata, and must-run invariants."
+        ),
     )
     validate_parser.set_defaults(func=validate_command)
 

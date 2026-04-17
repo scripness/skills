@@ -230,6 +230,7 @@ Never:
 
 ```text
 .
+├── Makefile
 ├── AGENTS.md
 ├── CLAUDE.md -> AGENTS.md
 ├── README.md
@@ -251,8 +252,9 @@ Generated eval outputs live under ignored `.tmp/evals/`.
 
 ## Commands
 
-There is currently no package manifest or CI in this repo. Most work today is
-docs, skill-definition work, and thin eval-harness tooling.
+There is still no package manifest or CI in this repo. Phase 06 now ships a
+repo-root `Makefile` as the thin local maintenance surface above the existing
+Python harness helper.
 
 Useful local commands:
 
@@ -263,8 +265,12 @@ Useful local commands:
 | Inspect roadmap | `sed -n '1,260p' TODO.md` |
 | Inspect active plan | `sed -n '1,220p' plans/<file>.md` |
 | Check git status | `git status --short` |
-| Validate tracked eval definitions and must-run invariants | `python3 evals/scripts/harness.py validate` |
-| Scaffold a repeatable must-run eval workspace | `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run` |
+| Show the repo-level maintenance targets | `make help` |
+| Run repo-level validation for skill metadata, asset integrity, and eval invariants | `make validate` |
+| Scaffold a repeatable eval workspace through the repo-level wrapper | `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]` |
+| Show the direct harness CLI help | `python3 evals/scripts/harness.py --help` |
+| Run validation directly without the Makefile | `python3 evals/scripts/harness.py validate` |
+| Scaffold a repeatable must-run eval workspace directly | `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run` |
 
 If a phase introduces executable helpers or eval runners, document the exact
 commands here and keep them current.

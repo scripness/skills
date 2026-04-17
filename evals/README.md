@@ -27,17 +27,25 @@ split below.
 
 ## Local Runner Surface
 
-Milestone 5 ships a deliberately thin local helper surface. It does not
-replace manual execution or review, but it makes the tracked harness
-repeatable before broader tooling exists.
+Milestone 5 introduced the direct helper script and Phase 06 Milestone 1 adds
+a thin repo-root `Makefile` above it. The wrappers stay deliberately small and
+delegate unique logic back to `evals/scripts/harness.py`.
 
-- Run `python3 evals/scripts/harness.py validate` to validate the tracked
-  eval definitions, fixture manifests, runtime metadata, must-run selection,
-  and `.tmp/evals/` ignore coverage.
-- Run `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
+- Run `make help` to list the shipped maintenance targets.
+- Run `make validate` to validate shipped skill structure, `SKILL.md`
+  frontmatter, local asset integrity, tracked eval definitions, fixture
+  manifests, runtime metadata, must-run selection, and `.tmp/evals/` ignore
+  coverage.
+- Run `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
   to scaffold `.tmp/evals/<run-id>/` with:
   `run.json`, `review-template.md`, `outputs/`, `transcripts/`, and
   `fixtures/`.
+- Run `python3 evals/scripts/harness.py --help` when you need the direct
+  script interface that the Makefile delegates to.
+- Run `python3 evals/scripts/harness.py validate` if you want the validation
+  surface without invoking `make`.
+- Run `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
+  if you want the direct scaffolding command instead of the Makefile wrapper.
 - Add `--selection validation` to include the full validation surface or
   `--selection all` to include both train and validation cases.
 - Add one or more `--skill <skill>` filters when you want a smaller run

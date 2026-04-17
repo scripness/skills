@@ -75,10 +75,11 @@ six-skill system cleanly once the skills and eval harness exist.
 ## Sync Expectations
 
 - `specs`: required as part of this phase rather than optional after the fact.
-  Milestones 1 and 3 change durable repo truth about the maintenance command
-  surface, validation coverage, eval refresh workflow, and operator guidance,
-  so keep `AGENTS.md`, `README.md`, `evals/README.md`, and `MAINTENANCE.md`
-  aligned before calling any milestone complete.
+  Milestone 1 changes durable repo truth about the maintenance command surface,
+  validation coverage, and eval refresh workflow, so keep `AGENTS.md`,
+  `README.md`, and `evals/README.md` aligned before calling Milestone 1
+  complete. Milestone 3 adds operator guidance, so keep those docs plus
+  `MAINTENANCE.md` aligned before calling the phase complete.
 - `tests`: required for any new executable surface in this phase. The minimum
   acceptable follow-through is smoke execution of each new `make` target or
   helper entrypoint, `--help` coverage for any script interface, and
@@ -117,10 +118,46 @@ six-skill system cleanly once the skills and eval harness exist.
   non-interactive, expose `--help`, separate machine-readable stdout from
   stderr diagnostics, report meaningful exit codes, and implement `--dry-run`
   or explicit confirmation when stateful behavior exists.
-- Confirm `AGENTS.md`, `README.md`, `evals/README.md`, and `MAINTENANCE.md`
-  describe the same command surface, maintenance loop, and durable-state model.
+- Confirm `AGENTS.md`, `README.md`, and `evals/README.md` describe the same
+  shipped command surface for Milestone 1; include `MAINTENANCE.md` in that
+  sync set once Milestone 3 lands.
 - Smoke-run each shipped command surface and record the exact commands and
   results in this plan before closing milestones.
+- [2026-04-17] Ran `python3 evals/scripts/harness.py --help` and it passed,
+  showing the direct `validate` and `init-run` subcommands behind the Makefile
+  wrappers.
+- [2026-04-17] Ran `python3 evals/scripts/harness.py validate` and it passed,
+  reporting 6 skills, 6 skill frontmatter files, 6 agent shims, 4 required
+  local assets, 12 trigger packs, 18 workflow cases, and 1 fixture manifest.
+- [2026-04-17] Ran
+  `python3 evals/scripts/harness.py init-run --run-id phase06-m1-direct-smoke --selection must-run --skill execute`
+  and it passed, creating `.tmp/evals/phase06-m1-direct-smoke/` with 2 cases
+  and the `cryptoli` fixture.
+- [2026-04-17] Ran `make help` and it passed, printing the shipped repo-level
+  targets and the direct script help entrypoint.
+- [2026-04-17] Ran `make validate` and it passed, delegating to the same
+  repo-level validation surface in `evals/scripts/harness.py` with the same
+  counts as the direct validation command.
+- [2026-04-17] Ran
+  `make eval-init-run RUN_ID=phase06-m1-make-smoke SELECTION=validation SKILL="execute verify"`
+  and it passed, creating `.tmp/evals/phase06-m1-make-smoke/` with 6 cases and
+  the `cryptoli` fixture through the Makefile wrapper.
+- [2026-04-17] Ran `git diff --check` and it passed with no whitespace or
+  patch-format issues after the Milestone 1 edits.
+- [2026-04-17] Ran `python3 evals/scripts/harness.py validate` again after the
+  gap-repair slice and it passed, confirming the validator now reads the
+  required local assets and checks their structural markers instead of
+  existence alone.
+- [2026-04-17] Ran `make validate` again after the gap-repair slice and it
+  passed through the same repo-level wrapper.
+- [2026-04-17] Ran
+  `python3 evals/scripts/harness.py init-run --run-id phase06-m1-gap-repair-direct --selection must-run --skill execute`
+  and it passed, creating `.tmp/evals/phase06-m1-gap-repair-direct/` with 2
+  cases and the `cryptoli` fixture after the validator changes.
+- [2026-04-17] Ran
+  `make eval-init-run RUN_ID=phase06-m1-gap-repair-make SELECTION=validation SKILL="execute verify"`
+  and it passed, creating `.tmp/evals/phase06-m1-gap-repair-make/` with 6
+  cases and the `cryptoli` fixture after the validator changes.
 
 ## Risks
 
@@ -131,22 +168,16 @@ six-skill system cleanly once the skills and eval harness exist.
 
 ## Open Questions
 
-- Should the repo-root `Makefile` also carry a discoverable `help` target, or
-  is explicit command documentation in `README.md` and `MAINTENANCE.md`
-  sufficient for the initial shipped surface?
 - After the `Makefile` exists, does any plan-driven helper still earn inclusion,
   or should Milestone 2 close by explicitly recording that no helper is needed?
 
 ## Blockers
 
 - None currently.
-- Current repo state is still Phase 05-only: `evals/scripts/harness.py` exists
-  and is documented, but there is no repo-root `Makefile`, no `execute/scripts/`
-  helper surface, and no separate `MAINTENANCE.md` yet.
 
 ## Progress
 
-- [ ] Milestone 1
+- [x] Milestone 1
 - [ ] Milestone 2
 - [ ] Milestone 3
 
@@ -157,6 +188,9 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Use a repo-root `Makefile` as the first Phase 06 maintenance
   surface so operator commands stay thin, reviewable, and additive above the
   existing `evals/scripts/harness.py` helpers.
+- [2026-04-17] Ship a discoverable `make help` target with the Makefile so the
+  repo-level maintenance surface is self-describing without adding hidden logic
+  or extra docs-only command names.
 - [2026-04-17] If a plan-driven convenience wrapper is justified, it belongs
   under `execute/scripts/` because it composes `execute` and `verify`; if no
   real gap remains after Milestone 1, close Milestone 2 explicitly without
@@ -164,6 +198,10 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Use repo-root `MAINTENANCE.md` as the durable home for skill
   update guidance, eval-running guidance, and upstreaming notes from downstream
   repo work.
+- [2026-04-17] Keep `MAINTENANCE.md` as a Milestone 3 deliverable rather than
+  back-solving the missing file into the Milestone 1 slice; the Milestone 1
+  sync gate is the shipped maintenance surface in `AGENTS.md`, `README.md`,
+  and `evals/README.md`.
 
 ## Discoveries
 
@@ -175,6 +213,21 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Before this repair, the Phase 06 plan lacked `Repo Context`,
   `Blockers`, and milestone-level acceptance criteria, which made fresh-session
   execution riskier than the shipped `plan` contract allows.
+- [2026-04-17] The shipped skill surface has one consistent structure today:
+  each skill owns `SKILL.md`, `agents/openai.yaml`, and `evals/evals.json`,
+  while only `plan/` and `specs/` currently ship required local assets worth
+  validating in the Phase 06 maintenance pass.
+- [2026-04-17] Re-reading the updated repo-truth docs after Milestone 1 showed
+  that `AGENTS.md`, `README.md`, `evals/README.md`, and the new `Makefile`
+  now describe the same thin maintenance surface instead of splitting command
+  truth across mismatched entrypoints.
+- [2026-04-17] The current tracked eval surface is larger than the rough Phase
+  06 placeholder implied: repo validation reports 18 workflow cases today, so
+  future plan notes should derive counts from the validator output instead of
+  carrying stale hardcoded numbers forward.
+- [2026-04-17] “Local asset integrity” needed a real implementation rather than
+  presence-only file checks; the required asset templates already expose stable
+  section markers that can be validated without adding a heavy schema layer.
 
 ## Outcomes / Retrospective
 
