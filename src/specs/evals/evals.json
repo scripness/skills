@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "skill": "specs",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete specs trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "specs-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise specs' trigger boundary on missing or stale repo-truth situations.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "specs-trigger-missing-harness",
+          "expected_outcome": "trigger",
+          "prompt": "This repo has code and tests but no AGENTS.md or specs/. Bootstrap the missing repo-truth layer so future planning and execution are safe.",
+          "why": "Repo truth is missing, so specs owns the bootstrap."
+        },
+        {
+          "id": "specs-near-miss-tests-only",
+          "expected_outcome": "no_trigger",
+          "prompt": "The parser behavior changed and its unit tests are stale. Update the coverage and run the relevant suite.",
+          "why": "Executable truth drift belongs to tests."
+        },
+        {
+          "id": "specs-near-miss-direct-implementation",
+          "expected_outcome": "no_trigger",
+          "prompt": "Add one missing field to evals/runtime.json and stop.",
+          "why": "A bounded implementation task belongs to execute."
+        }
+      ]
+    },
+    {
+      "id": "specs-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": true,
+      "grading": "assertion",
+      "goal": "Protect specs' ownership of repo truth without absorbing planning or review work.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "specs-trigger-stale-operational-guidance",
+          "expected_outcome": "trigger",
+          "prompt": "The repo added evals/runtime.json and .tmp/evals/, but AGENTS.md and README.md still describe the old layout. Sync the docs with code reality.",
+          "why": "Repo-wide operational truth is stale, so specs owns the sync."
+        },
+        {
+          "id": "specs-near-miss-plan-file-maintenance",
+          "expected_outcome": "no_trigger",
+          "prompt": "Update plans/2026-04-14-phase-05-evaluation-harness.md with the latest milestone status and blockers.",
+          "why": "Task-local plan maintenance belongs to plan."
+        },
+        {
+          "id": "specs-near-miss-verify-diff",
+          "expected_outcome": "no_trigger",
+          "prompt": "Review this AGENTS.md diff and tell me whether it introduced stale claims.",
+          "why": "Adversarial judgment belongs to verify."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "specs-workflow-train-bootstrap-truth-layer",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether specs can bootstrap a minimal but usable repo-truth layer from actual repo topology.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the specs skill materially improves repo-truth bootstrap quality over an unguided answer."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Bootstrap AGENTS.md and specs/ for a repo that currently has neither.",
+        "repo_state": [
+          "The repo has apps/api, packages/shared, tests/, dist/, and node_modules/.",
+          "There is no durable operational guidance yet.",
+          "The bootstrap should stay minimal and avoid a speculative doc forest."
+        ],
+        "required_inputs": [
+          "current codebase",
+          "repo layout"
+        ]
+      },
+      "assertions": [
+        "Inspects the actual repo topology before writing guidance.",
+        "Creates the minimum AGENTS.md and specs/ truth needed for safe future work.",
+        "Keeps generated or vendor paths out of the owning guidance.",
+        "Names the owning paths and boundaries a fresh agent will need."
+      ],
+      "review_questions": [
+        "Does the result improve agent navigability without turning into generic filler?",
+        "Does it preserve the distinction between durable repo truth and task-local plans?"
+      ]
+    },
+    {
+      "id": "specs-workflow-validation-sync-stale-truth",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether specs can sync stale repo truth after a structural or workflow change without broadening scope.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the specs skill limits the sync to stale owning docs instead of broadening scope."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Sync AGENTS.md and README.md after the eval harness layout changed.",
+        "repo_state": [
+          "The repo now tracks evals/runtime.json and skill-local eval definitions.",
+          "AGENTS.md and README.md still describe the old layout.",
+          "No product-code changes are needed."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "README.md",
+          "evals/runtime.json",
+          "current repo layout"
+        ]
+      },
+      "assertions": [
+        "Reads the existing truth layer before editing.",
+        "Updates only the owning docs that are actually stale.",
+        "Keeps AGENTS.md concise and repo-operational rather than task-specific.",
+        "Reports any remaining ambiguity or structural risk honestly."
+      ],
+      "review_questions": [
+        "Does the sync stay proportional instead of broadening into unrelated documentation work?"
+      ]
+    },
+    {
+      "id": "specs-workflow-validation-cryptoli-sync-truth",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether specs can sync repo truth on the pinned cryptoli monorepo without mistaking generated or operational paths for owning source.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether specs improves multi-app repo-truth sync quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Sync cryptoli's repo-truth docs so a fresh agent can navigate the three-app pnpm workspace, the root specs, and the ops surface without treating generated output as owning truth.",
+        "repo_state": [
+          "The pinned fixture includes apps/backend, apps/frontend, apps/admin, root AGENTS.md and README.md, specs/, ops/README.md, and local .agents/skills/ docs.",
+          "The evaluation branch intentionally leaves repo-truth docs stale after the admin and ops surfaces grew.",
+          "Generated and vendor paths still exist and should be excluded from owning guidance unless explicitly relevant."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/pnpm-workspace.yaml",
+          "cryptoli/ops/README.md"
+        ]
+      },
+      "assertions": [
+        "Reads the actual repo topology before editing the truth layer.",
+        "Updates only the owning docs that need sync instead of editing product code or task plans.",
+        "Captures the backend, frontend, and admin app boundaries plus the root specs and ops surfaces.",
+        "Keeps generated, vendor, and copied-artifact noise out of the owning guidance."
+      ],
+      "review_questions": [
+        "Does the sync improve agent navigability on the real repo without broadening into generic filler?"
+      ]
+    }
+  ]
+}

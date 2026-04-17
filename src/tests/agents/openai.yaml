@@ -1,0 +1,3 @@
+display_name: Test Truth Sync
+short_description: Bootstrap, extend, or sync test truth across the repo's actual test topology
+default_prompt: Use this skill to bootstrap, extend, or sync the test truth layer by discovering the repo's actual test topology, choosing proportional coverage layers, ignoring generated or vendor noise by default, closing concrete coverage gaps, and reporting remaining gaps honestly.

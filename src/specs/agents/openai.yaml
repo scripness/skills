@@ -1,0 +1,3 @@
+display_name: Repo Truth Sync
+short_description: Bootstrap, sync, or repair repo truth after discovering the repo's actual topology
+default_prompt: Use this skill to bootstrap, sync, or repair the repo truth layer in AGENTS.md and specs when current guidance is missing, stale, or too weak for safe planning, execution, or verification. Start by discovering the repo's actual topology, ignore generated or vendor noise by default, and improve organization guidance when weak boundaries or poor navigability reduce agent reliability.

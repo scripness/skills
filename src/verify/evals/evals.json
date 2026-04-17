@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "skill": "verify",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete verify trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "verify-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise verify's trigger boundary on concrete plans and claims.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "verify-trigger-plan-review",
+          "expected_outcome": "trigger",
+          "prompt": "Review plans/2026-04-14-phase-05-evaluation-harness.md against AGENTS.md and plans/2026-04-14-phase-00-design-doc.md and tell me whether the plan passes.",
+          "why": "There is a concrete plan target to judge."
+        },
+        {
+          "id": "verify-near-miss-consult",
+          "expected_outcome": "no_trigger",
+          "prompt": "I do not know whether the next move should be consult, plan, or execute. Recommend the safest next move.",
+          "why": "Clarification and recommendation belong to consult."
+        },
+        {
+          "id": "verify-near-miss-execute",
+          "expected_outcome": "no_trigger",
+          "prompt": "Implement the next milestone from this plan file and run the smallest meaningful checks.",
+          "why": "Implementation belongs to execute."
+        }
+      ]
+    },
+    {
+      "id": "verify-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": true,
+      "grading": "assertion",
+      "goal": "Protect verify's ownership of concrete diff and claim review.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "verify-trigger-implementation-review",
+          "expected_outcome": "trigger",
+          "prompt": "Review this concrete implementation slice for bugs, regressions, missing specs/tests sync, and blocked checks. Return findings first and a verdict.",
+          "why": "A concrete implementation target exists and needs adversarial judgment."
+        },
+        {
+          "id": "verify-near-miss-plan-maintenance",
+          "expected_outcome": "no_trigger",
+          "prompt": "Create or update a plan file for this task so a fresh session can resume it.",
+          "why": "Durable task-state maintenance belongs to plan."
+        },
+        {
+          "id": "verify-near-miss-direct-code-fix",
+          "expected_outcome": "no_trigger",
+          "prompt": "Fix the failing test and stop once the suite passes.",
+          "why": "Implementation belongs to execute or tests, not verify."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "verify-workflow-train-plan-review",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge plan-review quality against repo truth and explicit sync obligations.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the verify skill materially improves adversarial plan review over an unguided judgment."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Verify plans/2026-04-14-phase-05-evaluation-harness.md before implementation starts.",
+        "repo_state": [
+          "AGENTS.md requires findings-first review and treats missing required specs/tests sync as fail.",
+          "plans/2026-04-14-phase-00-design-doc.md section 7 defines the evaluation-harness scope.",
+          "Inspection may be enough if no mechanical check is needed."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "plans/2026-04-14-phase-00-design-doc.md",
+          "plans/2026-04-14-phase-05-evaluation-harness.md"
+        ]
+      },
+      "assertions": [
+        "Returns findings first and names the verification target.",
+        "Checks scope, sequencing, blockers, and explicit specs/tests follow-through against repo truth.",
+        "Runs or skips only the smallest meaningful checks and explains skipped checks honestly.",
+        "Ends with a verdict and remaining gaps."
+      ],
+      "review_questions": [
+        "Does the review stay adversarial instead of defending the plan?",
+        "Are any findings grounded in specific file references or command evidence?"
+      ]
+    },
+    {
+      "id": "verify-workflow-validation-implementation-review",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge implementation-review quality for a concrete slice with changed code, docs, and tests.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the verify skill materially improves concrete implementation review and missing-sync detection."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Review a concrete implementation slice that changed src/execute/SKILL.md, README.md, and one test file.",
+        "repo_state": [
+          "The claimed outcome is that execute's behavior changed and the tests were synced.",
+          "The review must separate unrelated baseline noise from problems introduced by the slice.",
+          "Missing required specs or tests sync should be treated as fail when the obligation is clear."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "changed files",
+          "relevant tests",
+          "diff or command claims"
+        ]
+      },
+      "assertions": [
+        "Returns findings first with file references or command evidence.",
+        "Checks correctness, regressions, and missing required specs/tests sync.",
+        "Separates unrelated baseline failures from newly introduced problems.",
+        "Ends with a clear verdict and remaining gaps."
+      ],
+      "review_questions": [
+        "Does the review catch material regressions instead of stopping at a surface summary?"
+      ]
+    },
+    {
+      "id": "verify-workflow-validation-cryptoli-repo-truth-review",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether verify can review a concrete cryptoli repo-truth and test-truth sync against the pinned fixture and return findings first.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether verify improves findings-first review quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Review a concrete cryptoli sync slice that changed AGENTS.md, specs/README.md, and specs/testing-strategy.md. Return findings first and a verdict.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with root repo-truth docs and layered backend plus frontend/admin tests.",
+          "The candidate slice claims to sync repo truth and testing guidance after the monorepo grew.",
+          "Missing required specs or tests sync should fail when the obligation is clear from the fixture and the claimed change."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/specs/testing-strategy.md",
+          "changed files or diff",
+          "command claims"
+        ]
+      },
+      "assertions": [
+        "Returns findings first with file references or command evidence.",
+        "Checks whether the three-app workspace, repo-truth surface, and testing layers are represented accurately against the pinned fixture.",
+        "Flags missing required repo-truth or test-truth sync instead of rubber-stamping the slice.",
+        "Ends with a clear verdict and any blocked checks."
+      ],
+      "review_questions": [
+        "Does the review stay adversarial and grounded in the actual fixture rather than generic doc-review language?"
+      ]
+    }
+  ]
+}

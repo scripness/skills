@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "skill": "execute",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete execute trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "execute-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise execute's direct-mode trigger boundary on locally clear implementation requests.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "execute-trigger-direct-bounded-change",
+          "expected_outcome": "trigger",
+          "prompt": "Update one stale sentence in README.md so it matches the shipped eval harness behavior, run the smallest meaningful check, and stop.",
+          "why": "The user wants immediate implementation and the work is still locally clear."
+        },
+        {
+          "id": "execute-near-miss-consult",
+          "expected_outcome": "no_trigger",
+          "prompt": "I do not know whether this repo needs specs, tests, or a plan first. Read the code and recommend the safest next move.",
+          "why": "The next move is unclear, so consult owns it."
+        },
+        {
+          "id": "execute-near-miss-verify",
+          "expected_outcome": "no_trigger",
+          "prompt": "Review this concrete patch and tell me whether it misses required tests sync.",
+          "why": "Adversarial review belongs to verify."
+        }
+      ]
+    },
+    {
+      "id": "execute-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": true,
+      "grading": "assertion",
+      "goal": "Protect execute's plan-driven entry rules and anti-triggers.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "execute-trigger-explicit-plan-path",
+          "expected_outcome": "trigger",
+          "prompt": "Read AGENTS.md, README.md, plans/2026-04-14-phase-00-design-doc.md, and plans/2026-04-14-phase-05-evaluation-harness.md, then execute only the next unfinished milestone from that exact plan file.",
+          "why": "The request is implementation now and it provides one explicit plan path."
+        },
+        {
+          "id": "execute-near-miss-plan-needed-no-path",
+          "expected_outcome": "no_trigger",
+          "prompt": "Finish the remaining evaluation-harness roadmap across several milestones, but there is no explicit plan file yet.",
+          "why": "Durable task state is needed before execution, so plan owns it."
+        },
+        {
+          "id": "execute-near-miss-claim-review",
+          "expected_outcome": "no_trigger",
+          "prompt": "Is the claim that verify always runs tests actually true in the current repo?",
+          "why": "Concrete fact-checking and judgment belong to verify."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "execute-workflow-train-direct-bounded-edit",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge direct bounded execution quality without plan-file invention.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether execute's direct-mode contract materially improves bounded implementation discipline."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Update one stale sentence in README.md and stop.",
+        "repo_state": [
+          "The requested work is one bounded docs edit.",
+          "No explicit plan path exists or is needed.",
+          "AGENTS.md requires repo truth to be read before editing and bounded mechanical checks before stopping."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "README.md"
+        ]
+      },
+      "assertions": [
+        "Chooses direct mode instead of inventing plan-driven execution.",
+        "Reads repo truth before editing.",
+        "Makes only the bounded change needed for the request.",
+        "Runs the smallest meaningful mechanical check.",
+        "States that no plan file was involved."
+      ],
+      "review_questions": [
+        "Does the implementation stay proportional instead of broadening into unrelated cleanup?",
+        "Does the output keep the handoff to verify explicit when review is still needed?"
+      ]
+    },
+    {
+      "id": "execute-workflow-validation-plan-driven-slice",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge plan-driven execution quality for the next unfinished milestone from an explicit plan path.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether execute's explicit-plan-path and one-slice stop rules materially improve plan-driven execution."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Read AGENTS.md, README.md, plans/2026-04-14-phase-00-design-doc.md, and plans/2026-04-14-phase-05-evaluation-harness.md, then execute only the next unfinished milestone and update the plan before stopping.",
+        "repo_state": [
+          "Milestones 1 and 2 in the plan are complete.",
+          "Milestone 3 is the next unfinished milestone.",
+          "Milestones 4 and 5 remain pending and must not be started in this session."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "README.md",
+          "plans/2026-04-14-phase-00-design-doc.md",
+          "plans/2026-04-14-phase-05-evaluation-harness.md"
+        ]
+      },
+      "assertions": [
+        "Uses the explicit plan path rather than guessing another plan file.",
+        "Identifies Milestone 3 as the next unfinished slice.",
+        "Implements only that slice and stops before Milestone 4.",
+        "Updates Progress, Decision Log, Discoveries, and Verification in the plan.",
+        "Reports follow-through and next-step verify handoff explicitly."
+      ],
+      "review_questions": [
+        "Does the session stay in the smart working zone instead of expanding into extra milestones?",
+        "Is the updated plan resumable for the next fresh execution session?"
+      ]
+    },
+    {
+      "id": "execute-workflow-validation-cryptoli-plan-slice",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge plan-driven execution discipline on the pinned cryptoli fixture when the harness provides an explicit plan file for a repo-truth slice.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether execute's explicit-plan-path and stop-after-one-slice rules improve real-repo execution discipline."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Read AGENTS.md, README.md, specs/testing-strategy.md, and plans/2026-04-20-cryptoli-agent-readiness-refresh.md in the pinned cryptoli fixture, then execute only the next unfinished milestone and update the plan before stopping.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with root repo-truth docs and layered backend plus frontend/admin tests.",
+          "The harness provides the explicit plan file and marks Milestone 1 as the next unfinished slice; later milestones remain pending.",
+          "Milestone 1 is a repo-truth sync slice that updates AGENTS.md and specs/README.md without starting later test-work."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/testing-strategy.md",
+          "cryptoli/plans/2026-04-20-cryptoli-agent-readiness-refresh.md"
+        ]
+      },
+      "assertions": [
+        "Uses the explicit plan path rather than inventing another plan or switching to direct mode.",
+        "Implements only the next unfinished milestone and stops before later milestones.",
+        "Updates the provided plan in place with progress, discoveries, and verification notes.",
+        "Runs the smallest meaningful checks for the repo-truth slice and leaves the verify handoff explicit."
+      ],
+      "review_questions": [
+        "Does the execution stay bounded and resumable on a real repo fixture instead of broadening into adjacent work?"
+      ]
+    }
+  ]
+}

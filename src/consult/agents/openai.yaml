@@ -1,0 +1,3 @@
+display_name: Deep Consult
+short_description: Clarify the safest next move before work is clear enough to execute or plan
+default_prompt: Use this skill when the safest next move is not yet clear enough to execute or plan. Clarify current behavior, viable options, key risks, and the recommendation. Do not use it to judge a concrete plan, implementation, diff, or claim; use verify instead. If the work should become plan-driven, say exactly what belongs in the plan.

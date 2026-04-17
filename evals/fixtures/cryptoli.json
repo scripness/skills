@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "fixture_id": "cryptoli",
+  "status": "pinned",
+  "repository": {
+    "full_name": "scripness/cryptoli",
+    "visibility": "private",
+    "default_branch": "main",
+    "clone_url": "https://github.com/scripness/cryptoli.git",
+    "pinned_commit": {
+      "sha": "5c634bd5018eba27b5d6881116d5328e287c03c3",
+      "committed_at": "2026-04-16T08:44:06Z",
+      "message": "Feat/seo optimization (#12)"
+    }
+  },
+  "checkout": {
+    "preferred_clone_command": "gh repo clone scripness/cryptoli <dest>",
+    "checkout_command": "git checkout 5c634bd5018eba27b5d6881116d5328e287c03c3",
+    "generated_workspace_root": ".tmp/evals/<run-id>/fixtures/cryptoli"
+  },
+  "topology": {
+    "repo_kind": "pnpm monorepo",
+    "workspace_file": "pnpm-workspace.yaml",
+    "workspace_globs": [
+      "apps/*"
+    ],
+    "package_manager": "pnpm@10.33.0",
+    "apps": [
+      {
+        "name": "backend",
+        "path": "apps/backend",
+        "stack": "NestJS 11",
+        "quality_commands": [
+          "pnpm --filter backend run test:unit",
+          "pnpm --filter backend run test:integration",
+          "pnpm --filter backend run test:e2e"
+        ],
+        "test_layers": [
+          "unit",
+          "integration",
+          "e2e",
+          "smoke"
+        ]
+      },
+      {
+        "name": "frontend",
+        "path": "apps/frontend",
+        "stack": "Next.js 16",
+        "quality_commands": [
+          "pnpm --filter frontend run test"
+        ],
+        "test_layers": [
+          "vitest"
+        ]
+      },
+      {
+        "name": "admin",
+        "path": "apps/admin",
+        "stack": "Next.js 16",
+        "quality_commands": [
+          "pnpm --filter admin run test"
+        ],
+        "test_layers": [
+          "vitest"
+        ]
+      }
+    ],
+    "repo_truth_paths": [
+      "AGENTS.md",
+      "README.md",
+      "specs/README.md",
+      "specs/testing-strategy.md",
+      ".agents/skills/"
+    ],
+    "ops_paths": [
+      "ops/README.md",
+      "scripts/"
+    ]
+  },
+  "eval_focus": [
+    "repo-topology discovery across a three-app pnpm workspace",
+    "codebase-organization assessment and repo-truth sync on a real monorepo",
+    "multi-app spec syncing",
+    "multi-layer test discovery and honest coverage reporting",
+    "plan, execute, and verify behavior against a real repo with pinned state"
+  ],
+  "pin_sanity_checks": [
+    {
+      "path": "pnpm-workspace.yaml",
+      "expectation": "Declares the apps/* workspace glob."
+    },
+    {
+      "path": "package.json",
+      "expectation": "Pins packageManager to pnpm@10.33.0 and exposes root build, test, and typecheck scripts."
+    },
+    {
+      "path": "apps/backend/test/integration",
+      "expectation": "Exists as the backend integration-test layer."
+    },
+    {
+      "path": "apps/backend/test/e2e",
+      "expectation": "Exists as the backend e2e-test layer."
+    },
+    {
+      "path": "apps/frontend/vitest.config.ts",
+      "expectation": "Exists as the frontend Vitest entrypoint."
+    },
+    {
+      "path": "apps/admin/vitest.config.ts",
+      "expectation": "Exists as the admin Vitest entrypoint."
+    },
+    {
+      "path": "AGENTS.md",
+      "expectation": "Documents the three-app monorepo, local skill usage, and quality commands."
+    },
+    {
+      "path": "specs/testing-strategy.md",
+      "expectation": "Documents backend unit, integration, and e2e layers plus frontend/admin testing."
+    }
+  ]
+}

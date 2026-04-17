@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "skill": "consult",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete consult trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
+  "default_baseline": "previous_committed_skill_version",
+  "optional_secondary_baseline": "no_skill_when_it_adds_signal",
+  "trigger_evals": [
+    {
+      "id": "consult-trigger-train-boundary-pack",
+      "split": "train",
+      "must_run": false,
+      "grading": "assertion",
+      "goal": "Exercise consult's trigger boundary on development-time clarification prompts.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "consult-trigger-unclear-next-move",
+          "expected_outcome": "trigger",
+          "prompt": "I need to improve a repo's workflow docs and testing policy, but I do not yet know whether the safest first move is specs, tests, or a durable plan. Read the repo and recommend the safest next move.",
+          "why": "The next move is not yet clear enough to execute or plan."
+        },
+        {
+          "id": "consult-near-miss-direct-execute",
+          "expected_outcome": "no_trigger",
+          "prompt": "Change one typo in README.md from 'behavour' to 'behavior' and stop.",
+          "why": "The work is locally clear and bounded, so execute owns it."
+        },
+        {
+          "id": "consult-near-miss-verify",
+          "expected_outcome": "no_trigger",
+          "prompt": "Review this concrete diff for missing specs or tests sync and tell me whether it passes.",
+          "why": "A concrete target already exists, so verify owns it."
+        }
+      ]
+    },
+    {
+      "id": "consult-trigger-validation-boundary-pack",
+      "split": "validation",
+      "must_run": true,
+      "grading": "assertion",
+      "goal": "Protect consult's production boundary against plan, execute, and verify overlap.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ]
+      },
+      "cases": [
+        {
+          "id": "consult-trigger-option-comparison",
+          "expected_outcome": "trigger",
+          "prompt": "Compare manual copy refresh against adding an install helper now, then recommend the safest next move and the key risks before Phase 06 starts.",
+          "why": "The user needs evidence-backed option comparison and recommendation, not implementation."
+        },
+        {
+          "id": "consult-near-miss-plan",
+          "expected_outcome": "no_trigger",
+          "prompt": "Create a durable plan file for finishing the evaluation harness across three milestones and keep it resumable for a fresh session.",
+          "why": "The direction is already clear and durable task state is needed, so plan owns it."
+        },
+        {
+          "id": "consult-near-miss-file-lookup",
+          "expected_outcome": "no_trigger",
+          "prompt": "Tell me which file defines the canonical eval runtime in this repo.",
+          "why": "A simple lookup should not promote into consult."
+        }
+      ]
+    }
+  ],
+  "workflow_evals": [
+    {
+      "id": "consult-workflow-train-recommend-plan",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether consult reads repo truth, compares options, and recommends plan when the direction is not yet settled and durable state will be needed.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether consult's recommendation contract materially improves the next-move decision."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "The evaluation harness needs another phase after Milestone 2, but I am not sure whether the safest next move is direct execution, a new plan file, or a repo-truth sync. Recommend the next move.",
+        "repo_state": [
+          "AGENTS.md says consult owns clarification and recommendation, plan owns durable task state, and execute owns implementation.",
+          "plans/2026-04-14-phase-00-design-doc.md describes multiple remaining evaluation-harness milestones.",
+          "The work will span more than one session if it becomes plan-driven."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "plans/2026-04-14-phase-00-design-doc.md",
+          "README.md"
+        ]
+      },
+      "assertions": [
+        "Reads repo truth before recommending a next move.",
+        "Names the current constraints or options instead of jumping straight to implementation.",
+        "Recommends plan because durable task state is warranted once the direction is clear.",
+        "Includes plan carry-forward facts such as owning paths, risks, or blockers."
+      ],
+      "review_questions": [
+        "Does the answer stay evidence-backed instead of turning into a broad survey?",
+        "Does it keep the recommendation concrete enough for the next session to act on immediately?"
+      ]
+    },
+    {
+      "id": "consult-workflow-validation-recommend-execute",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether consult refuses to inflate a locally clear implementation task into a plan or research theater.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether consult avoids inflating a locally clear task into unnecessary planning or research."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "A single wording fix is needed in evals/README.md. Tell me the safest next move.",
+        "repo_state": [
+          "The requested change is one bounded docs edit.",
+          "No durable task state is needed and there is no ambiguity about scope."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "evals/README.md"
+        ]
+      },
+      "assertions": [
+        "Identifies the task as locally clear and bounded.",
+        "Recommends execute rather than consult or plan.",
+        "Does not invent a durable plan file or a broad research loop."
+      ],
+      "review_questions": [
+        "Is the recommendation short, decisive, and aligned with the shipped skill boundaries?"
+      ]
+    },
+    {
+      "id": "consult-workflow-validation-cryptoli-next-move",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether consult reads the pinned cryptoli fixture and recommends the safest next move for repo-truth maintenance without inflating into planning or implementation.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether consult improves next-move recommendation quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "I need to refresh agent guidance in cryptoli after the admin app and ops docs matured, but I am not sure whether the safest first move is specs, tests, or a durable plan. Read the repo and recommend the safest next move.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with apps/backend, apps/frontend, and apps/admin plus root AGENTS.md, README.md, and specs/ guidance.",
+          "The task is about repo truth and test truth, not a concrete product-code change.",
+          "No explicit plan path exists yet."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/pnpm-workspace.yaml"
+        ]
+      },
+      "assertions": [
+        "Reads the pinned fixture manifest and relevant repo-truth files before recommending a next move.",
+        "Recognizes the task as repo-truth maintenance rather than a direct code or test change.",
+        "Recommends specs as the safest immediate next move instead of inventing a plan or implementation task.",
+        "Calls out the multi-app pnpm workspace and at least one owning path the next step must cover."
+      ],
+      "review_questions": [
+        "Does the recommendation stay grounded in the actual fixture instead of drifting into generic monorepo advice?"
+      ]
+    }
+  ]
+}

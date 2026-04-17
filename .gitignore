@@ -1,0 +1,3 @@
+# Generated eval artifacts, temporary fixture workspaces, and local interpreter caches.
+.tmp/evals/
+__pycache__/
