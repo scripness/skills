@@ -47,13 +47,13 @@ of judged only by intuition.
 ## Dependencies
 
 - Delivered contracts for all six skills through Phase 04
-- Existing `AGENTS.md`, `README.md`, and `TODO.md`
+- Existing `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
 - Access to `scripness/cryptoli` for deliberate pinning during Milestone 4;
   the tracked pin created here is an output of this phase, not a prerequisite
 
 ## Repo Context
 
-- Task source: `TODO.md` section `7. Add Full Evaluation Coverage`, plus the
+- Task source: `plans/2026-04-14-phase-00-design-doc.md` section `7. Add Full Evaluation Coverage`, plus the
   `AGENTS.md` command-table requirement to document exact commands when a phase
   introduces executable helpers or eval runners
 - Owning code paths: tracked eval definitions belong with the skills they
@@ -75,7 +75,7 @@ of judged only by intuition.
 - Owning spec paths: `AGENTS.md` is the authoritative workflow contract,
   including the Commands section that must name exact local runner commands
   once they exist; `README.md` is the shipped usage and maintenance surface;
-  `TODO.md` remains roadmap truth and should only be updated here if shipped
+  `plans/2026-04-14-phase-00-design-doc.md` remains roadmap truth and should only be updated here if shipped
   behavior would otherwise make its wording false or misleading
 - Owning test paths: there is still no formal automated suite in this repo, so
   the applicable follow-through for this phase is definition validation,
@@ -85,7 +85,7 @@ of judged only by intuition.
   command before claiming completion
 - Related docs or references:
   `plans/2026-04-14-phase-04-specs-and-tests-refresh.md` and the
-  evaluation-governance bullets in `TODO.md` section `7`
+  evaluation-governance bullets in `plans/2026-04-14-phase-00-design-doc.md` section `7`
 
 ## Sync Expectations
 
@@ -134,7 +134,7 @@ of judged only by intuition.
   change.
 - Confirm the exact local eval-runner commands are documented in `AGENTS.md`
   once the runner surface exists.
-- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `TODO.md`, and this plan after
+- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, and this plan after
   the Milestone 1 edits and confirmed they now align on the tracked eval
   layout, baseline comparison policy, canonical runtime profile, and ignored
   `.tmp/evals/` generated-output root without claiming that runners or
@@ -152,7 +152,7 @@ of judged only by intuition.
   Milestone 1 paths.
 - [2026-04-16] Ran `git diff --check` after the Milestone 1 edits; it passed
   with no whitespace or patch-format issues.
-- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `TODO.md`, `evals/README.md`,
+- [2026-04-16] Re-read `AGENTS.md`, `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, `evals/README.md`,
   `evals/runtime.json`, and this plan after the Milestone 2 edits and
   confirmed they now align on the shipped governance contract without claiming
   that concrete eval cases, pinned fixtures, or runner helpers already exist.
@@ -460,13 +460,13 @@ Milestone 5 note:
   explicitly say that each `src/<skill>/evals/evals.json` is hand-authored tracked
   input rather than generated output.
 - [2026-04-16] Added that missing contract rule to `evals/README.md` so the
-  shipped artifact contract now matches `TODO.md`'s Milestone 1 intent and the
+  shipped artifact contract now matches `plans/2026-04-14-phase-00-design-doc.md`'s Milestone 1 intent and the
   plan's completion claim.
 - [2026-04-16] Re-ran
   `jq empty evals/runtime.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`,
   `git check-ignore -v .tmp/evals/example-run/artifact.json`,
   `git diff --check`, and
-  `rg -n "author each src/<skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|src/<skill>/evals/evals.json" AGENTS.md README.md evals/README.md TODO.md plans/2026-04-14-phase-05-evaluation-harness.md`;
+  `rg -n "author each src/<skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|src/<skill>/evals/evals.json" AGENTS.md README.md evals/README.md plans/2026-04-14-phase-00-design-doc.md plans/2026-04-14-phase-05-evaluation-harness.md`;
   they passed or confirmed the repaired contract wording.
 - [2026-04-16] Fresh verification then found one remaining Milestone 3 policy
   gap: every workflow eval still listed `no_skill_when_it_adds_signal`

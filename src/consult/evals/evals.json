@@ -93,12 +93,12 @@
         "user_request": "The evaluation harness needs another phase after Milestone 2, but I am not sure whether the safest next move is direct execution, a new plan file, or a repo-truth sync. Recommend the next move.",
         "repo_state": [
           "AGENTS.md says consult owns clarification and recommendation, plan owns durable task state, and execute owns implementation.",
-          "TODO.md describes multiple remaining evaluation-harness milestones.",
+          "plans/2026-04-14-phase-00-design-doc.md describes multiple remaining evaluation-harness milestones.",
           "The work will span more than one session if it becomes plan-driven."
         ],
         "required_inputs": [
           "AGENTS.md",
-          "TODO.md",
+          "plans/2026-04-14-phase-00-design-doc.md",
           "README.md"
         ]
       },

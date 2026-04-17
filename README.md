@@ -43,7 +43,8 @@ The shipped six-skill workflow is:
 - `execute`
 - `verify`
 
-See [TODO.md](./TODO.md) for the implementation roadmap and
+See [Phase 00: Initial Design Doc](./plans/2026-04-14-phase-00-design-doc.md)
+for the implementation roadmap and
 [SOURCES.md](./SOURCES.md) for the durable design grounding captured from the
 official docs and example corpora.
 
@@ -63,9 +64,9 @@ chance of success.
 
 - `src/` contains only the six shipped source skills and their local assets,
   eval definitions, and helper scripts.
-- Repo-root docs such as `AGENTS.md`, `README.md`, `TODO.md`,
-  `MAINTENANCE.md`, and `SOURCES.md` define the workflow contract, roadmap,
-  and design grounding around those skills.
+- Repo docs such as `AGENTS.md`, `README.md`, `MAINTENANCE.md`, and
+  `SOURCES.md`, plus the design doc and phase plans under `plans/`, define the
+  workflow contract, roadmap, and design grounding around those skills.
 - Repo-root `evals/`, `plans/`, and `.tmp/evals/` hold the harness metadata,
   execution artifacts, and generated local outputs around the source skills.
 

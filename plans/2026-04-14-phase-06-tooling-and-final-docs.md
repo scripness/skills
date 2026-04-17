@@ -36,7 +36,7 @@ six-skill system cleanly once the skills and eval harness exist.
 
 ## Repo Context
 
-- Task source: `TODO.md` sections `8. Add Repo-Level Maintenance Tooling` and
+- Task source: `plans/2026-04-14-phase-00-design-doc.md` sections `8. Add Repo-Level Maintenance Tooling` and
   `9. Add Core Repo Docs`, plus the 2026-04-17 verification finding that this
   plan needed explicit owning paths, blockers, and milestone acceptance
   criteria before Phase 06 execution could start safely
@@ -54,7 +54,7 @@ six-skill system cleanly once the skills and eval harness exist.
   command table, `README.md` for the shipped usage surface, `evals/README.md`
   for eval artifact and review procedure details, and repo-root
   `MAINTENANCE.md` for operator guidance on updating skills, running evals, and
-  upstreaming improvements from downstream repos; update `TODO.md` only if
+  upstreaming improvements from downstream repos; update `plans/2026-04-14-phase-00-design-doc.md` only if
   shipped behavior would otherwise make the roadmap wording false
 - Owning test paths: there is still no formal automated suite in this repo, so
   the minimum acceptable follow-through is smoke execution of each new
@@ -63,14 +63,14 @@ six-skill system cleanly once the skills and eval harness exist.
   truth
 - Related docs or references:
   `plans/2026-04-14-phase-05-evaluation-harness.md`, `README.md`,
-  `AGENTS.md`, and `TODO.md` sections `8` and `9`
+  `AGENTS.md`, and `plans/2026-04-14-phase-00-design-doc.md` sections `8` and `9`
 
 ## Dependencies
 
 - Delivered six-skill system
 - Delivered initial eval harness, including the current
   `evals/scripts/harness.py` validate-plus-init-run surface
-- Existing `README.md`, `AGENTS.md`, `evals/README.md`, and `TODO.md`
+- Existing `README.md`, `AGENTS.md`, `evals/README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
 
 ## Sync Expectations
 
@@ -235,7 +235,7 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Re-ran `git diff --check` after the self-describing-surface
   repair and it passed with no whitespace or patch-format issues.
 - [2026-04-17] Fresh `execute` follow-through re-read `AGENTS.md`,
-  `README.md`, `TODO.md`, and this plan, then stopped without implementation
+  `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, and this plan, then stopped without implementation
   changes because all three Phase 06 milestones were already complete and the
   recorded smoke checks above already cover the shipped maintenance surface.
 

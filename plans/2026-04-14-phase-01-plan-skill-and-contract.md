@@ -4,8 +4,8 @@
 
 Establish the provider-agnostic contract for this repo, lock the six-skill
 workflow shape, and add the missing `plan` skill so later phases can execute
-against explicit living plan files instead of only against `TODO.md`, while
-keeping `AGENTS.md`, `README.md`, and `TODO.md` aligned with the shipped
+against explicit living plan files instead of only against `plans/2026-04-14-phase-00-design-doc.md`, while
+keeping `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` aligned with the shipped
 contract.
 
 ## Scope
@@ -27,7 +27,7 @@ contract.
 - `1. Define Repo Contract`
 - `2. Define The Six-Skill Workflow`
 - `3. Add The Plan Skill`
-- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `TODO.md`
+- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
   truthful after shipping `plan`
 
 ## Deliverables
@@ -35,7 +35,7 @@ contract.
 - `src/plan/SKILL.md`
 - `src/plan/agents/openai.yaml`
 - `src/plan/assets/plan-template.md`
-- Minimal updates to `AGENTS.md`, `README.md`, and `TODO.md` needed to keep the
+- Minimal updates to `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` needed to keep the
   shipped contract and refresh workflow truth aligned with the delivered
   `plan` skill
 
@@ -43,7 +43,7 @@ contract.
 
 - Existing `AGENTS.md`
 - Existing `README.md`
-- Existing `TODO.md`
+- Existing `plans/2026-04-14-phase-00-design-doc.md`
 - Existing shipped skills for boundary alignment:
   `consult`, `specs`, `tests`, and `verify`
 
@@ -52,7 +52,7 @@ contract.
 - `specs`: required in this phase because shipping `plan` changes durable repo
   truth about the canonical workflow, skill boundaries, and task-state model;
   in this repo that means updating `AGENTS.md` first as the authoritative
-  contract, then keeping `README.md` and `TODO.md` aligned with the delivered
+  contract, then keeping `README.md` and `plans/2026-04-14-phase-00-design-doc.md` aligned with the delivered
   `plan` skill and the chosen refresh workflow.
 - `tests`: not expected in this phase unless the implementation introduces
   executable helpers, validators, or other behavior that should be covered now.
@@ -70,13 +70,13 @@ contract.
    provider-agnostic scope.
 5. Add `src/plan/assets/plan-template.md` with the full self-contained living-plan
    structure required by the roadmap.
-6. Sync repo docs minimally so `AGENTS.md`, `README.md`, and `TODO.md` stay
+6. Sync repo docs minimally so `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` stay
    truthful, while keeping the bootstrap asymmetry explicit until `execute`
    exists.
 
 ## Verification
 
-- Read the shipped `plan` skill against `AGENTS.md`, `README.md`, and `TODO.md`
+- Read the shipped `plan` skill against `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
   and confirm the boundaries are consistent.
 - Confirm the plan template includes goal, scope, non-goals, milestones,
   verification, risks, open questions, progress, decision log, discoveries, and
@@ -115,7 +115,7 @@ Milestone 6 note:
 - Minimal `AGENTS.md` and `README.md` truth sync was completed as required
   follow-through for shipping Milestone 4.
 - Milestone 5 did not require new doc edits because the shipped template
-  matches the existing `AGENTS.md`, `README.md`, `TODO.md`, and `src/plan/SKILL.md`
+  matches the existing `AGENTS.md`, `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, and `src/plan/SKILL.md`
   contract rather than changing it.
 - Milestone 6 closed after the final phase-wide doc pass confirmed the shipped
   docs remained truthful and the reusable template no longer contained the raw
@@ -150,7 +150,7 @@ Milestone 6 note:
 
 ## Discoveries
 
-- [2026-04-14] `TODO.md` is the roadmap, not the execution artifact; later
+- [2026-04-14] `plans/2026-04-14-phase-00-design-doc.md` is the roadmap, not the execution artifact; later
   phases should execute from explicit `plans/*.md` files.
 - [2026-04-14] The existing `consult` skill already forbids owning long-lived
   task state, so the `consult` -> `plan` boundary could be locked with
@@ -167,7 +167,7 @@ Milestone 6 note:
   so the new `plan` skill could be added proportionally without inventing a
   different scaffold shape.
 - [2026-04-14] Shipping `src/plan/` immediately made the old "plan is still
-  planned" wording in `AGENTS.md` and `README.md` false, while `TODO.md`
+  planned" wording in `AGENTS.md` and `README.md` false, while `plans/2026-04-14-phase-00-design-doc.md`
   remained valid because it is the roadmap rather than the shipped-state index.
 - [2026-04-14] The existing phase plans already provided a stable reusable
   shape for the template: goal, scope, non-goals, sync expectations,
@@ -187,7 +187,7 @@ Milestone 6 note:
 
 ## Verification
 
-- [2026-04-14] Verified `AGENTS.md`, `README.md`, and `TODO.md` all capture the
+- [2026-04-14] Verified `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` all capture the
   same Milestone 1 contract: `plan` triggers on durable-state need, starts
   after `consult` has clarified the next move, owns only task-local plan files,
   hands implementation off to `execute` via an explicit plan path, uses
@@ -195,18 +195,18 @@ Milestone 6 note:
   resumption from repo truth plus the plan file.
 - [2026-04-14] Verified Milestone 2 doc sync: `AGENTS.md` now names itself as
   the authoritative refresh-workflow contract, and `AGENTS.md`, `README.md`,
-  and `TODO.md` all say the initial default is manual copy into
+  and `plans/2026-04-14-phase-00-design-doc.md` all say the initial default is manual copy into
   `.agents/skills/`, with install helpers, subtree wiring, and
   provider-specific plugins remaining optional.
 - [2026-04-14] Re-ran Milestone 2 verification after adding the missing
-  `TODO.md` pointer: `README.md` and `TODO.md` both now explicitly name
+  `plans/2026-04-14-phase-00-design-doc.md` pointer: `README.md` and `plans/2026-04-14-phase-00-design-doc.md` both now explicitly name
   `AGENTS.md` as the owning refresh-workflow contract, so the owner location is
   captured in shipped docs rather than implied.
 - [2026-04-14] Deferred milestone-specific verification that depends on the
   shipped `plan` skill, template, and refresh workflow to later milestones in
   this phase.
 - [2026-04-14] Verified Milestone 3 trigger tightening by re-reading
-  `AGENTS.md`, `README.md`, and `TODO.md`: all now say `plan` is for durable
+  `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`: all now say `plan` is for durable
   task-state need, not abstract size; they explicitly name anti-triggers for
   short clarification or locally clear bounded work; and they require an
   explicit `plans/*.md` path for handoff to `execute` and `verify`.
@@ -230,7 +230,7 @@ Milestone 6 note:
   follow-through, and plans must preserve material blockers for fresh-session
   resumption.
 - [2026-04-14] Re-read `src/plan/assets/plan-template.md`, `src/plan/SKILL.md`,
-  `AGENTS.md`, `README.md`, and `TODO.md` after adding the template and
+  `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` after adding the template and
   confirmed the reusable plan skeleton includes goal, scope, non-goals,
   deliverables, repo context, dependencies, explicit `specs`/`tests` sync
   expectations, milestones, verification, risks, open questions, blockers,
@@ -244,7 +244,7 @@ Milestone 6 note:
 - [2026-04-14] Re-ran `git diff --check` after replacing raw angle-bracket
   placeholders in `src/plan/assets/plan-template.md` with plain bracketed text; it
   passed with no whitespace or patch-format issues.
-- [2026-04-14] Re-read `AGENTS.md`, `README.md`, `TODO.md`, `src/plan/SKILL.md`,
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, `src/plan/SKILL.md`,
   and `src/plan/assets/plan-template.md` during the final Phase 01 verification
   pass and confirmed the shipped contract still aligns on `plan` being shipped,
   `execute` remaining unshipped, manual copy into `.agents/skills/` as the

@@ -42,18 +42,18 @@ review.
 
 - Completed Phase 01 and Phase 02 or equivalent delivered contracts for `plan`
   and `execute`
-- Existing `README.md` and `TODO.md`
+- Existing `README.md` and `plans/2026-04-14-phase-00-design-doc.md`
 
 ## Repo Context
 
-- Task source: the `consult` and `verify` entries in `TODO.md` section
+- Task source: the `consult` and `verify` entries in `plans/2026-04-14-phase-00-design-doc.md` section
   `5. Improve The Six Core Skills`, plus the relevant source-grounding work in
   section `6. Ground The Skills In Official Sources`
 - Owning code paths: `src/consult/` and `src/verify/`, including both `SKILL.md` and
   `agents/openai.yaml` because the agent wrapper prompts are part of the
   shipped surface
 - Owning spec paths: `AGENTS.md` as the authoritative workflow contract and
-  `README.md` as shipped usage guidance; `TODO.md` remains roadmap truth and
+  `README.md` as shipped usage guidance; `plans/2026-04-14-phase-00-design-doc.md` remains roadmap truth and
   should stay aligned where shipped behavior would otherwise make its wording
   false or misleading
 - Owning test paths: there is still no formal automated suite in this repo, so

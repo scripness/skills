@@ -1,4 +1,19 @@
-# TODO
+# Phase 00: Initial Design Doc
+
+This file preserves the initial design that preceded Phase 01 through Phase 06.
+It is the design baseline for the repo, not the active execution artifact and
+not the shipped-state index.
+
+Execution status of this design:
+
+- Sections `1-3` were executed through Phase 01.
+- Section `4` was executed through Phase 02.
+- Sections `5-6` were executed through Phases 03 and 04.
+- Section `7` was executed through Phase 05.
+- Sections `8-9` were executed through Phase 06.
+
+For current shipped truth, use `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
+`SOURCES.md`, and the completed phase plan files under `plans/`.
 
 ## 1. Define Repo Contract
 
@@ -297,6 +312,8 @@
 
 ## 8. Add Repo-Level Maintenance Tooling
 
+- Status: shipped in Phase 06; preserved here as the original design scope.
+
 - Add a small command surface for validation and eval refresh.
 - Validate skill structure, frontmatter, and local asset integrity.
 - Decide whether a `Makefile`, shell scripts, or another lightweight interface
@@ -325,6 +342,8 @@
 - Consider adding CI later, but keep the local maintenance loop usable first.
 
 ## 9. Add Core Repo Docs
+
+- Status: shipped in Phase 06; preserved here as the original design scope.
 
 - Expand `README.md` so it explains the full `0 -> 100` workflow:
   bootstrap repo truth, bootstrap test truth, consult, plan, execute, verify,

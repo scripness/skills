@@ -21,7 +21,7 @@
         {
           "id": "verify-trigger-plan-review",
           "expected_outcome": "trigger",
-          "prompt": "Review plans/2026-04-14-phase-05-evaluation-harness.md against AGENTS.md and TODO.md and tell me whether the plan passes.",
+          "prompt": "Review plans/2026-04-14-phase-05-evaluation-harness.md against AGENTS.md and plans/2026-04-14-phase-00-design-doc.md and tell me whether the plan passes.",
           "why": "There is a concrete plan target to judge."
         },
         {
@@ -93,12 +93,12 @@
         "user_request": "Verify plans/2026-04-14-phase-05-evaluation-harness.md before implementation starts.",
         "repo_state": [
           "AGENTS.md requires findings-first review and treats missing required specs/tests sync as fail.",
-          "TODO.md section 7 defines the evaluation-harness scope.",
+          "plans/2026-04-14-phase-00-design-doc.md section 7 defines the evaluation-harness scope.",
           "Inspection may be enough if no mechanical check is needed."
         ],
         "required_inputs": [
           "AGENTS.md",
-          "TODO.md",
+          "plans/2026-04-14-phase-00-design-doc.md",
           "plans/2026-04-14-phase-05-evaluation-harness.md"
         ]
       },

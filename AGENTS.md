@@ -21,8 +21,8 @@ Shipped skills today:
 - `tests`
 - `verify`
 
-Current roadmap:
-- [TODO.md](TODO.md)
+Phase 00 design doc:
+- [Phase 00: Initial Design Doc](plans/2026-04-14-phase-00-design-doc.md)
 
 Operator guidance for updating skills, refreshing eval workspaces, and
 upstreaming durable improvements from downstream repos lives in
@@ -30,7 +30,8 @@ upstreaming durable improvements from downstream repos lives in
 
 Durable source grounding for the workflow lives in [SOURCES.md](SOURCES.md).
 
-Current execution plans for building the missing system:
+Phase plans used to build and verify the system:
+- [plans/2026-04-14-phase-00-design-doc.md](plans/2026-04-14-phase-00-design-doc.md)
 - [plans/2026-04-14-phase-01-plan-skill-and-contract.md](plans/2026-04-14-phase-01-plan-skill-and-contract.md)
 - [plans/2026-04-14-phase-02-execute-skill.md](plans/2026-04-14-phase-02-execute-skill.md)
 - [plans/2026-04-14-phase-03-consult-and-verify-refresh.md](plans/2026-04-14-phase-03-consult-and-verify-refresh.md)
@@ -43,14 +44,15 @@ Current execution plans for building the missing system:
 For this repo, use these files in this order:
 
 1. `AGENTS.md`
-2. `TODO.md`
+2. the Phase 00 design doc: `plans/2026-04-14-phase-00-design-doc.md`
 3. the active `plans/*.md` file for the current phase
 4. `README.md`
 5. the relevant skill directories and assets
 
 Important:
 
-- `TODO.md` is the roadmap, not the active execution artifact.
+- `plans/2026-04-14-phase-00-design-doc.md` is the design baseline and
+  roadmap, not the active execution artifact.
 - `plans/*.md` are the active task artifacts for the current phase.
 - `README.md` should reflect shipped truth, not aspirational behavior.
 - Code and checked-in files are reality. Docs must stay synced to what is
@@ -185,7 +187,7 @@ Shipped `execute` contract for this repo:
 
 When working on the roadmap:
 
-1. Read `AGENTS.md`, `TODO.md`, and the active phase plan.
+1. Read `AGENTS.md`, the Phase 00 design doc, and the active phase plan.
 2. Use a fresh session per bounded milestone or slice.
 3. Use [src/execute/SKILL.md](src/execute/SKILL.md) with the explicit plan path for
    implementation.
@@ -217,13 +219,13 @@ Ask first:
 
 - broad workflow changes that alter the six-skill model
 - adding heavy automation or orchestration that becomes required for correctness
-- widening a phase beyond its owned TODO sections
+- widening a phase beyond its owned Phase 00 design-doc sections
 
 Never:
 
 - treat provider plan modes, plugins, or auto-memory as required workflow
   primitives
-- turn `TODO.md` into a single giant execution plan
+- turn the Phase 00 design doc into a single giant execution plan
 - guess the latest active plan file in plan-driven work
 - let docs claim shipped behavior that the repo does not yet implement
 
@@ -236,7 +238,6 @@ Never:
 ├── CLAUDE.md -> AGENTS.md
 ├── SOURCES.md
 ├── README.md
-├── TODO.md
 ├── evals/
 ├── src/
 │   ├── consult/
@@ -246,6 +247,13 @@ Never:
 │   ├── tests/
 │   └── verify/
 └── plans/
+    ├── 2026-04-14-phase-00-design-doc.md
+    ├── 2026-04-14-phase-01-plan-skill-and-contract.md
+    ├── 2026-04-14-phase-02-execute-skill.md
+    ├── 2026-04-14-phase-03-consult-and-verify-refresh.md
+    ├── 2026-04-14-phase-04-specs-and-tests-refresh.md
+    ├── 2026-04-14-phase-05-evaluation-harness.md
+    └── 2026-04-14-phase-06-tooling-and-final-docs.md
 ```
 
 Bootstrap assets live under `src/specs/assets/`.
@@ -263,7 +271,7 @@ Useful local commands:
 |---------|---------|
 | List files | `rg --files .` |
 | Search text | `rg "pattern" .` |
-| Inspect roadmap | `sed -n '1,260p' TODO.md` |
+| Inspect the Phase 00 design doc | `sed -n '1,260p' plans/2026-04-14-phase-00-design-doc.md` |
 | Inspect maintenance guide | `sed -n '1,260p' MAINTENANCE.md` |
 | Inspect active plan | `sed -n '1,220p' plans/<file>.md` |
 | Check git status | `git status --short` |
@@ -282,7 +290,9 @@ commands here and keep them current.
 ## Conventions
 
 - Keep `AGENTS.md` concise and operational.
-- Keep durable roadmap and contract truth in `TODO.md` and `README.md`.
+- Keep durable design-roadmap truth in
+  `plans/2026-04-14-phase-00-design-doc.md`.
+- Keep current shipped workflow truth in `AGENTS.md` and `README.md`.
 - Keep phase-local state in `plans/*.md`.
 - Keep the six source skills under `src/` so the repo-root workflow docs and
   tooling stay clearly separated from the shipped skill payloads.

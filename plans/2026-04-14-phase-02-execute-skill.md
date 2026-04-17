@@ -26,7 +26,7 @@ improvised prompts.
 
 - `4. Add The Execute Skill`
 - The `execute` parts of `5. Improve The Six Core Skills`
-- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `TODO.md`
+- Minimal doc sync needed to keep `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
   truthful after shipping `execute`
 
 ## Deliverables
@@ -35,19 +35,19 @@ improvised prompts.
 - `src/execute/agents/openai.yaml`
 - Minimal updates to `AGENTS.md` and `README.md` needed to keep the shipped
   `execute` contract truthful
-- Minimal updates to `TODO.md` if the delivered `execute` behavior changes the
+- Minimal updates to `plans/2026-04-14-phase-00-design-doc.md` if the delivered `execute` behavior changes the
   current roadmap wording or assumptions for later phases
 
 ## Repo Context
 
-- Task source: `TODO.md` section `4. Add The Execute Skill`, plus the
+- Task source: `plans/2026-04-14-phase-00-design-doc.md` section `4. Add The Execute Skill`, plus the
   `execute`-specific trigger and boundary work in section
   `5. Improve The Six Core Skills`
 - Owning code paths: `src/execute/`, with boundary-alignment touchpoints in
   `src/plan/SKILL.md`, `src/consult/SKILL.md`, `src/verify/SKILL.md`, and any
   doc files that still describe the pre-`execute` bootstrap loop
 - Owning spec paths: `AGENTS.md` as the authoritative workflow contract and
-  `README.md` as shipped usage guidance; `TODO.md` remains the roadmap and must
+  `README.md` as shipped usage guidance; `plans/2026-04-14-phase-00-design-doc.md` remains the roadmap and must
   stay consistent where shipped behavior would otherwise make its wording false
 - Owning test paths: no formal automated suite exists yet in this repo; use the
   repo command guidance in `AGENTS.md` plus bounded mechanical checks for the
@@ -60,7 +60,7 @@ improvised prompts.
 
 - Completed Phase 01 or equivalent delivered `plan` skill contract
 - Existing `consult`, `specs`, `tests`, and `verify` skill boundaries
-- Existing `AGENTS.md`, `README.md`, and `TODO.md`
+- Existing `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`
 - Existing pre-ship bootstrap workflow notes captured in repo history
 
 ## Sync Expectations
@@ -70,7 +70,7 @@ improvised prompts.
   behavior, plan-path handoff, and `specs`/`tests` sync responsibilities; in
   this repo that means updating `AGENTS.md` first as the authoritative
   contract, then keeping `README.md` aligned with the shipped `execute` skill,
-  and updating `TODO.md` only where the roadmap wording would otherwise become
+  and updating `plans/2026-04-14-phase-00-design-doc.md` only where the roadmap wording would otherwise become
   false or misleading after the ship.
 - `tests`: no dedicated automated test layer is expected in this phase unless
   the implementation introduces executable helpers, validators, or eval
@@ -96,7 +96,7 @@ improvised prompts.
 
 - Confirm the Phase 02 deliverables exist with the intended narrow scaffold:
   `src/execute/SKILL.md` and `src/execute/agents/openai.yaml`.
-- Re-read `src/execute/SKILL.md`, `AGENTS.md`, `README.md`, and `TODO.md` together
+- Re-read `src/execute/SKILL.md`, `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` together
   after each contract-changing slice and confirm they stay aligned on shipped
   versus planned workflow.
 - Confirm `execute` never guesses the latest plan file.
@@ -109,17 +109,17 @@ improvised prompts.
   plan-driven modes are both discoverable without overlapping other skills.
 - Run `git diff --check` after each edit set that changes the shipped skill or
   doc contract.
-- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `TODO.md` after the
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` after the
   Milestone 1 edits and confirmed they now align on `execute` supporting
   direct bounded execution and explicit plan-driven execution, forbidding
   latest-plan guessing, and handing adversarial review to `verify`.
 - [2026-04-14] Ran
-  `rg -n 'latest plan file|adversarial review|hand off explicitly|hand adversarial review back' AGENTS.md README.md TODO.md`
+  `rg -n 'latest plan file|adversarial review|hand off explicitly|hand adversarial review back' AGENTS.md README.md plans/2026-04-14-phase-00-design-doc.md`
   and confirmed the tightened boundary language is present in repo truth and
   the roadmap.
 - [2026-04-14] Ran `git diff --check` after the Milestone 1 doc edits; it
   passed with no whitespace or patch-format issues.
-- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `TODO.md` after the
+- [2026-04-14] Re-read `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md` after the
   Milestone 2 edits and confirmed they now align on the positive `execute`
   trigger ("implementation now"), the anti-triggers that hand unclear work
   back to `consult`, durable-state setup back to `plan`, and adversarial
@@ -132,7 +132,7 @@ improvised prompts.
 - [2026-04-14] Ran `git diff --check` after the Milestone 2 doc edits; it
   passed with no whitespace or patch-format issues.
 - [2026-04-15] Re-read `src/execute/SKILL.md`, `AGENTS.md`, `README.md`, and
-  `TODO.md` after shipping the `src/execute/` scaffold and confirmed they align on
+  `plans/2026-04-14-phase-00-design-doc.md` after shipping the `src/execute/` scaffold and confirmed they align on
   direct versus plan-driven entry modes, the explicit-plan-path requirement,
   one-bounded-slice execution, required `specs`/`tests` follow-through, and
   explicit handoff to `verify`.
@@ -220,7 +220,7 @@ Milestone 5 note:
   updated the roadmap working loop to use the real `execute` and `verify`
   skills, and marked the old bootstrap prompt files as legacy reference
   artifacts.
-- No `TODO.md` edit was required because the roadmap wording remained truthful
+- No `plans/2026-04-14-phase-00-design-doc.md` edit was required because the roadmap wording remained truthful
   after the shipped `execute` contract landed.
 
 ## Decision Log
@@ -231,7 +231,7 @@ Milestone 5 note:
   through when `execute` ships, because `AGENTS.md` is this repo's highest-
   priority workflow contract and cannot remain in the pre-`execute` state.
 - [2026-04-14] Treat Milestone 1 as doc-contract tightening only: align
-  `AGENTS.md` and `README.md` with the existing `TODO.md` boundary before
+  `AGENTS.md` and `README.md` with the existing `plans/2026-04-14-phase-00-design-doc.md` boundary before
   creating any `src/execute/` files, so the repo does not imply that `execute` is
   already shipped.
 - [2026-04-14] Treat Milestone 2 as a second doc-contract slice before
@@ -261,7 +261,7 @@ Milestone 5 note:
 - [2026-04-14] The Phase 02 plan itself needed explicit repo context,
   blockers, and named `specs` ownership to satisfy the shipped `plan`
   resumability contract before implementation starts.
-- [2026-04-14] `TODO.md` already captured the intended `execute` boundary more
+- [2026-04-14] `plans/2026-04-14-phase-00-design-doc.md` already captured the intended `execute` boundary more
   precisely than `AGENTS.md` and `README.md`, so Milestone 1 only needed truth
   sync rather than roadmap edits.
 - [2026-04-14] The missing contract details were the explicit split between
@@ -274,13 +274,13 @@ Milestone 5 note:
   the repo already had a plan-driven example, but not a matching direct
   bounded-execution example.
 - [2026-04-15] Most of the `execute` boundary was already captured in
-  `AGENTS.md`, `README.md`, and `TODO.md`; shipping the skill mainly required
+  `AGENTS.md`, `README.md`, and `plans/2026-04-14-phase-00-design-doc.md`; shipping the skill mainly required
   turning that planned contract into a concrete skill scaffold and removing the
   stale "not shipped yet" wording.
 - [2026-04-15] The `specs`/`tests` sync gate could be expressed proportionally
   inside the first `execute` skill without broadening the repo or adding new
   tooling.
-- [2026-04-15] `TODO.md` remained valid as roadmap truth after the ship, so the
+- [2026-04-15] `plans/2026-04-14-phase-00-design-doc.md` remained valid as roadmap truth after the ship, so the
   required doc sync for this slice was limited to `AGENTS.md` and `README.md`.
 - [2026-04-15] The narrowest remaining risk after shipping was not in the main
   skill body but in the connector-facing default prompt, which also needed to

@@ -46,14 +46,14 @@ without hardcoded layout assumptions.
 ## Dependencies
 
 - Delivered contracts for `plan` and `execute`
-- Existing `README.md`, `TODO.md`, and `src/specs/assets/*`
+- Existing `README.md`, `plans/2026-04-14-phase-00-design-doc.md`, and `src/specs/assets/*`
 - Real-world monorepo reference shape from `scripness/cryptoli`, but only as
   captured in the repo context below; do not depend on unstated external notes
   or a floating external HEAD
 
 ## Repo Context
 
-- Task source: the `specs` and `tests` entries in `TODO.md` section
+- Task source: the `specs` and `tests` entries in `plans/2026-04-14-phase-00-design-doc.md` section
   `5. Improve The Six Core Skills`, plus the relevant source-grounding work in
   section `6. Ground The Skills In Official Sources`
 - Owning code paths: `specs/` and `src/tests/`, including both `SKILL.md` and
@@ -77,7 +77,7 @@ without hardcoded layout assumptions.
   required portable default
 - Related docs or references:
   `plans/2026-04-14-phase-03-consult-and-verify-refresh.md`, and the official
-  sources listed in `TODO.md` section `6. Ground The Skills In Official
+  sources listed in `plans/2026-04-14-phase-00-design-doc.md` section `6. Ground The Skills In Official
   Sources`
 
 ## Sync Expectations
