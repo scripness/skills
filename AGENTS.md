@@ -74,9 +74,10 @@ under `.agents/skills/`.
   `<skill>/evals/evals.json`.
 - Shared harness metadata lives under repo-root `evals/`;
   `evals/README.md` owns the artifact contract, governance rules, and
-  regression-review procedure, while `evals/runtime.json` pins the default
-  gating profile and the machine-readable default governance settings.
-- Future shared fixture manifests and thin runner helpers also belong under
+  regression-review procedure, `evals/runtime.json` pins the default gating
+  profile and the machine-readable default governance settings, and
+  `evals/fixtures/cryptoli.json` pins the first official real-repo fixture.
+- Shared fixture manifests and future thin runner helpers also belong under
   repo-root `evals/`.
 - Generated eval outputs, temporary fixture clones, and other run artifacts
   must stay outside tracked source under ignored `.tmp/evals/`.
@@ -85,6 +86,9 @@ under `.agents/skills/`.
 - Use `train` splits for tuning and `validation` splits for gating; reserve
   must-run cases for the validation split and repeat them three times by
   default.
+- The initial must-run surface is the validation boundary trigger pack for
+  each shipped skill plus one pinned `cryptoli` real-repo workflow case per
+  skill.
 - Grade each eval as `assertion`, `rubric`, or `hybrid`, and do not accept a
   skill change until regression artifacts have been reviewed.
 

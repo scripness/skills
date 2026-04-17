@@ -1,10 +1,11 @@
 # Evaluation Harness
 
 This directory holds the tracked eval metadata for the six-skill workflow.
-Milestones 1 through 3 define the layout, artifact contract, governance rules,
-canonical runtime profile, and the first skill-local trigger and workflow
-cases. Later milestones add pinned fixtures and runnable helpers without
-changing the tracked-versus-generated split below.
+Milestones 1 through 4 define the layout, artifact contract, governance rules,
+canonical runtime profile, the first skill-local trigger and workflow cases,
+the first pinned real-repo fixture, and the initial must-run surface. Later
+milestones add runnable helpers without changing the tracked-versus-generated
+split below.
 
 ## Tracked Source
 
@@ -16,7 +17,10 @@ changing the tracked-versus-generated split below.
   regression gating while leaving room for deliberate future profile changes.
 - `evals/runtime.json` also carries the machine-readable default governance
   settings that future runners should enforce.
-- Future shared fixture manifests belong under `evals/fixtures/`.
+- Shared real-repo fixture manifests belong under `evals/fixtures/`;
+  `evals/fixtures/cryptoli.json` is the first pinned fixture manifest.
+- Real-repo workflow cases should reference the owning manifest instead of
+  inlining floating repo metadata in each skill-local definition.
 - Future thin shared runner helpers belong under `evals/scripts/`.
 
 ## Baseline Policy
@@ -86,12 +90,13 @@ future runners use the same rules.
 
 - The must-run surface is a subset of the `validation` split used for everyday
   regression checks and release-gating decisions.
-- Each skill should eventually contribute at least one trigger pack and one
-  workflow case to that must-run validation surface.
-- Once Milestone 4 lands, all pinned `cryptoli` real-repo cases join the
-  must-run surface by default.
-- Until Milestones 3 and 4 land, this section defines the required shape of
-  the surface even though the tracked must-run cases are still pending.
+- The initial shipped must-run surface is the validation boundary trigger pack
+  for each skill plus one pinned `cryptoli`-backed validation workflow case
+  per skill.
+- Skill-local `must_run: true` flags are the tracked source of truth for that
+  surface, and `evals/runtime.json` mirrors the selected case ids for future
+  runner defaults.
+- All pinned real-repo fixture cases join the must-run surface by default.
 
 ### Regression Artifact Review
 
@@ -120,7 +125,7 @@ Each run should retain, at minimum:
 
 ## Scope Note
 
-Milestones 1 through 3 define layout, storage, baseline policy, governance,
-review gates, and the first concrete skill-local cases. Milestones 4 and 5
-still own the pinned fixtures, initial must-run surface, and runnable helper
+Milestones 1 through 4 define layout, storage, baseline policy, governance,
+review gates, the first concrete skill-local cases, the first pinned fixture,
+and the initial must-run surface. Milestone 5 still owns the runnable helper
 surface.

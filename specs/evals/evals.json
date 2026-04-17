@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "specs",
-  "status": "milestone_3_seeded",
-  "description": "First concrete specs trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete specs trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -41,7 +41,7 @@
     {
       "id": "specs-trigger-validation-boundary-pack",
       "split": "validation",
-      "must_run": false,
+      "must_run": true,
       "grading": "assertion",
       "goal": "Protect specs' ownership of repo truth without absorbing planning or review work.",
       "comparison_targets": {
@@ -151,6 +151,53 @@
       ],
       "review_questions": [
         "Does the sync stay proportional instead of broadening into unrelated documentation work?"
+      ]
+    },
+    {
+      "id": "specs-workflow-validation-cryptoli-sync-truth",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether specs can sync repo truth on the pinned cryptoli monorepo without mistaking generated or operational paths for owning source.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether specs improves multi-app repo-truth sync quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Sync cryptoli's repo-truth docs so a fresh agent can navigate the three-app pnpm workspace, the root specs, and the ops surface without treating generated output as owning truth.",
+        "repo_state": [
+          "The pinned fixture includes apps/backend, apps/frontend, apps/admin, root AGENTS.md and README.md, specs/, ops/README.md, and local .agents/skills/ docs.",
+          "The evaluation branch intentionally leaves repo-truth docs stale after the admin and ops surfaces grew.",
+          "Generated and vendor paths still exist and should be excluded from owning guidance unless explicitly relevant."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/pnpm-workspace.yaml",
+          "cryptoli/ops/README.md"
+        ]
+      },
+      "assertions": [
+        "Reads the actual repo topology before editing the truth layer.",
+        "Updates only the owning docs that need sync instead of editing product code or task plans.",
+        "Captures the backend, frontend, and admin app boundaries plus the root specs and ops surfaces.",
+        "Keeps generated, vendor, and copied-artifact noise out of the owning guidance."
+      ],
+      "review_questions": [
+        "Does the sync improve agent navigability on the real repo without broadening into generic filler?"
       ]
     }
   ]

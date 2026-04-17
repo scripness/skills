@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "verify",
-  "status": "milestone_3_seeded",
-  "description": "First concrete verify trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete verify trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -41,7 +41,7 @@
     {
       "id": "verify-trigger-validation-boundary-pack",
       "split": "validation",
-      "must_run": false,
+      "must_run": true,
       "grading": "assertion",
       "goal": "Protect verify's ownership of concrete diff and claim review.",
       "comparison_targets": {
@@ -152,6 +152,53 @@
       ],
       "review_questions": [
         "Does the review catch material regressions instead of stopping at a surface summary?"
+      ]
+    },
+    {
+      "id": "verify-workflow-validation-cryptoli-repo-truth-review",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether verify can review a concrete cryptoli repo-truth and test-truth sync against the pinned fixture and return findings first.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether verify improves findings-first review quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Review a concrete cryptoli sync slice that changed AGENTS.md, specs/README.md, and specs/testing-strategy.md. Return findings first and a verdict.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with root repo-truth docs and layered backend plus frontend/admin tests.",
+          "The candidate slice claims to sync repo truth and testing guidance after the monorepo grew.",
+          "Missing required specs or tests sync should fail when the obligation is clear from the fixture and the claimed change."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/specs/testing-strategy.md",
+          "changed files or diff",
+          "command claims"
+        ]
+      },
+      "assertions": [
+        "Returns findings first with file references or command evidence.",
+        "Checks whether the three-app workspace, repo-truth surface, and testing layers are represented accurately against the pinned fixture.",
+        "Flags missing required repo-truth or test-truth sync instead of rubber-stamping the slice.",
+        "Ends with a clear verdict and any blocked checks."
+      ],
+      "review_questions": [
+        "Does the review stay adversarial and grounded in the actual fixture rather than generic doc-review language?"
       ]
     }
   ]

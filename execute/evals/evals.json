@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "execute",
-  "status": "milestone_3_seeded",
-  "description": "First concrete execute trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete execute trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -41,7 +41,7 @@
     {
       "id": "execute-trigger-validation-boundary-pack",
       "split": "validation",
-      "must_run": false,
+      "must_run": true,
       "grading": "assertion",
       "goal": "Protect execute's plan-driven entry rules and anti-triggers.",
       "comparison_targets": {
@@ -154,6 +154,52 @@
       "review_questions": [
         "Does the session stay in the smart working zone instead of expanding into extra milestones?",
         "Is the updated plan resumable for the next fresh execution session?"
+      ]
+    },
+    {
+      "id": "execute-workflow-validation-cryptoli-plan-slice",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge plan-driven execution discipline on the pinned cryptoli fixture when the harness provides an explicit plan file for a repo-truth slice.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether execute's explicit-plan-path and stop-after-one-slice rules improve real-repo execution discipline."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Read AGENTS.md, README.md, specs/testing-strategy.md, and plans/2026-04-20-cryptoli-agent-readiness-refresh.md in the pinned cryptoli fixture, then execute only the next unfinished milestone and update the plan before stopping.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with root repo-truth docs and layered backend plus frontend/admin tests.",
+          "The harness provides the explicit plan file and marks Milestone 1 as the next unfinished slice; later milestones remain pending.",
+          "Milestone 1 is a repo-truth sync slice that updates AGENTS.md and specs/README.md without starting later test-work."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/testing-strategy.md",
+          "cryptoli/plans/2026-04-20-cryptoli-agent-readiness-refresh.md"
+        ]
+      },
+      "assertions": [
+        "Uses the explicit plan path rather than inventing another plan or switching to direct mode.",
+        "Implements only the next unfinished milestone and stops before later milestones.",
+        "Updates the provided plan in place with progress, discoveries, and verification notes.",
+        "Runs the smallest meaningful checks for the repo-truth slice and leaves the verify handoff explicit."
+      ],
+      "review_questions": [
+        "Does the execution stay bounded and resumable on a real repo fixture instead of broadening into adjacent work?"
       ]
     }
   ]

@@ -54,20 +54,24 @@ chance of success.
 
 ## Evaluation Harness
 
-Milestones 1 through 3 of the eval harness ship the tracked layout, storage
-contract, governance policy, and the first concrete skill-local trigger and
-workflow definitions.
+Milestones 1 through 4 of the eval harness ship the tracked layout, storage
+contract, governance policy, the first concrete skill-local trigger and
+workflow definitions, the first pinned real-repo fixture, and the initial
+must-run regression surface.
 
 - Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
   for trigger and workflow eval definitions.
-- The first concrete Milestone 3 cases live in those six skill-local
-  `evals/evals.json` files as train and validation seeds; Milestone 4 still
-  adds the initial pinned real-repo fixtures and selects the first must-run
-  regression surface.
+- The first concrete Milestone 3 cases still live in those six skill-local
+  `evals/evals.json` files as train and validation seeds.
+- `evals/fixtures/cryptoli.json` pins `scripness/cryptoli` as the first
+  official real-repo fixture for monorepo-aware workflow evaluation.
 - `evals/runtime.json` pins the canonical default gating profile:
   `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
 - Use `train` splits for tuning and `validation` splits for regression gating;
   reserve must-run cases for the validation split.
+- The initial must-run surface uses the validation boundary trigger pack for
+  each shipped skill plus one pinned `cryptoli` validation workflow case per
+  skill.
 - Run must-run validation cases three times for both candidate and baseline,
   aggregate by majority or median as appropriate, and keep the compared runtime
   profile identical.

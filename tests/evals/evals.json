@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "tests",
-  "status": "milestone_3_seeded",
-  "description": "First concrete tests trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete tests trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -41,7 +41,7 @@
     {
       "id": "tests-trigger-validation-boundary-pack",
       "split": "validation",
-      "must_run": false,
+      "must_run": true,
       "grading": "assertion",
       "goal": "Protect tests' ownership of executable truth without absorbing planning or consultation.",
       "comparison_targets": {
@@ -151,6 +151,53 @@
       ],
       "review_questions": [
         "Does the result improve safety without implying more coverage than was actually added?"
+      ]
+    },
+    {
+      "id": "tests-workflow-validation-cryptoli-backend-coverage",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether tests can extend the smallest applicable executable-truth layer on the pinned cryptoli fixture while respecting its real backend/frontend/admin test topology.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the tests skill improves layer selection and honest gap reporting on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "A backend change landed in cryptoli without enough automated coverage. Add the smallest durable automated layer and report any still-blocked higher-layer gaps.",
+        "repo_state": [
+          "The pinned fixture has backend unit tests in apps/backend/src/**/*.spec.ts, backend integration tests in apps/backend/test/integration, backend e2e tests in apps/backend/test/e2e, and separate Vitest suites for frontend and admin.",
+          "The evaluation branch under test adds backend behavior without the matching integration coverage.",
+          "AGENTS.md and specs/testing-strategy.md require applicable layers, not one blanket suite."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/specs/testing-strategy.md",
+          "cryptoli/apps/backend/package.json",
+          "changed backend files",
+          "cryptoli/apps/backend/test/integration"
+        ]
+      },
+      "assertions": [
+        "Discovers the actual backend, frontend, and admin test topology before choosing a layer.",
+        "Adds or updates the smallest applicable backend test layer for the changed behavior instead of inventing unrelated infrastructure.",
+        "Runs the targeted backend command for the owning layer and reports blocked higher layers honestly.",
+        "Does not broaden into repo-truth editing or unrelated frontend/admin test work."
+      ],
+      "review_questions": [
+        "Does the result improve executable truth on the real repo without overstating what is now covered?"
       ]
     }
   ]

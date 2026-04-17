@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "consult",
-  "status": "milestone_3_seeded",
-  "description": "First concrete consult trigger and workflow eval definitions from Milestone 3. These cases stay non-must-run until Milestone 4 selects the initial must-run regression surface.",
+  "status": "milestone_4_real_repo_must_run",
+  "description": "Concrete consult trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -41,7 +41,7 @@
     {
       "id": "consult-trigger-validation-boundary-pack",
       "split": "validation",
-      "must_run": false,
+      "must_run": true,
       "grading": "assertion",
       "goal": "Protect consult's production boundary against plan, execute, and verify overlap.",
       "comparison_targets": {
@@ -148,6 +148,52 @@
       ],
       "review_questions": [
         "Is the recommendation short, decisive, and aligned with the shipped skill boundaries?"
+      ]
+    },
+    {
+      "id": "consult-workflow-validation-cryptoli-next-move",
+      "split": "validation",
+      "must_run": true,
+      "grading": "hybrid",
+      "goal": "Judge whether consult reads the pinned cryptoli fixture and recommends the safest next move for repo-truth maintenance without inflating into planning or implementation.",
+      "fixture": {
+        "id": "cryptoli",
+        "manifest_path": "evals/fixtures/cryptoli.json"
+      },
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether consult improves next-move recommendation quality on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "I need to refresh agent guidance in cryptoli after the admin app and ops docs matured, but I am not sure whether the safest first move is specs, tests, or a durable plan. Read the repo and recommend the safest next move.",
+        "repo_state": [
+          "The pinned fixture is a three-app pnpm workspace with apps/backend, apps/frontend, and apps/admin plus root AGENTS.md, README.md, and specs/ guidance.",
+          "The task is about repo truth and test truth, not a concrete product-code change.",
+          "No explicit plan path exists yet."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/README.md",
+          "cryptoli/specs/README.md",
+          "cryptoli/pnpm-workspace.yaml"
+        ]
+      },
+      "assertions": [
+        "Reads the pinned fixture manifest and relevant repo-truth files before recommending a next move.",
+        "Recognizes the task as repo-truth maintenance rather than a direct code or test change.",
+        "Recommends specs as the safest immediate next move instead of inventing a plan or implementation task.",
+        "Calls out the multi-app pnpm workspace and at least one owning path the next step must cover."
+      ],
+      "review_questions": [
+        "Does the recommendation stay grounded in the actual fixture instead of drifting into generic monorepo advice?"
       ]
     }
   ]

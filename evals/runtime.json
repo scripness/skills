@@ -69,13 +69,34 @@
     },
     "must_run_surface": {
       "required_validation_categories": [
-        "one trigger pack per skill",
-        "one workflow case per skill",
-        "all pinned real-repo fixture cases once introduced"
+        "one validation trigger pack per skill",
+        "one validation workflow case per skill",
+        "all pinned real-repo fixture cases"
+      ],
+      "selected_cases": {
+        "trigger_packs": [
+          "consult:consult-trigger-validation-boundary-pack",
+          "execute:execute-trigger-validation-boundary-pack",
+          "plan:plan-trigger-validation-boundary-pack",
+          "specs:specs-trigger-validation-boundary-pack",
+          "tests:tests-trigger-validation-boundary-pack",
+          "verify:verify-trigger-validation-boundary-pack"
+        ],
+        "workflow_cases": [
+          "consult:consult-workflow-validation-cryptoli-next-move",
+          "execute:execute-workflow-validation-cryptoli-plan-slice",
+          "plan:plan-workflow-validation-cryptoli-create-plan",
+          "specs:specs-workflow-validation-cryptoli-sync-truth",
+          "tests:tests-workflow-validation-cryptoli-backend-coverage",
+          "verify:verify-workflow-validation-cryptoli-repo-truth-review"
+        ]
+      },
+      "real_repo_fixtures": [
+        "cryptoli@5c634bd5018eba27b5d6881116d5328e287c03c3"
       ],
       "notes": [
-        "Milestone 3 populates the first trigger and workflow cases.",
-        "Milestone 4 adds the first pinned real-repo cases, starting with cryptoli."
+        "The initial must-run trigger surface uses the validation boundary pack for each shipped skill.",
+        "The initial must-run workflow surface uses one cryptoli-backed validation case per skill."
       ]
     },
     "artifact_review": {

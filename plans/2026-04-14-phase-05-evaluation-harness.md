@@ -202,6 +202,38 @@ of judged only by intuition.
   skill-local metadata.
 - [2026-04-16] Ran `git diff --check` after the comparison-metadata repair; it
   passed with no whitespace or patch-format issues.
+- [2026-04-17] Queried
+  `gh api repos/scripness/cryptoli/commits/main --jq '{sha: .sha, date: .commit.committer.date, message: .commit.message}'`
+  and pinned the first official real-repo fixture to commit
+  `5c634bd5018eba27b5d6881116d5328e287c03c3` from `2026-04-16T08:44:06Z`
+  with commit message `Feat/seo optimization (#12)`.
+- [2026-04-17] Queried `gh api repos/scripness/cryptoli/contents?ref=5c634bd5018eba27b5d6881116d5328e287c03c3`,
+  `gh api repos/scripness/cryptoli/contents/pnpm-workspace.yaml?ref=5c634bd5018eba27b5d6881116d5328e287c03c3`,
+  `gh api repos/scripness/cryptoli/contents/package.json?ref=5c634bd5018eba27b5d6881116d5328e287c03c3`,
+  and `gh api repos/scripness/cryptoli/git/trees/5c634bd5018eba27b5d6881116d5328e287c03c3?recursive=1`
+  and confirmed the pinned fixture is a three-app pnpm workspace with
+  `apps/backend`, `apps/frontend`, `apps/admin`, root repo-truth docs,
+  backend integration/e2e layers, and frontend/admin Vitest entrypoints.
+- [2026-04-17] Ran
+  `jq empty evals/runtime.json evals/fixtures/cryptoli.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and it passed after the Milestone 4 fixture and must-run edits.
+- [2026-04-17] Ran
+  `for f in consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json; do jq '{skill, validation_trigger_must_run: (.trigger_evals[] | select(.id | endswith("validation-boundary-pack")).must_run), cryptoli_case: (.workflow_evals[] | select(.id | contains("cryptoli")) | {id, must_run, fixture: .fixture.id})}' "$f"; done`
+  and confirmed each shipped skill now marks its validation boundary trigger
+  pack and one pinned `cryptoli` workflow case as `must_run: true`.
+- [2026-04-17] Ran
+  `rg -n 'Milestones 1 through 4|evals/fixtures/cryptoli.json|must-run surface|cryptoli-backed|validation boundary trigger pack' AGENTS.md README.md evals/README.md evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  and confirmed the repo-truth docs, shared harness contract, machine-readable
+  runtime metadata, and skill-local eval definitions all describe the same
+  shipped Milestone 4 state.
+- [2026-04-17] Ran `git diff --check` after the Milestone 4 edits; it passed
+  with no whitespace or patch-format issues.
+- [2026-04-17] Followed up on fresh-session verification feedback that the new
+  pinned fixture manifest was still untracked in the worktree, added
+  `evals/fixtures/cryptoli.json` to Git, and re-ran
+  `git ls-files --error-unmatch evals/fixtures/cryptoli.json` to confirm the
+  Milestone 4 fixture now exists as tracked source instead of only as a local
+  file.
 
 ## Risks
 
@@ -220,7 +252,7 @@ of judged only by intuition.
 - [x] Milestone 1
 - [x] Milestone 2
 - [x] Milestone 3
-- [ ] Milestone 4
+- [x] Milestone 4
 - [ ] Milestone 5
 
 Milestone 1 note:
@@ -263,6 +295,23 @@ Milestone 3 note:
   the shipped first-case state honestly while still deferring pinned fixtures
   and runner helpers to later milestones.
 
+Milestone 4 note:
+
+- Added `evals/fixtures/cryptoli.json` as the first tracked real-repo fixture
+  manifest, pinning `scripness/cryptoli` to commit
+  `5c634bd5018eba27b5d6881116d5328e287c03c3` and recording its three-app pnpm
+  workspace shape plus sanity-check paths.
+- Promoted the validation boundary trigger pack for each shipped skill into the
+  initial must-run trigger surface and added one pinned `cryptoli`
+  validation workflow case per skill as the initial must-run real-repo surface.
+- Synced `AGENTS.md`, `README.md`, `evals/README.md`, and `evals/runtime.json`
+  so repo-facing docs and machine-readable defaults now describe the pinned
+  fixture and the selected must-run surface honestly while still deferring the
+  runnable helper surface to Milestone 5.
+- Closed the follow-up repo-state gap from verification by adding
+  `evals/fixtures/cryptoli.json` to tracked source, so the pinned fixture
+  manifest now ships with the rest of the Milestone 4 harness changes.
+
 ## Decision Log
 
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
@@ -297,6 +346,18 @@ Milestone 3 note:
   the skill-local eval definitions so future runner work can honor the default
   previous-version baseline while adding no-skill baselines only when the case
   explicitly says they add signal.
+- [2026-04-17] Pin the first official real-repo fixture to the current
+  `scripness/cryptoli` `main` commit instead of an older historical snapshot so
+  the harness captures the monorepo shape actually used during the Phase 04
+  design work while remaining repeatable from one explicit commit.
+- [2026-04-17] Select the initial must-run surface as the validation boundary
+  trigger pack for each shipped skill plus one pinned `cryptoli` validation
+  workflow case per skill, leaving the older generic validation workflow cases
+  available as non-must-run comparison fixtures.
+- [2026-04-17] Reference `evals/fixtures/cryptoli.json` from the skill-local
+  real-repo workflow cases and mirror the selected case ids in
+  `evals/runtime.json` so future runner work can reuse one shared fixture
+  manifest instead of duplicating repo metadata per skill.
 
 ## Discoveries
 
@@ -321,6 +382,14 @@ Milestone 3 note:
   conditional no-skill-baseline policy; the tracked definitions needed to
   distinguish required and optional baselines explicitly to avoid pushing that
   decision back onto future runner code.
+- [2026-04-17] Real-repo eval definitions need to separate pinned fixture facts
+  from harness-injected task context such as temporary plan files, stale-doc
+  branches, or candidate diffs; a shared fixture manifest plus skill-local
+  scenario state is enough to express that boundary before runner tooling
+  exists.
+- [2026-04-17] `cryptoli` already exposes enough durable repo truth and layered
+  test topology at one pinned commit to stress repo-truth, test-truth, and
+  plan/execute/verify workflows from a single monorepo fixture.
 
 ## Blockers
 
@@ -328,11 +397,12 @@ Milestone 3 note:
 
 ## Outcomes / Retrospective
 
-- Milestones 1 through 3 completed by defining the tracked eval layout, the
+- Milestones 1 through 4 completed by defining the tracked eval layout, the
   shared artifact-storage contract, the canonical runtime profile, the ignored
   generated-output root, the explicit governance and regression-review
-  contract, and the first concrete skill-local trigger and workflow cases.
-  Milestones 4 and 5 remain pending.
+  contract, the first concrete skill-local trigger and workflow cases, the
+  first pinned real-repo fixture, and the initial must-run surface. Milestone
+  5 remains pending.
 
 ## Follow-up verification repair
 
