@@ -199,6 +199,41 @@ six-skill system cleanly once the skills and eval harness exist.
   and it passed, creating `.tmp/evals/phase06-m2-execute-eval-refresh/` with
   3 selected execute validation cases and the `cryptoli` fixture, refreshing
   the relevant execute eval workspace for this skill slice.
+- [2026-04-17] Re-ran `make help` during the Milestone 3 doc-sync slice and it
+  passed, still printing the shipped repo-level maintenance targets described
+  in `README.md`, `AGENTS.md`, and the new `MAINTENANCE.md`.
+- [2026-04-17] Re-ran `make validate` during the Milestone 3 doc-sync slice
+  and it passed, still reporting 6 skills, 6 skill frontmatter files, 6 agent
+  shims, 4 required local assets, 12 trigger packs, 18 workflow cases, and 1
+  fixture manifest after the final doc edits.
+- [2026-04-17] Re-ran `python3 evals/scripts/harness.py --help` during the
+  Milestone 3 doc-sync slice and it passed, still showing the direct
+  `validate` and `init-run` harness surface behind the Makefile wrappers.
+- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` during the
+  Milestone 3 doc-sync slice and it passed, still documenting the optional
+  explicit-plan helper contract, external runner requirement, and exit codes.
+- [2026-04-17] Re-ran `git diff --check` during the Milestone 3 doc-sync slice
+  and it passed with no whitespace or patch-format issues after adding
+  `MAINTENANCE.md` and the final doc links.
+- [2026-04-17] Ran `git diff --check` again after the required final plan
+  update and it still passed, confirming the final Milestone 3 tree is clean.
+- [2026-04-17] Re-ran `make help` after the self-describing-surface repair and
+  it passed, now listing the optional `python3 execute/scripts/plan_loop.py`
+  `--help` and `--dry-run --plan ... --provider-command ...` commands alongside
+  the Makefile-wrapped harness commands so the advertised maintenance surface
+  no longer depends on docs-only command names.
+- [2026-04-17] Re-ran `make validate` after the self-describing-surface repair
+  and it passed, still reporting 6 skills, 6 skill frontmatter files, 6 agent
+  shims, 4 required local assets, 12 trigger packs, 18 workflow cases, and 1
+  fixture manifest.
+- [2026-04-17] Re-ran `python3 evals/scripts/harness.py --help` after the
+  self-describing-surface repair and it passed, still showing the direct
+  `validate` and `init-run` harness interface behind the Makefile wrappers.
+- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` after the
+  self-describing-surface repair and it passed, still documenting the optional
+  explicit-plan helper contract and exit codes.
+- [2026-04-17] Re-ran `git diff --check` after the self-describing-surface
+  repair and it passed with no whitespace or patch-format issues.
 
 ## Risks
 
@@ -219,7 +254,7 @@ six-skill system cleanly once the skills and eval harness exist.
 
 - [x] Milestone 1
 - [x] Milestone 2
-- [ ] Milestone 3
+- [x] Milestone 3
 
 ## Decision Log
 
@@ -254,6 +289,10 @@ six-skill system cleanly once the skills and eval harness exist.
   relevant eval reports" for a skill edit as scaffolding a fresh
   `.tmp/evals/<run-id>/` workspace and review template for that skill, because
   the repo still does not ship automated model execution or grading.
+- [2026-04-17] Keep `MAINTENANCE.md` as an operator guide that ties together
+  skill updates, eval refresh, and downstream-upstream sync without turning it
+  into a second workflow contract; `AGENTS.md` remains the authoritative
+  refresh and boundary document for the repo.
 
 ## Discoveries
 
@@ -289,7 +328,18 @@ six-skill system cleanly once the skills and eval harness exist.
   plus the pinned `cryptoli` fixture, which is enough to refresh the relevant
   eval workspace for this helper-and-skill slice without implying that grading
   artifacts already exist.
+- [2026-04-17] By the start of Milestone 3, the remaining Phase 06 gap was no
+  longer executable behavior; it was the missing repo-root operator guide that
+  linked the already-shipped maintenance commands, eval refresh loop, and
+  downstream-upstream sync guidance in one durable place.
+- [2026-04-17] For this repo, a "self-describing" `make help` surface needs to
+  include optional direct helper entrypoints that the docs treat as shipped,
+  not just the Makefile targets themselves.
 
 ## Outcomes / Retrospective
 
-- Pending.
+- Phase 06 is complete. The repo now ships a thin repo-level maintenance
+  surface (`Makefile`, `evals/scripts/harness.py`, and the optional
+  `execute/scripts/plan_loop.py`) plus a repo-root `MAINTENANCE.md` that keeps
+  `README.md`, `AGENTS.md`, and `evals/README.md` aligned around the same
+  provider-agnostic maintenance loop.

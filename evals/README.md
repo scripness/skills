@@ -31,6 +31,10 @@ Milestone 5 introduced the direct helper script and Phase 06 Milestone 1 adds
 a thin repo-root `Makefile` above it. The wrappers stay deliberately small and
 delegate unique logic back to `evals/scripts/harness.py`.
 
+See [../MAINTENANCE.md](../MAINTENANCE.md) for the repo-wide maintenance loop
+that uses this harness surface to refresh eval workspaces and upstream durable
+improvements.
+
 - Run `make help` to list the shipped maintenance targets.
 - Run `make validate` to validate shipped skill structure, `SKILL.md`
   frontmatter, local asset integrity, tracked eval definitions, fixture

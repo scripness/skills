@@ -24,6 +24,10 @@ Shipped skills today:
 Current roadmap:
 - [TODO.md](TODO.md)
 
+Operator guidance for updating skills, refreshing eval workspaces, and
+upstreaming durable improvements from downstream repos lives in
+[MAINTENANCE.md](MAINTENANCE.md).
+
 Current execution plans for building the missing system:
 - [plans/2026-04-14-phase-01-plan-skill-and-contract.md](plans/2026-04-14-phase-01-plan-skill-and-contract.md)
 - [plans/2026-04-14-phase-02-execute-skill.md](plans/2026-04-14-phase-02-execute-skill.md)
@@ -263,6 +267,7 @@ Useful local commands:
 | List files | `rg --files .` |
 | Search text | `rg "pattern" .` |
 | Inspect roadmap | `sed -n '1,260p' TODO.md` |
+| Inspect maintenance guide | `sed -n '1,260p' MAINTENANCE.md` |
 | Inspect active plan | `sed -n '1,220p' plans/<file>.md` |
 | Check git status | `git status --short` |
 | Show the repo-level maintenance targets | `make help` |

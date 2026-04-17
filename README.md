@@ -117,6 +117,10 @@ governance rules, and review procedure.
   `verify` outcomes to exit codes the helper can judge: `0` = pass,
   `10` = pass with risks, `20` = fail.
 
+See [MAINTENANCE.md](./MAINTENANCE.md) for the operator loop for updating
+skills, refreshing eval workspaces, and upstreaming durable improvements found
+in downstream repos.
+
 ## Refresh Workflow
 
 The authoritative refresh-workflow contract lives in `AGENTS.md`.
