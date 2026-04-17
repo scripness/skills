@@ -31,8 +31,8 @@ improvised prompts.
 
 ## Deliverables
 
-- `execute/SKILL.md`
-- `execute/agents/openai.yaml`
+- `src/execute/SKILL.md`
+- `src/execute/agents/openai.yaml`
 - Minimal updates to `AGENTS.md` and `README.md` needed to keep the shipped
   `execute` contract truthful
 - Minimal updates to `TODO.md` if the delivered `execute` behavior changes the
@@ -43,8 +43,8 @@ improvised prompts.
 - Task source: `TODO.md` section `4. Add The Execute Skill`, plus the
   `execute`-specific trigger and boundary work in section
   `5. Improve The Six Core Skills`
-- Owning code paths: `execute/`, with boundary-alignment touchpoints in
-  `plan/SKILL.md`, `consult/SKILL.md`, `verify/SKILL.md`, and any prompt or
+- Owning code paths: `src/execute/`, with boundary-alignment touchpoints in
+  `src/plan/SKILL.md`, `src/consult/SKILL.md`, `src/verify/SKILL.md`, and any
   doc files that still describe the pre-`execute` bootstrap loop
 - Owning spec paths: `AGENTS.md` as the authoritative workflow contract and
   `README.md` as shipped usage guidance; `TODO.md` remains the roadmap and must
@@ -53,15 +53,15 @@ improvised prompts.
   repo command guidance in `AGENTS.md` plus bounded mechanical checks for the
   shipped skill and doc sync
 - Related docs, commands, or external dependencies:
-  `PROMPT_execute.md`, `PROMPT_verify.md`, `rg --files .`, `rg "execute" .`,
-  `git status --short`, and `git diff --check`
+  `rg --files .`, `rg "execute" .`, `git status --short`, and
+  `git diff --check`
 
 ## Dependencies
 
 - Completed Phase 01 or equivalent delivered `plan` skill contract
 - Existing `consult`, `specs`, `tests`, and `verify` skill boundaries
 - Existing `AGENTS.md`, `README.md`, and `TODO.md`
-- Existing bootstrap prompts: `PROMPT_execute.md` and `PROMPT_verify.md`
+- Existing pre-ship bootstrap workflow notes captured in repo history
 
 ## Sync Expectations
 
@@ -86,7 +86,7 @@ improvised prompts.
    handoff rules to `verify`.
 2. Tighten the trigger description and invocation guidance for `execute` so it
    is clearly distinguishable from `consult`, `plan`, and `verify`.
-3. Write `execute/SKILL.md` with one-bounded-slice execution, required
+3. Write `src/execute/SKILL.md` with one-bounded-slice execution, required
    mechanical checks, and mandatory plan updates for plan-driven work.
 4. Encode the sync gates for `specs` and `tests`, including direct-mode
    inference from repo truth when no plan file exists.
@@ -95,8 +95,8 @@ improvised prompts.
 ## Verification
 
 - Confirm the Phase 02 deliverables exist with the intended narrow scaffold:
-  `execute/SKILL.md` and `execute/agents/openai.yaml`.
-- Re-read `execute/SKILL.md`, `AGENTS.md`, `README.md`, and `TODO.md` together
+  `src/execute/SKILL.md` and `src/execute/agents/openai.yaml`.
+- Re-read `src/execute/SKILL.md`, `AGENTS.md`, `README.md`, and `TODO.md` together
   after each contract-changing slice and confirm they stay aligned on shipped
   versus planned workflow.
 - Confirm `execute` never guesses the latest plan file.
@@ -131,31 +131,31 @@ improvised prompts.
   are present in repo truth.
 - [2026-04-14] Ran `git diff --check` after the Milestone 2 doc edits; it
   passed with no whitespace or patch-format issues.
-- [2026-04-15] Re-read `execute/SKILL.md`, `AGENTS.md`, `README.md`, and
-  `TODO.md` after shipping the `execute/` scaffold and confirmed they align on
+- [2026-04-15] Re-read `src/execute/SKILL.md`, `AGENTS.md`, `README.md`, and
+  `TODO.md` after shipping the `src/execute/` scaffold and confirmed they align on
   direct versus plan-driven entry modes, the explicit-plan-path requirement,
   one-bounded-slice execution, required `specs`/`tests` follow-through, and
   explicit handoff to `verify`.
-- [2026-04-15] Ran `find execute -maxdepth 3 -type f | sort` and confirmed the
+- [2026-04-15] Ran `find src/execute -maxdepth 3 -type f | sort` and confirmed the
   shipped scaffold is intentionally narrow:
-  `execute/SKILL.md` and `execute/agents/openai.yaml`.
+  `src/execute/SKILL.md` and `src/execute/agents/openai.yaml`.
 - [2026-04-15] Ran
   `rg -n 'planned next skill|Until \`execute\` ships|Planned \`execute\` contract|### \`execute\` \(planned\)|while \`execute\` is still not shipped here|target workflow after \`execute\` ships' AGENTS.md README.md`
   and confirmed those stale pre-ship phrases no longer appear in shipped docs.
 - [2026-04-15] Ran
-  `rg -n 'never guess the latest plan file|implement only one milestone or other bounded slice|specs\` or \`tests\` follow-through' execute/SKILL.md AGENTS.md README.md`
+  `rg -n 'never guess the latest plan file|implement only one milestone or other bounded slice|specs\` or \`tests\` follow-through' src/execute/SKILL.md AGENTS.md README.md`
   and confirmed the core execute contract is present in the shipped skill and
   synced docs.
 - [2026-04-15] Ran
-  `rg -n 'hand off.*\`verify\`|Do not absorb adversarial review into \`execute\`|hand adversarial review back to \`verify\`' execute/SKILL.md AGENTS.md README.md`
+  `rg -n 'hand off.*\`verify\`|Do not absorb adversarial review into \`execute\`|hand adversarial review back to \`verify\`' src/execute/SKILL.md AGENTS.md README.md`
   and confirmed the shipped contract keeps adversarial review in `verify`.
-- [2026-04-15] Ran `git diff --check` after shipping `execute/` and syncing the
+- [2026-04-15] Ran `git diff --check` after shipping `src/execute/` and syncing the
   docs; it passed with no whitespace or patch-format issues.
-- [2026-04-15] Repaired the `execute/agents/openai.yaml` default prompt so it
+- [2026-04-15] Repaired the `src/execute/agents/openai.yaml` default prompt so it
   no longer implies that direct mode always updates a plan file; the wording
   now makes plan updates conditional on plan-driven work, matching
-  `execute/SKILL.md`.
-- [2026-04-15] Re-ran `git diff --check`, `find execute -maxdepth 3 -type f |
+  `src/execute/SKILL.md`.
+- [2026-04-15] Re-ran `git diff --check`, `find src/execute -maxdepth 3 -type f |
   sort`, and the contract `rg` checks after that repair and confirmed the
   shipped `execute` scaffold still matches the Phase 02 contract.
 
@@ -190,7 +190,7 @@ improvised prompts.
 Milestone 1 note:
 
 - Completed as a doc-contract slice in `AGENTS.md` and `README.md`.
-- Left the `execute/` scaffold and broader sync-gate behavior to later
+- Left the `src/execute/` scaffold and broader sync-gate behavior to later
   milestones so the repo does not imply that `execute` is already shipped.
 
 Milestone 2 note:
@@ -198,12 +198,12 @@ Milestone 2 note:
 - Completed as a doc-contract slice in `AGENTS.md` and `README.md`.
 - Locked positive triggers, anti-triggers, direct-to-`plan` promotion rules,
   and clearer direct versus plan-driven invocation examples without shipping
-  the `execute/` scaffold yet.
+  the `src/execute/` scaffold yet.
 
 Milestone 3 note:
 
-- Shipped the narrow `execute/` scaffold in `execute/SKILL.md` and
-  `execute/agents/openai.yaml`.
+- Shipped the narrow `src/execute/` scaffold in `src/execute/SKILL.md` and
+  `src/execute/agents/openai.yaml`.
 - Completed the minimum `AGENTS.md` and `README.md` truth sync in the same
   slice so the repo no longer claims `execute` is still only planned.
 
@@ -232,10 +232,10 @@ Milestone 5 note:
   priority workflow contract and cannot remain in the pre-`execute` state.
 - [2026-04-14] Treat Milestone 1 as doc-contract tightening only: align
   `AGENTS.md` and `README.md` with the existing `TODO.md` boundary before
-  creating any `execute/` files, so the repo does not imply that `execute` is
+  creating any `src/execute/` files, so the repo does not imply that `execute` is
   already shipped.
 - [2026-04-14] Treat Milestone 2 as a second doc-contract slice before
-  creating `execute/`: make the trigger explicit in repo truth, name the
+  creating `src/execute/`: make the trigger explicit in repo truth, name the
   anti-triggers versus `consult`, `plan`, and `verify`, and add direct and
   plan-driven invocation examples in `README.md`.
 - [2026-04-15] Ship the first `execute` scaffold as one bounded slice that
@@ -246,11 +246,12 @@ Milestone 5 note:
   shipped `execute` skill rather than deferring it to a later rewrite, because
   the direct-mode and plan-driven contracts are not safe without an explicit
   stop condition when required sync is missing.
-- [2026-04-15] Keep `PROMPT_execute.md` and `PROMPT_verify.md` in the repo as
-  legacy reference artifacts rather than baseline workflow requirements now
-  that `execute` is shipped.
+- [2026-04-15] The initial `execute` ship temporarily preserved the old
+  execute/verify bootstrap prompts as reference artifacts rather than baseline
+  workflow requirements; later cleanup can remove them once repo-truth docs
+  fully replace them.
 - [2026-04-15] The OpenAI agent scaffold must preserve the same direct versus
-  plan-driven distinction as `execute/SKILL.md`; helper-facing prompts are part
+  plan-driven distinction as `src/execute/SKILL.md`; helper-facing prompts are part
   of the shipped contract, not just packaging.
 
 ## Discoveries
@@ -287,13 +288,14 @@ Milestone 5 note:
 
 ## Outcomes / Retrospective
 
-- Phase 02 is now complete: the repo ships `execute/SKILL.md` and
-  `execute/agents/openai.yaml`, `AGENTS.md` and `README.md` now describe
+- Phase 02 is now complete: the repo ships `src/execute/SKILL.md` and
+  `src/execute/agents/openai.yaml`, `AGENTS.md` and `README.md` now describe
   `execute` as shipped rather than planned, and the working loop now uses the
   real `execute`/`verify` skills instead of the bootstrap prompts.
-- The legacy prompt files remain checked in only as reference artifacts from
-  the pre-ship execution loop; the baseline workflow is now the six shipped
-  skills plus explicit `plans/*.md` files when durable task state is needed.
-- The post-ship verification gap in `execute/agents/openai.yaml` is now closed;
+- The bootstrap prompts were transitional artifacts from the pre-ship
+  execution loop and have since been removed; the baseline workflow is now the
+  six shipped skills plus explicit `plans/*.md` files when durable task state
+  is needed.
+- The post-ship verification gap in `src/execute/agents/openai.yaml` is now closed;
   the packaged OpenAI prompt matches the same direct-mode versus plan-driven
   behavior required by the shipped `execute` skill.

@@ -5,16 +5,14 @@ execution.
 
 The intended future home is something like:
 
-- `execute/scripts/run-plan.sh`
-- or `execute/scripts/loop.sh`
+- `src/execute/scripts/run-plan.sh`
+- or `src/execute/scripts/loop.sh`
 
 That script does not exist yet.
 
 This file does **not** describe:
 
-- the current prompt-based workflow
-- `PROMPT_execute.md`
-- `PROMPT_verify.md`
+- a prompt-based workflow
 - normal manual fresh-session work
 - the baseline six-skill workflow itself
 

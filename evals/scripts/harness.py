@@ -21,6 +21,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILLS_ROOT = REPO_ROOT / "src"
 EVALS_ROOT = REPO_ROOT / "evals"
 SKILLS = ("consult", "execute", "plan", "specs", "tests", "verify")
 ALLOWED_TRIGGER_OUTCOMES = {"trigger", "no_trigger"}
@@ -151,10 +152,21 @@ def load_markdown_frontmatter(path: Path) -> tuple[dict[str, str], str]:
     return frontmatter, body
 
 
+def skill_source_root(skill: str) -> Path:
+    return SKILLS_ROOT / skill
+
+
+def skill_source_label(skill: str, suffix: str = "") -> str:
+    path = f"src/{skill}"
+    if suffix:
+        return f"{path}/{suffix}"
+    return path
+
+
 def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
-    skill_root = REPO_ROOT / skill
+    skill_root = skill_source_root(skill)
     if not skill_root.is_dir():
-        errors.append(f"{skill}: skill directory is missing")
+        errors.append(f"src/{skill}: skill directory is missing")
         return {"skill": skill, "local_assets": 0}
 
     skill_doc = skill_root / "SKILL.md"
@@ -167,12 +179,15 @@ def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
             value = frontmatter.get(field)
             if not isinstance(value, str) or not value.strip():
                 errors.append(
-                    f"{skill}/SKILL.md: frontmatter {field!r} must be a non-empty string"
+                    f"{skill_source_label(skill, 'SKILL.md')}: "
+                    f"frontmatter {field!r} must be a non-empty string"
                 )
         if frontmatter.get("name") != skill:
-            errors.append(f"{skill}/SKILL.md: frontmatter name must be {skill!r}")
+            errors.append(
+                f"{skill_source_label(skill, 'SKILL.md')}: frontmatter name must be {skill!r}"
+            )
         if not body.strip():
-            errors.append(f"{skill}/SKILL.md: skill body must not be empty")
+            errors.append(f"{skill_source_label(skill, 'SKILL.md')}: skill body must not be empty")
 
     agent_path = skill_root / "agents" / "openai.yaml"
     try:
@@ -188,7 +203,8 @@ def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
             value = agent_metadata.get(field)
             if not isinstance(value, str) or not value.strip():
                 errors.append(
-                    f"{skill}/agents/openai.yaml: {field!r} must be a non-empty string"
+                    f"{skill_source_label(skill, 'agents/openai.yaml')}: "
+                    f"{field!r} must be a non-empty string"
                 )
 
     local_assets = 0
@@ -196,9 +212,9 @@ def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
         local_assets += 1
         asset_path = skill_root / asset_rel
         if not asset_path.exists():
-            errors.append(f"{skill}/{asset_rel} is missing")
+            errors.append(f"{skill_source_label(skill, asset_rel)} is missing")
         elif not asset_path.is_file():
-            errors.append(f"{skill}/{asset_rel} must be a file")
+            errors.append(f"{skill_source_label(skill, asset_rel)} must be a file")
             continue
         else:
             try:
@@ -208,14 +224,15 @@ def validate_skill_metadata(skill: str, errors: list[str]) -> dict[str, Any]:
                 continue
 
             if not asset_text.strip():
-                errors.append(f"{skill}/{asset_rel} must not be empty")
+                errors.append(f"{skill_source_label(skill, asset_rel)} must not be empty")
                 continue
 
             required_markers = REQUIRED_LOCAL_ASSET_MARKERS.get(skill, {}).get(asset_rel, ())
             for marker in required_markers:
                 if marker not in asset_text:
                     errors.append(
-                        f"{skill}/{asset_rel} is missing required marker {marker!r}"
+                        f"{skill_source_label(skill, asset_rel)} "
+                        f"is missing required marker {marker!r}"
                     )
 
     return {"skill": skill, "local_assets": local_assets}
@@ -508,7 +525,7 @@ def validate_repo() -> dict[str, Any]:
     all_trigger_summaries: list[dict[str, Any]] = []
     all_workflow_summaries: list[dict[str, Any]] = []
     for skill in SKILLS:
-        skill_path = REPO_ROOT / skill / "evals" / "evals.json"
+        skill_path = skill_source_root(skill) / "evals" / "evals.json"
         triggers, workflows = validate_skill_eval(skill, skill_path, runtime, fixture_manifests, errors)
         all_trigger_summaries.extend(triggers)
         all_workflow_summaries.extend(workflows)
@@ -522,7 +539,7 @@ def validate_repo() -> dict[str, Any]:
         fixture_id = summary.get("fixture_id")
         if fixture_id in pinned_fixture_ids and not summary["must_run"]:
             errors.append(
-                f"{summary['skill']}/evals/evals.json:{summary['id']}: "
+                f"{skill_source_label(summary['skill'], 'evals/evals.json')}:{summary['id']}: "
                 "workflow evals for pinned fixtures must set must_run: true"
             )
 

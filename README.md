@@ -25,9 +25,14 @@ Current shipped skills are:
 - `tests`
 - `verify`
 
-Legacy bootstrap prompts from the pre-`execute` loop are still checked in for
-reference at [PROMPT_execute.md](./PROMPT_execute.md) and
-[PROMPT_verify.md](./PROMPT_verify.md).
+The source-of-truth skill directories live under `src/` in this repo:
+
+- `src/consult/`
+- `src/execute/`
+- `src/plan/`
+- `src/specs/`
+- `src/tests/`
+- `src/verify/`
 
 The shipped six-skill workflow is:
 
@@ -38,19 +43,31 @@ The shipped six-skill workflow is:
 - `execute`
 - `verify`
 
-See [TODO.md](./TODO.md) for the implementation roadmap.
+See [TODO.md](./TODO.md) for the implementation roadmap and
+[SOURCES.md](./SOURCES.md) for the durable design grounding captured from the
+official docs and example corpora.
 
 ## Durable State
 
-- `AGENTS.md` and `specs/` = repo truth
+- `AGENTS.md` and a target repo's `specs/` = repo truth
 - tests = executable truth
-- `<skill>/evals/evals.json` and `evals/` = tracked eval truth
+- `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
 - `plans/*.md` = task truth
 - code = implemented reality
 
 The repo should stay in a state where a fresh agent can get oriented quickly,
 find the right code paths, and make correct changes with the highest practical
 chance of success.
+
+## Repo Layout
+
+- `src/` contains only the six shipped source skills and their local assets,
+  eval definitions, and helper scripts.
+- Repo-root docs such as `AGENTS.md`, `README.md`, `TODO.md`,
+  `MAINTENANCE.md`, and `SOURCES.md` define the workflow contract, roadmap,
+  and design grounding around those skills.
+- Repo-root `evals/`, `plans/`, and `.tmp/evals/` hold the harness metadata,
+  execution artifacts, and generated local outputs around the source skills.
 
 ## Evaluation Harness
 
@@ -59,14 +76,14 @@ contract, governance policy, the first concrete skill-local trigger and
 workflow definitions, the first pinned real-repo fixture, the initial must-run
 regression surface, and the first thin local runner helpers.
 
-- Each skill owns `<skill>/evals/evals.json` as its default tracked entrypoint
+- Each skill owns `src/<skill>/evals/evals.json` as its default tracked entrypoint
   for trigger and workflow eval definitions.
 - The first concrete Milestone 3 cases still live in those six skill-local
   `evals/evals.json` files as train and validation seeds.
 - `evals/fixtures/cryptoli.json` pins `scripness/cryptoli` as the first
   official real-repo fixture for monorepo-aware workflow evaluation.
-- `evals/runtime.json` pins the canonical default gating profile:
-  `codex`, `gpt-5.4`, `xhigh`, while keeping the profile list upgradeable later.
+- `evals/runtime.json` pins the canonical default gating profile while keeping
+  the profile list upgradeable later.
 - Repo-root `Makefile` is the thin operator surface for local maintenance:
   `make validate` runs repo-level validation and
   `make eval-init-run RUN_ID=<run-id>` scaffolds repeatable local eval
@@ -109,9 +126,9 @@ governance rules, and review procedure.
   re-implementing harness logic in the wrapper.
 - `python3 evals/scripts/harness.py --help` shows the direct script interface
   behind the Makefile wrappers.
-- `python3 execute/scripts/plan_loop.py --help` shows the optional plan-driven
-  helper contract shipped with `execute/`.
-- `python3 execute/scripts/plan_loop.py --yes --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/plan_loop.py --help` shows the optional
+  plan-driven helper contract shipped with `src/execute/`.
+- `python3 src/execute/scripts/plan_loop.py --yes --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   runs fresh `execute` and `verify` cycles against one explicit plan path. The
   external runner must accept `execute <plan>` and `verify <plan>` and map
   `verify` outcomes to exit codes the helper can judge: `0` = pass,
@@ -126,7 +143,7 @@ in downstream repos.
 The authoritative refresh-workflow contract lives in `AGENTS.md`.
 
 - Current default: manually copy the shipped skill directories from this repo
-  into `.agents/skills/` in the target repo.
+  from `src/` into `.agents/skills/` in the target repo.
 - Refresh by re-copying only the skill directories and supporting assets that
   changed here.
 - Treat install helpers, git subtree wiring, and provider-specific plugins as

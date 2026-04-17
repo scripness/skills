@@ -30,13 +30,13 @@ without hardcoded layout assumptions.
 
 ## Deliverables
 
-- Updated `specs/SKILL.md`
-- Updated `specs/agents/openai.yaml` if the refreshed `specs` trigger or
+- Updated `src/specs/SKILL.md`
+- Updated `src/specs/agents/openai.yaml` if the refreshed `specs` trigger or
   default prompt changes shipped behavior
-- Updated `tests/SKILL.md`
-- Updated `tests/agents/openai.yaml` if the refreshed `tests` trigger or
+- Updated `src/tests/SKILL.md`
+- Updated `src/tests/agents/openai.yaml` if the refreshed `tests` trigger or
   default prompt changes shipped behavior
-- Updated `specs/assets/*` if the repo-truth bootstrap templates need to match
+- Updated `src/specs/assets/*` if the repo-truth bootstrap templates need to match
   the refreshed contract
 - Durable in-plan summary of the official-source guidance actually used for the
   Phase 04 refresh, so the owned source-grounding slice stays auditable from
@@ -46,7 +46,7 @@ without hardcoded layout assumptions.
 ## Dependencies
 
 - Delivered contracts for `plan` and `execute`
-- Existing `README.md`, `TODO.md`, and `specs/assets/*`
+- Existing `README.md`, `TODO.md`, and `src/specs/assets/*`
 - Real-world monorepo reference shape from `scripness/cryptoli`, but only as
   captured in the repo context below; do not depend on unstated external notes
   or a floating external HEAD
@@ -56,11 +56,11 @@ without hardcoded layout assumptions.
 - Task source: the `specs` and `tests` entries in `TODO.md` section
   `5. Improve The Six Core Skills`, plus the relevant source-grounding work in
   section `6. Ground The Skills In Official Sources`
-- Owning code paths: `specs/` and `tests/`, including both `SKILL.md` and
+- Owning code paths: `specs/` and `src/tests/`, including both `SKILL.md` and
   `agents/openai.yaml` because the agent wrapper prompts are part of the
   shipped surface
 - Owning spec paths: `AGENTS.md` as the authoritative workflow contract,
-  `README.md` as shipped usage guidance, and `specs/assets/*` because the
+  `README.md` as shipped usage guidance, and `src/specs/assets/*` because the
   bootstrap assets must stay aligned when the `specs` contract changes
 - Owning test paths: there is still no formal automated suite in this repo, so
   Phase 04 verification should use bounded mechanical checks such as contract
@@ -75,7 +75,7 @@ without hardcoded layout assumptions.
   test discovery. Do not depend on unstated `cryptoli` path details during
   Phase 04 execution, and do not turn one repo's concrete layout into a
   required portable default
-- Related docs or references: `PROMPT_verify.md`,
+- Related docs or references:
   `plans/2026-04-14-phase-03-consult-and-verify-refresh.md`, and the official
   sources listed in `TODO.md` section `6. Ground The Skills In Official
   Sources`
@@ -138,7 +138,7 @@ without hardcoded layout assumptions.
   heuristics rather than unstated repo-specific path assumptions.
 - Confirm the plan carries a durable summary of the official-source guidance
   used for the refresh instead of pointing to dangling external notes.
-- Confirm `specs/agents/openai.yaml` and `tests/agents/openai.yaml` stay
+- Confirm `src/specs/agents/openai.yaml` and `src/tests/agents/openai.yaml` stay
   aligned with the shipped `SKILL.md` contracts when their prompts or wrapper
   descriptions are touched.
 - Run bounded mechanical checks after each contract-changing slice: contract
@@ -146,20 +146,20 @@ without hardcoded layout assumptions.
 
 ### 2026-04-15 Milestone 1 results
 
-- Re-read `specs/SKILL.md` and `specs/agents/openai.yaml` after editing to
+- Re-read `src/specs/SKILL.md` and `src/specs/agents/openai.yaml` after editing to
   confirm the shipped `specs` surface now explicitly covers repo-topology
   discovery, generated/vendor-noise pruning, and proportional organization
   guidance.
-- After `PROMPT_verify` later caught provider-facing drift, follow-up refresh
-  tightened `specs/agents/openai.yaml` so the shipped wrapper metadata now
-  explicitly carries topology discovery, generated/vendor-noise pruning, and
-  agentic-readiness language instead of under-describing the refreshed
-  `specs` contract.
+- After follow-up verification later caught provider-facing drift, follow-up
+  refresh tightened `src/specs/agents/openai.yaml` so the shipped wrapper
+  metadata now explicitly carries topology discovery, generated/vendor-noise
+  pruning, and agentic-readiness language instead of under-describing the
+  refreshed `specs` contract.
 - `rg -n "topology|monorepo|generated|vendor|agent reliability|src/"
-  specs/SKILL.md specs/agents/openai.yaml` passed and showed the intended
+  src/specs/SKILL.md src/specs/agents/openai.yaml` passed and showed the intended
   contract language in the shipped skill surfaces.
 - `git diff --check` passed.
-- `test -f specs/SKILL.md && test -f specs/agents/openai.yaml && echo present`
+- `test -f src/specs/SKILL.md && test -f src/specs/agents/openai.yaml && echo present`
   passed.
 - `rg -n "Owns repo truth|evaluate codebase organization quality|improve
   boundaries|discoverability|repo truth is weak|AGENTS.md and specs"
@@ -169,64 +169,64 @@ without hardcoded layout assumptions.
 
 ### 2026-04-15 Milestone 2 results
 
-- Re-read `AGENTS.md`, `README.md`, `specs/SKILL.md`,
-  `specs/agents/openai.yaml`, `tests/SKILL.md`, and
-  `tests/agents/openai.yaml` after editing to confirm the shipped trigger and
+- Re-read `AGENTS.md`, `README.md`, `src/specs/SKILL.md`,
+  `src/specs/agents/openai.yaml`, `src/tests/SKILL.md`, and
+  `src/tests/agents/openai.yaml` after editing to confirm the shipped trigger and
   invocation surfaces now cover bootstrap, sync, and gap-driven use for both
   skills.
 - `rg -n "trigger when repo truth|trigger when test truth|three user-facing
   situations|gap-close|coverage gaps|safe execution and verification|safe
-  planning, execution, or verification" AGENTS.md README.md specs/SKILL.md
-  specs/agents/openai.yaml tests/SKILL.md tests/agents/openai.yaml` passed and
+  planning, execution, or verification" AGENTS.md README.md src/specs/SKILL.md
+  src/specs/agents/openai.yaml src/tests/SKILL.md src/tests/agents/openai.yaml` passed and
   showed the intended activation language across repo-facing docs, skill
   contracts, and wrapper metadata.
-- `git diff -- AGENTS.md README.md specs/SKILL.md specs/agents/openai.yaml
-  tests/SKILL.md tests/agents/openai.yaml` was reviewed to confirm this slice
+- `git diff -- AGENTS.md README.md src/specs/SKILL.md src/specs/agents/openai.yaml
+  src/tests/SKILL.md src/tests/agents/openai.yaml` was reviewed to confirm this slice
   stayed limited to trigger and invocation semantics rather than pulling
   Milestone 3's deeper `tests` contract refresh forward.
 - `git diff --check` passed.
-- `test -f specs/SKILL.md && test -f specs/agents/openai.yaml && test -f
-  tests/SKILL.md && test -f tests/agents/openai.yaml && echo present` passed.
+- `test -f src/specs/SKILL.md && test -f src/specs/agents/openai.yaml && test -f
+  src/tests/SKILL.md && test -f src/tests/agents/openai.yaml && echo present` passed.
 
 ### 2026-04-16 Milestone 3 results
 
-- Re-read `tests/SKILL.md` and `tests/agents/openai.yaml` after editing to
+- Re-read `src/tests/SKILL.md` and `src/tests/agents/openai.yaml` after editing to
   confirm the shipped `tests` surface now explicitly covers topology-aware
   suite discovery, generated/vendor-noise pruning, layered coverage selection,
   weak-repo bootstrap guidance, and honest uncovered-gap reporting across repo
   shapes.
-- `rg -n "topology|monorepo|single package|per-app|per-package|per-service|unit|integration|e2e|smoke|browser|contract|visual|security|performance|vendor|generated|coverage gaps|false-confidence|shared test root" tests/SKILL.md tests/agents/openai.yaml`
+- `rg -n "topology|monorepo|single package|per-app|per-package|per-service|unit|integration|e2e|smoke|browser|contract|visual|security|performance|vendor|generated|coverage gaps|false-confidence|shared test root" src/tests/SKILL.md src/tests/agents/openai.yaml`
   passed and showed the intended contract language in the shipped `tests`
   skill surfaces.
 - After follow-up verification flagged provider-facing under-description,
-  `tests/agents/openai.yaml` was tightened so the shipped wrapper metadata now
+  `src/tests/agents/openai.yaml` was tightened so the shipped wrapper metadata now
   explicitly covers bootstrap, sync, and concrete coverage-gap closure rather
   than reading as sync-only.
-- `git diff -- tests/SKILL.md tests/agents/openai.yaml` was reviewed to
+- `git diff -- src/tests/SKILL.md src/tests/agents/openai.yaml` was reviewed to
   confirm this slice stayed limited to the `tests` contract and aligned wrapper
   metadata rather than pulling Milestone 4 asset refresh or Milestone 5 doc
   sync forward.
 - `git diff --check` passed.
-- `test -f tests/SKILL.md && test -f tests/agents/openai.yaml && echo present`
+- `test -f src/tests/SKILL.md && test -f src/tests/agents/openai.yaml && echo present`
   passed.
 
 ### 2026-04-16 Milestone 4 results
 
-- Re-read `specs/assets/AGENTS.md`, `specs/assets/specs/README.md`, and
-  `specs/assets/specs/spec-template.md` after editing to confirm the shipped
+- Re-read `src/specs/assets/AGENTS.md`, `src/specs/assets/specs/README.md`, and
+  `src/specs/assets/specs/spec-template.md` after editing to confirm the shipped
   bootstrap scaffolding now reflects the six-skill workflow, topology-aware
   ownership guidance, generated/vendor-noise exclusions, and non-assumptive
   test-layer documentation.
-- `rg -n "plan/SKILL|execute/SKILL|topology|generated|vendor|copied-artifact|Owning paths|suite root|security|single shared test root|apps, packages, or services" specs/assets`
+- `rg -n "src/plan/SKILL|src/execute/SKILL|topology|generated|vendor|copied-artifact|Owning paths|suite root|security|single shared test root|apps, packages, or services" src/specs/assets`
   passed and showed the intended bootstrap language across the refreshed asset
   templates.
-- `git diff -- specs/assets/AGENTS.md specs/assets/specs/README.md
-  specs/assets/specs/spec-template.md` was reviewed to confirm this slice
+- `git diff -- src/specs/assets/AGENTS.md src/specs/assets/specs/README.md
+  src/specs/assets/specs/spec-template.md` was reviewed to confirm this slice
   stayed limited to the shipped bootstrap assets rather than pulling Milestone
   5's broader repo-facing doc sync forward.
 - `git diff --check` passed.
-- `test -f specs/assets/AGENTS.md && test -f specs/assets/specs/README.md &&
-  test -f specs/assets/specs/spec-template.md && echo present` passed.
+- `test -f src/specs/assets/AGENTS.md && test -f src/specs/assets/specs/README.md &&
+  test -f src/specs/assets/specs/spec-template.md && echo present` passed.
 
 ### 2026-04-16 Milestone 5 results
 
@@ -252,34 +252,34 @@ without hardcoded layout assumptions.
 
 ### 2026-04-16 Follow-up verification repair
 
-- Fresh `PROMPT_verify` surfaced one remaining shipped-surface gap:
-  `specs/agents/openai.yaml` still under-described the refreshed `specs`
-  contract compared with `specs/SKILL.md`, so Phase 04 was not yet honestly
+- Fresh verification surfaced one remaining shipped-surface gap:
+  `src/specs/agents/openai.yaml` still under-described the refreshed `specs`
+  contract compared with `src/specs/SKILL.md`, so Phase 04 was not yet honestly
   complete.
-- Tightened `specs/agents/openai.yaml` so the shipped wrapper metadata now
+- Tightened `src/specs/agents/openai.yaml` so the shipped wrapper metadata now
   explicitly covers repo-topology discovery, default generated/vendor-noise
   pruning, and organization guidance for weak boundaries or navigability.
-- Re-read `specs/SKILL.md`, `specs/agents/openai.yaml`, `README.md`, and this
+- Re-read `src/specs/SKILL.md`, `src/specs/agents/openai.yaml`, `README.md`, and this
   plan after the repair to confirm the shipped provider-facing and repo-facing
   surfaces now agree about the refreshed `specs` and `tests` behavior.
 - `rg -n "topology|monorepo|generated|vendor|agent reliability|src/"
-  specs/SKILL.md specs/agents/openai.yaml` passed and now shows the intended
+  src/specs/SKILL.md src/specs/agents/openai.yaml` passed and now shows the intended
   topology and noise-pruning language in both shipped `specs` surfaces.
 - `rg -n "trigger when repo truth|trigger when test truth|three user-facing
   situations|gap-close|coverage gaps|safe execution and verification|safe
-  planning, execution, or verification" AGENTS.md README.md specs/SKILL.md
-  specs/agents/openai.yaml tests/SKILL.md tests/agents/openai.yaml` passed and
+  planning, execution, or verification" AGENTS.md README.md src/specs/SKILL.md
+  src/specs/agents/openai.yaml src/tests/SKILL.md src/tests/agents/openai.yaml` passed and
   showed the intended activation language across repo-facing docs, skill
   contracts, and wrapper metadata.
-- `rg -n "topology|monorepo|single package|per-app|per-package|per-service|unit|integration|e2e|smoke|browser|contract|visual|security|performance|vendor|generated|coverage gaps|false-confidence|shared test root" tests/SKILL.md tests/agents/openai.yaml`
+- `rg -n "topology|monorepo|single package|per-app|per-package|per-service|unit|integration|e2e|smoke|browser|contract|visual|security|performance|vendor|generated|coverage gaps|false-confidence|shared test root" src/tests/SKILL.md src/tests/agents/openai.yaml`
   passed.
-- `rg -n "plan/SKILL|execute/SKILL|topology|generated|vendor|copied-artifact|Owning paths|suite root|security|single shared test root|apps, packages, or services" specs/assets`
+- `rg -n "src/plan/SKILL|src/execute/SKILL|topology|generated|vendor|copied-artifact|Owning paths|suite root|security|single shared test root|apps, packages, or services" src/specs/assets`
   passed.
 - `git diff --check` passed.
-- `test -f specs/SKILL.md && test -f specs/agents/openai.yaml && test -f
-  tests/SKILL.md && test -f tests/agents/openai.yaml && test -f
-  specs/assets/AGENTS.md && test -f specs/assets/specs/README.md && test -f
-  specs/assets/specs/spec-template.md && test -f README.md && test -f
+- `test -f src/specs/SKILL.md && test -f src/specs/agents/openai.yaml && test -f
+  src/tests/SKILL.md && test -f src/tests/agents/openai.yaml && test -f
+  src/specs/assets/AGENTS.md && test -f src/specs/assets/specs/README.md && test -f
+  src/specs/assets/specs/spec-template.md && test -f README.md && test -f
   plans/2026-04-14-phase-04-specs-and-tests-refresh.md && echo present`
   passed.
 
@@ -314,7 +314,7 @@ without hardcoded layout assumptions.
   monorepo stress case for topology and layer discovery, not as a source of
   portable path-level defaults.
 - [2026-04-15] Keep Milestone 1 scoped to the shipped `specs` contract and the
-  aligned `specs/agents/openai.yaml` wrapper prompt; defer trigger tightening,
+  aligned `src/specs/agents/openai.yaml` wrapper prompt; defer trigger tightening,
   `tests`, asset refresh, and broader doc sync to later milestones.
 - [2026-04-15] Leave `README.md` unchanged in Milestone 1 because its current
   `specs` description already remains accurate at a high level; revisit
@@ -326,18 +326,18 @@ without hardcoded layout assumptions.
   wrappers in Milestone 2 because trigger wording is part of the shipped
   provider-agnostic and wrapper-facing surface, not just an internal
   `SKILL.md` detail.
-- [2026-04-16] Keep Milestone 3 scoped to `tests/SKILL.md` and
-  `tests/agents/openai.yaml`; defer asset refresh and broader doc sync to
+- [2026-04-16] Keep Milestone 3 scoped to `src/tests/SKILL.md` and
+  `src/tests/agents/openai.yaml`; defer asset refresh and broader doc sync to
   Milestones 4 and 5 unless the refreshed `tests` contract exposes material
   shipped-truth drift.
 - [2026-04-16] Treat weak-repo bootstrap as establishing the smallest credible
   automated layer plus explicit gap reporting, not as a requirement to build
   broad new testing infrastructure in one pass.
-- [2026-04-16] Refresh `specs/assets/*` in Milestone 4 because the shipped
+- [2026-04-16] Refresh `src/specs/assets/*` in Milestone 4 because the shipped
   bootstrap surface had material drift from the refreshed `specs` and `tests`
   contracts; do not defer that drift to the later eval phase.
 - [2026-04-16] Keep Milestone 4 limited to bootstrap scaffolding updates under
-  `specs/assets/*`; defer repo-facing README sync and any broader shipped-truth
+  `src/specs/assets/*`; defer repo-facing README sync and any broader shipped-truth
   edits to Milestone 5.
 - [2026-04-16] Keep Milestone 5 doc sync limited to `README.md` and this plan:
   `AGENTS.md` already remained accurate at the authoritative contract level,
@@ -379,12 +379,12 @@ without hardcoded layout assumptions.
   topology-discovery, generated/vendor-noise pruning, or organization-quality
   language stays only in `SKILL.md`, provider-facing surfaces can still drift
   enough to invalidate phase-closure claims.
-- [2026-04-16] The shipped bootstrap `specs/assets/AGENTS.md` had material
+- [2026-04-16] The shipped bootstrap `src/specs/assets/AGENTS.md` had material
   contract drift after Milestones 1 through 3: it still omitted `plan` and
   `execute` from the toolbox guidance and nudged fresh repos toward a fixed
   unit/integration/e2e testing table rather than discovered suite topology.
-- [2026-04-16] The existing `specs/assets/specs/README.md` and
-  `specs/assets/specs/spec-template.md` already had a usable house style, so
+- [2026-04-16] The existing `src/specs/assets/specs/README.md` and
+  `src/specs/assets/specs/spec-template.md` already had a usable house style, so
   Milestone 4 only needed targeted ownership and exclusion-language refreshes
   instead of a larger asset redesign.
 - [2026-04-16] After Milestones 3 and 4, the main visible remaining
@@ -407,11 +407,11 @@ without hardcoded layout assumptions.
   bootstrap guidance, and explicit uncovered-gap reporting across repo shapes.
   Remaining Phase 04 milestones are still pending.
 - Milestone 4 completed by refreshing the shipped bootstrap assets in
-  `specs/assets/*` so fresh repos inherit the six-skill workflow, topology-
+  `src/specs/assets/*` so fresh repos inherit the six-skill workflow, topology-
   aware ownership language, and non-assumptive test-layer scaffolding. Only
   Milestone 5 doc sync remains pending for Phase 04.
 - Milestone 5 completed by syncing `README.md` with the refreshed topology-
   aware `specs` and `tests` contracts and by recording the final verification
   evidence in this plan. After follow-up verification repaired the stale
-  `specs` wrapper metadata, Phase 04 is complete and ready for `PROMPT_verify`
-  against this same plan file.
+  `specs` wrapper metadata, Phase 04 is complete and ready for fresh
+  `verify` against this same plan file.

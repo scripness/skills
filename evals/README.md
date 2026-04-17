@@ -9,9 +9,9 @@ split below.
 
 ## Tracked Source
 
-- `<skill>/evals/evals.json` is the default tracked entrypoint for each
+- `src/<skill>/evals/evals.json` is the default tracked entrypoint for each
   skill's trigger and workflow eval definitions.
-- Author each `<skill>/evals/evals.json` by hand as tracked eval intent; do
+- Author each `src/<skill>/evals/evals.json` by hand as tracked eval intent; do
   not treat these files as generated run artifacts.
 - `evals/runtime.json` pins the canonical runtime profile used for default
   regression gating while leaving room for deliberate future profile changes.

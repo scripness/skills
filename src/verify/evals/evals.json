@@ -131,7 +131,7 @@
         ]
       },
       "scenario": {
-        "user_request": "Review a concrete implementation slice that changed execute/SKILL.md, README.md, and one test file.",
+        "user_request": "Review a concrete implementation slice that changed src/execute/SKILL.md, README.md, and one test file.",
         "repo_state": [
           "The claimed outcome is that execute's behavior changed and the tests were synced.",
           "The review must separate unrelated baseline noise from problems introduced by the slice.",

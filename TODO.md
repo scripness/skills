@@ -11,6 +11,12 @@
   manually copy the shipped skills from this repo into `.agents/skills/` as the
   cross-client canonical path and invoke them from a normal interactive session
   in any compatible client.
+- Keep the source-of-truth skill payloads under repo-root `src/` so the six
+  skills remain visually separate from repo docs, plans, eval metadata, and
+  maintenance tooling.
+- Make the copy boundary explicit:
+  `src/<skill>/` in this repo becomes `.agents/skills/<skill>/` in a target
+  repo.
 - Treat provider-native locations and mirrors as optional compatibility shims
   only; keep `.agents/` and `AGENTS.md` as the authoritative provider-agnostic
   surface.
@@ -68,7 +74,7 @@
 
 ## 3. Add The Plan Skill
 
-- Create `plan/SKILL.md` with a narrow scope: own task-level plan documents
+- Create `src/plan/SKILL.md` with a narrow scope: own task-level plan documents
   only.
 - Bake the planning protocol into the skill instead of requiring a repo-level
   `PLANS.md`.
@@ -76,7 +82,7 @@
   `plans/YYYY-MM-DD-short-task-slug.md` and keep each plan updated in place.
 - `plan` should create the `plans/` directory when it is missing in a target
   repo.
-- Add `plan/assets/plan-template.md` for a self-contained living plan.
+- Add `src/plan/assets/plan-template.md` for a self-contained living plan.
 - Use the default plan filename format:
   `plans/YYYY-MM-DD-short-task-slug.md`.
 - Ground the plan template in durable ExecPlan guidance:
@@ -113,7 +119,7 @@
 
 ## 4. Add The Execute Skill
 
-- Create `execute/SKILL.md` with a narrow scope: own implementation work only.
+- Create `src/execute/SKILL.md` with a narrow scope: own implementation work only.
 - Let `execute` handle two valid entry modes:
   - direct bounded execution when the task is still locally clear and does not
     need durable task state
@@ -208,6 +214,9 @@
   - https://github.com/anthropics/skills
   - https://github.com/obra/superpowers
   - https://github.com/ClaytonFarr/ralph-playbook
+- Capture both the official-doc guidance and the example-corpora patterns in a
+  durable repo-level reference note rather than leaving them only in plans or
+  chat memory.
 - Keep provider-specific guidance additive only; use it to stress-test the
   portable workflow rather than define the portable baseline.
 - Capture the durable cross-provider patterns explicitly:
@@ -235,7 +244,7 @@
   compare against the previous committed version of the skill, and use no-skill
   baseline runs where that comparison meaningfully clarifies whether the skill
   itself is helping.
-- Store tracked eval definitions with each skill in `<skill>/evals/` so trigger
+- Store tracked eval definitions with each skill in `src/<skill>/evals/` so trigger
   cases, workflow fixtures, and grading notes stay close to the skill they
   validate.
 - Make the eval artifact contract explicit:
@@ -293,7 +302,7 @@
 - Decide whether a `Makefile`, shell scripts, or another lightweight interface
   is the right operator surface for this repo.
 - Add optional helper scripts under the relevant skill-local `scripts/`
-  directory, most likely `execute/scripts/`, for convenience only and not as
+  directory, most likely `src/execute/scripts/`, for convenience only and not as
   required workflow primitives.
 - Add a thin helper loop for plan-driven work only:
   take an explicit provider command and explicit plan file, run a fresh

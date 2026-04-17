@@ -67,7 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Example:\n"
-            "  python3 execute/scripts/plan_loop.py --dry-run \\\n"
+            "  python3 src/execute/scripts/plan_loop.py --dry-run \\\n"
             "      --plan plans/2026-04-14-short-task-slug.md \\\n"
             "      --provider-command \"./bin/run-skill\"\n\n"
             "The external runner must be non-interactive and accept:\n"

@@ -57,9 +57,10 @@ of judged only by intuition.
   `AGENTS.md` command-table requirement to document exact commands when a phase
   introduces executable helpers or eval runners
 - Owning code paths: tracked eval definitions belong with the skills they
-  validate under `consult/evals/`, `execute/evals/`, `plan/evals/`,
-  `specs/evals/`, `tests/evals/`, and `verify/evals/`; each skill should own
-  its own `evals/evals.json` plus any tracked skill-local fixture prompts,
+  validate under `src/consult/evals/`, `src/execute/evals/`,
+  `src/plan/evals/`, `src/specs/evals/`, `src/tests/evals/`, and
+  `src/verify/evals/`; each skill should own its own
+  `src/<skill>/evals/evals.json` plus any tracked skill-local fixture prompts,
   grading notes, or rubric files that are specific to that skill
 - Shared harness paths: `evals/README.md` owns the cross-skill artifact
   contract and regression-review procedure; `evals/runtime.json` owns the
@@ -83,8 +84,8 @@ of judged only by intuition.
   helpers, add the smallest credible automated sanity layer and document its
   command before claiming completion
 - Related docs or references:
-  `plans/2026-04-14-phase-04-specs-and-tests-refresh.md`, `PROMPT_verify.md`,
-  and the evaluation-governance bullets in `TODO.md` section `7`
+  `plans/2026-04-14-phase-04-specs-and-tests-refresh.md` and the
+  evaluation-governance bullets in `TODO.md` section `7`
 
 ## Sync Expectations
 
@@ -139,14 +140,14 @@ of judged only by intuition.
   `.tmp/evals/` generated-output root without claiming that runners or
   governance policy already ship.
 - [2026-04-16] Ran
-  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `jq empty evals/runtime.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and it passed.
 - [2026-04-16] Ran
-  `rg -n 'Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|<skill>/evals/evals.json' AGENTS.md README.md evals/README.md`
+  `rg -n 'Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|src/<skill>/evals/evals.json' AGENTS.md README.md evals/README.md`
   and confirmed the repo-truth docs and shared harness contract describe the
   same Milestone 1 layout and baseline policy.
 - [2026-04-16] Ran
-  `find consult/evals execute/evals plan/evals specs/evals tests/evals verify/evals evals -maxdepth 2 -type f | sort`
+  `find src/consult/evals src/execute/evals src/plan/evals src/specs/evals src/tests/evals src/verify/evals evals -maxdepth 2 -type f | sort`
   and confirmed the new tracked eval skeleton exists only at the intended
   Milestone 1 paths.
 - [2026-04-16] Ran `git diff --check` after the Milestone 1 edits; it passed
@@ -156,7 +157,7 @@ of judged only by intuition.
   confirmed they now align on the shipped governance contract without claiming
   that concrete eval cases, pinned fixtures, or runner helpers already exist.
 - [2026-04-16] Ran
-  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `jq empty evals/runtime.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and it passed after the Milestone 2 governance updates.
 - [2026-04-16] Ran
   `rg -n 'Milestones 1 and 2|train splits|validation split|artifact review|governance|must-run' AGENTS.md README.md evals/README.md evals/runtime.json`
@@ -165,39 +166,39 @@ of judged only by intuition.
 - [2026-04-16] Ran `git diff --check` after the Milestone 2 edits; it passed
   with no whitespace or patch-format issues.
 - [2026-04-16] Re-read `README.md`, `evals/README.md`, the six
-  `<skill>/evals/evals.json` files, and this plan after the Milestone 3 edits
+  `src/<skill>/evals/evals.json` files, and this plan after the Milestone 3 edits
   and confirmed they now align on the first concrete skill-local trigger and
   workflow definitions while still deferring pinned fixtures, must-run surface
   selection, and runner helpers to Milestones 4 and 5.
 - [2026-04-16] Ran
-  `jq empty consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json evals/runtime.json`
+  `jq empty src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json evals/runtime.json`
   and it passed after the Milestone 3 eval-definition edits.
 - [2026-04-16] Ran
-  `jq '{skill, status, trigger_packs: (.trigger_evals | length), workflow_cases: (.workflow_evals | length)}' consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `jq '{skill, status, trigger_packs: (.trigger_evals | length), workflow_cases: (.workflow_evals | length)}' src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and confirmed all six skills now carry two trigger packs and two workflow
   cases with `milestone_3_seeded` status.
 - [2026-04-16] Ran
-  `rg -n "Milestones 1 through 3|must-run surface|skill-local trigger and workflow|placeholder" README.md evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `rg -n "Milestones 1 through 3|must-run surface|skill-local trigger and workflow|placeholder" README.md evals/README.md src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and confirmed the shared docs now describe Milestone 3 honestly and no
   shipped skill-local eval file still advertises placeholder-only state.
 - [2026-04-16] Ran `git diff --check` after the Milestone 3 edits; it passed
   with no whitespace or patch-format issues.
 - [2026-04-16] Repaired one follow-up Milestone 3 policy gap by re-reading
   `README.md`, `evals/README.md`, this plan, and the six
-  `<skill>/evals/evals.json` files, then converting workflow comparison
+  `src/<skill>/evals/evals.json` files, then converting workflow comparison
   metadata from an unconditional flat list into required-vs-optional baselines
   so the default previous-version comparison stays explicit and no-skill
   baselines stay conditional.
 - [2026-04-16] Ran
-  `jq empty consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json evals/runtime.json`
+  `jq empty src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json evals/runtime.json`
   and it passed after the comparison-metadata repair.
 - [2026-04-16] Ran
-  `jq '.workflow_evals[] | {id, comparison_targets}' consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `jq '.workflow_evals[] | {id, comparison_targets}' src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and confirmed every workflow eval now records `previous_committed_skill_version`
   as the required target while treating `no_skill_when_it_adds_signal` as an
   optional target with an explicit reason.
 - [2026-04-16] Ran
-  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and confirmed the shared artifact-contract wording now matches the repaired
   skill-local metadata.
 - [2026-04-16] Ran `git diff --check` after the comparison-metadata repair; it
@@ -215,14 +216,14 @@ of judged only by intuition.
   `apps/backend`, `apps/frontend`, `apps/admin`, root repo-truth docs,
   backend integration/e2e layers, and frontend/admin Vitest entrypoints.
 - [2026-04-17] Ran
-  `jq empty evals/runtime.json evals/fixtures/cryptoli.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `jq empty evals/runtime.json evals/fixtures/cryptoli.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and it passed after the Milestone 4 fixture and must-run edits.
 - [2026-04-17] Ran
-  `for f in consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json; do jq '{skill, validation_trigger_must_run: (.trigger_evals[] | select(.id | endswith("validation-boundary-pack")).must_run), cryptoli_case: (.workflow_evals[] | select(.id | contains("cryptoli")) | {id, must_run, fixture: .fixture.id})}' "$f"; done`
+  `for f in src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json; do jq '{skill, validation_trigger_must_run: (.trigger_evals[] | select(.id | endswith("validation-boundary-pack")).must_run), cryptoli_case: (.workflow_evals[] | select(.id | contains("cryptoli")) | {id, must_run, fixture: .fixture.id})}' "$f"; done`
   and confirmed each shipped skill now marks its validation boundary trigger
   pack and one pinned `cryptoli` workflow case as `must_run: true`.
 - [2026-04-17] Ran
-  `rg -n 'Milestones 1 through 4|evals/fixtures/cryptoli.json|must-run surface|cryptoli-backed|validation boundary trigger pack' AGENTS.md README.md evals/README.md evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`
+  `rg -n 'Milestones 1 through 4|evals/fixtures/cryptoli.json|must-run surface|cryptoli-backed|validation boundary trigger pack' AGENTS.md README.md evals/README.md evals/runtime.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`
   and confirmed the repo-truth docs, shared harness contract, machine-readable
   runtime metadata, and skill-local eval definitions all describe the same
   shipped Milestone 4 state.
@@ -303,7 +304,7 @@ Milestone 2 note:
 
 Milestone 3 note:
 
-- Replaced the six placeholder `<skill>/evals/evals.json` entrypoints with the
+- Replaced the six placeholder `src/<skill>/evals/evals.json` entrypoints with the
   first concrete trigger and workflow definitions, using paired train and
   validation trigger packs plus two workflow cases per shipped skill.
 - Encoded boundary-focused trigger near-misses and workflow comparison targets
@@ -353,7 +354,7 @@ Milestone 5 note:
 - [2026-04-14] Use `codex` + `gpt-5.4` + `xhigh` as the initial canonical eval
   runtime, but keep it intentionally configurable later.
 - [2026-04-16] Define the per-skill eval layout in Milestone 1 with placeholder
-  `<skill>/evals/evals.json` entrypoints instead of real cases so the repo can
+  `src/<skill>/evals/evals.json` entrypoints instead of real cases so the repo can
   ship the storage contract now without collapsing Milestones 1 and 3.
 - [2026-04-16] Keep the baseline comparison policy and generated-output root in
   repo-facing docs now, but defer split policy, repeated runs, thresholds, and
@@ -456,16 +457,16 @@ Milestone 5 note:
 
 - [2026-04-16] Fresh verification found one remaining Milestone 1 repo-truth
   sync gap: `evals/README.md` described the tracked eval layout but did not
-  explicitly say that each `<skill>/evals/evals.json` is hand-authored tracked
+  explicitly say that each `src/<skill>/evals/evals.json` is hand-authored tracked
   input rather than generated output.
 - [2026-04-16] Added that missing contract rule to `evals/README.md` so the
   shipped artifact contract now matches `TODO.md`'s Milestone 1 intent and the
   plan's completion claim.
 - [2026-04-16] Re-ran
-  `jq empty evals/runtime.json consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`,
+  `jq empty evals/runtime.json src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`,
   `git check-ignore -v .tmp/evals/example-run/artifact.json`,
   `git diff --check`, and
-  `rg -n "author each <skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|<skill>/evals/evals.json" AGENTS.md README.md evals/README.md TODO.md plans/2026-04-14-phase-05-evaluation-harness.md`;
+  `rg -n "author each src/<skill>/evals/evals.json|Evaluation Harness|\\.tmp/evals|previous committed version|evals/runtime.json|src/<skill>/evals/evals.json" AGENTS.md README.md evals/README.md TODO.md plans/2026-04-14-phase-05-evaluation-harness.md`;
   they passed or confirmed the repaired contract wording.
 - [2026-04-16] Fresh verification then found one remaining Milestone 3 policy
   gap: every workflow eval still listed `no_skill_when_it_adds_signal`
@@ -479,7 +480,7 @@ Milestone 5 note:
   an optional comparison.
 - [2026-04-16] Added the matching artifact-contract rule to `evals/README.md`
   and re-ran `jq empty`, `jq '.workflow_evals[] | {id, comparison_targets}'`,
-  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md consult/evals/evals.json execute/evals/evals.json plan/evals/evals.json specs/evals/evals.json tests/evals/evals.json verify/evals/evals.json`,
+  `rg -n 'optional_secondary_baseline|"required":|"optional":|materially clarifies' evals/README.md src/consult/evals/evals.json src/execute/evals/evals.json src/plan/evals/evals.json src/specs/evals/evals.json src/tests/evals/evals.json src/verify/evals/evals.json`,
   and `git diff --check`; they passed and confirmed the repaired baseline
   policy is now explicit in tracked repo truth.
 - [2026-04-17] Fresh verification found two remaining Milestone 5 gaps: the

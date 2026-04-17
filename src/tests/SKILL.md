@@ -53,7 +53,7 @@ generated or vendor noise.
    - Map the actual test topology:
      - monorepo vs single package
      - per-app, per-package, per-service, or shared suites
-     - colocated tests vs top-level `tests/`, `e2e/`, or other suite roots
+     - colocated tests vs top-level `src/tests/`, `e2e/`, or other suite roots
      - runner and command roots that define how each suite is executed
      - existing layers such as unit, integration, e2e, smoke, browser,
        contract, visual, security, or performance tests

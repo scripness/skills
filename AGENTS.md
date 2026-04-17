@@ -28,6 +28,8 @@ Operator guidance for updating skills, refreshing eval workspaces, and
 upstreaming durable improvements from downstream repos lives in
 [MAINTENANCE.md](MAINTENANCE.md).
 
+Durable source grounding for the workflow lives in [SOURCES.md](SOURCES.md).
+
 Current execution plans for building the missing system:
 - [plans/2026-04-14-phase-01-plan-skill-and-contract.md](plans/2026-04-14-phase-01-plan-skill-and-contract.md)
 - [plans/2026-04-14-phase-02-execute-skill.md](plans/2026-04-14-phase-02-execute-skill.md)
@@ -35,10 +37,6 @@ Current execution plans for building the missing system:
 - [plans/2026-04-14-phase-04-specs-and-tests-refresh.md](plans/2026-04-14-phase-04-specs-and-tests-refresh.md)
 - [plans/2026-04-14-phase-05-evaluation-harness.md](plans/2026-04-14-phase-05-evaluation-harness.md)
 - [plans/2026-04-14-phase-06-tooling-and-final-docs.md](plans/2026-04-14-phase-06-tooling-and-final-docs.md)
-
-Legacy bootstrap prompts preserved for reference:
-- [PROMPT_execute.md](PROMPT_execute.md)
-- [PROMPT_verify.md](PROMPT_verify.md)
 
 ## Source Of Truth
 
@@ -60,14 +58,14 @@ Important:
 
 ## Local Agent Toolbox
 
-In this repo, the skills live at the repo root:
+In this repo, the source-of-truth skill directories live under `src/`:
 
-- [consult/SKILL.md](consult/SKILL.md)
-- [execute/SKILL.md](execute/SKILL.md)
-- [plan/SKILL.md](plan/SKILL.md)
-- [specs/SKILL.md](specs/SKILL.md)
-- [tests/SKILL.md](tests/SKILL.md)
-- [verify/SKILL.md](verify/SKILL.md)
+- [src/consult/SKILL.md](src/consult/SKILL.md)
+- [src/execute/SKILL.md](src/execute/SKILL.md)
+- [src/plan/SKILL.md](src/plan/SKILL.md)
+- [src/specs/SKILL.md](src/specs/SKILL.md)
+- [src/tests/SKILL.md](src/tests/SKILL.md)
+- [src/verify/SKILL.md](src/verify/SKILL.md)
 
 When these skills are copied into a target repo, they are intended to live
 under `.agents/skills/`.
@@ -75,7 +73,7 @@ under `.agents/skills/`.
 ## Evaluation Harness Layout
 
 - Tracked eval definitions live with the skills they validate under
-  `<skill>/evals/evals.json`.
+  `src/<skill>/evals/evals.json`.
 - Shared harness metadata lives under repo-root `evals/`;
   `evals/README.md` owns the artifact contract, governance rules, and
   regression-review procedure, `evals/runtime.json` pins the default gating
@@ -101,8 +99,8 @@ under `.agents/skills/`.
 `AGENTS.md` owns the authoritative refresh-workflow contract for this repo.
 
 - Use manual copy as the initial distribution and refresh workflow.
-- Copy the shipped skill directories from this repo into `.agents/skills/` in
-  the target repo.
+- Copy the shipped skill directories from `src/` in this repo into
+  `.agents/skills/` in the target repo.
 - Refresh a target repo by re-copying the skill directories and supporting
   assets that changed here.
 - Keep install helpers, subtree wiring, and provider-specific plugins optional
@@ -133,8 +131,7 @@ Use the current shipped skills as follows:
   for open-ended exploration or implementation.
 
 For roadmap execution in this repo, use the phase plans plus the shipped
-`execute` and `verify` skills in fresh sessions, and keep the legacy prompt
-files as reference-only bootstrap artifacts.
+`execute` and `verify` skills in fresh sessions.
 
 Shipped `plan` contract for this repo:
 
@@ -190,9 +187,9 @@ When working on the roadmap:
 
 1. Read `AGENTS.md`, `TODO.md`, and the active phase plan.
 2. Use a fresh session per bounded milestone or slice.
-3. Use [execute/SKILL.md](execute/SKILL.md) with the explicit plan path for
+3. Use [src/execute/SKILL.md](src/execute/SKILL.md) with the explicit plan path for
    implementation.
-4. Use [verify/SKILL.md](verify/SKILL.md) with the same plan path for review.
+4. Use [src/verify/SKILL.md](src/verify/SKILL.md) with the same plan path for review.
 5. Update the plan before stopping.
 6. Move to the next phase only after the current phase is actually complete.
 
@@ -237,21 +234,21 @@ Never:
 ├── Makefile
 ├── AGENTS.md
 ├── CLAUDE.md -> AGENTS.md
+├── SOURCES.md
 ├── README.md
 ├── TODO.md
-├── PROMPT_execute.md
-├── PROMPT_verify.md
-├── consult/
 ├── evals/
-├── execute/
-├── plan/
-├── specs/
-├── tests/
-├── verify/
+├── src/
+│   ├── consult/
+│   ├── execute/
+│   ├── plan/
+│   ├── specs/
+│   ├── tests/
+│   └── verify/
 └── plans/
 ```
 
-Bootstrap assets live under `specs/assets/`.
+Bootstrap assets live under `src/specs/assets/`.
 Generated eval outputs live under ignored `.tmp/evals/`.
 
 ## Commands
@@ -276,8 +273,8 @@ Useful local commands:
 | Show the direct harness CLI help | `python3 evals/scripts/harness.py --help` |
 | Run validation directly without the Makefile | `python3 evals/scripts/harness.py validate` |
 | Scaffold a repeatable must-run eval workspace directly | `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run` |
-| Show the optional plan-driven loop helper contract | `python3 execute/scripts/plan_loop.py --help` |
-| Dry-run the optional plan-driven execute/verify helper with an explicit external runner | `python3 execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
+| Show the optional plan-driven loop helper contract | `python3 src/execute/scripts/plan_loop.py --help` |
+| Dry-run the optional plan-driven execute/verify helper with an explicit external runner | `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
 
 If a phase introduces executable helpers or eval runners, document the exact
 commands here and keep them current.
@@ -287,8 +284,8 @@ commands here and keep them current.
 - Keep `AGENTS.md` concise and operational.
 - Keep durable roadmap and contract truth in `TODO.md` and `README.md`.
 - Keep phase-local state in `plans/*.md`.
-- Keep `PROMPT_execute.md` and `PROMPT_verify.md` only as legacy bootstrap
-  artifacts now that the real `execute` skill is shipped.
+- Keep the six source skills under `src/` so the repo-root workflow docs and
+  tooling stay clearly separated from the shipped skill payloads.
 - Use ASCII by default.
 - Prefer proportional edits over broad rewrites.
 

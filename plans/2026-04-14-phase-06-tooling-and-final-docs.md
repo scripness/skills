@@ -29,7 +29,7 @@ six-skill system cleanly once the skills and eval harness exist.
 
 - Repo-root `Makefile` exposing the Phase 06 maintenance command surface while
   delegating unique harness logic to `evals/scripts/harness.py`
-- Optional thin helper scripts under `execute/scripts/` only if they earn their
+- Optional thin helper scripts under `src/execute/scripts/` only if they earn their
   place after the repo-level operator surface exists
 - Repo-root `MAINTENANCE.md` plus final `README.md`, `AGENTS.md`, and
   `evals/README.md` polish
@@ -48,7 +48,7 @@ six-skill system cleanly once the skills and eval harness exist.
   unique harness logic in wrappers
 - Owning code paths: repo-root `Makefile` for the maintenance entrypoint;
   `evals/scripts/harness.py` for shared eval validation and run scaffolding;
-  `execute/scripts/` for any justified plan-driven convenience helper;
+  `src/execute/scripts/` for any justified plan-driven convenience helper;
   generated run artifacts remain outside tracked source under `.tmp/evals/`
 - Owning spec paths: `AGENTS.md` for the authoritative workflow contract and
   command table, `README.md` for the shipped usage surface, `evals/README.md`
@@ -62,8 +62,8 @@ six-skill system cleanly once the skills and eval harness exist.
   validation commands that prove the new surface stays aligned with tracked
   truth
 - Related docs or references:
-  `plans/2026-04-14-phase-05-evaluation-harness.md`, `PROMPT_verify.md`,
-  `README.md`, `AGENTS.md`, and `TODO.md` sections `8` and `9`
+  `plans/2026-04-14-phase-05-evaluation-harness.md`, `README.md`,
+  `AGENTS.md`, and `TODO.md` sections `8` and `9`
 
 ## Dependencies
 
@@ -97,7 +97,7 @@ six-skill system cleanly once the skills and eval harness exist.
    docs.
 2. Add only justified helper scripts with an explicit agent-safe contract: if a
    plan-driven convenience gap remains after Milestone 1, add at most thin
-   helpers under `execute/scripts/` that take an explicit provider command and
+   helpers under `src/execute/scripts/` that take an explicit provider command and
    explicit plan path, never guess state, expose `--help`, separate
    machine-readable stdout from stderr diagnostics, document meaningful exit
    codes, and support `--dry-run` or explicit confirmation for any stateful
@@ -158,16 +158,16 @@ six-skill system cleanly once the skills and eval harness exist.
   `make eval-init-run RUN_ID=phase06-m1-gap-repair-make SELECTION=validation SKILL="execute verify"`
   and it passed, creating `.tmp/evals/phase06-m1-gap-repair-make/` with 6
   cases and the `cryptoli` fixture after the validator changes.
-- [2026-04-17] Ran `python3 execute/scripts/plan_loop.py --help` and it
+- [2026-04-17] Ran `python3 src/execute/scripts/plan_loop.py --help` and it
   passed, showing the helper contract, required runner shape, and documented
   helper exit codes.
-- [2026-04-17] Ran `python3 -m py_compile execute/scripts/plan_loop.py` and it
+- [2026-04-17] Ran `python3 -m py_compile src/execute/scripts/plan_loop.py` and it
   passed.
 - [2026-04-17] Ran a temp-fixture smoke command that created a temporary plan
-  from `plan/assets/plan-template.md`, created a temporary fake external
+  from `src/plan/assets/plan-template.md`, created a temporary fake external
   runner that accepts `execute <plan>` and `verify <plan>`, then invoked both
-  `python3 execute/scripts/plan_loop.py --dry-run ...` and
-  `python3 execute/scripts/plan_loop.py --yes --max-iterations 3 ...`; it
+  `python3 src/execute/scripts/plan_loop.py --dry-run ...` and
+  `python3 src/execute/scripts/plan_loop.py --yes --max-iterations 3 ...`; it
   passed with `dry_run_rc = 0`, `real_run_rc = 0`, `last_verdict = "pass"`,
   and all three progress items marked complete in the temporary plan.
 - [2026-04-17] Ran `make validate` and it passed after the Milestone 2 helper
@@ -175,20 +175,20 @@ six-skill system cleanly once the skills and eval harness exist.
   tracked truth.
 - [2026-04-17] Ran `git diff --check` and it passed with no whitespace or
   patch-format issues after the Milestone 2 helper and doc edits.
-- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` after the
+- [2026-04-17] Re-ran `python3 src/execute/scripts/plan_loop.py --help` after the
   malformed-plan repair and it passed, now documenting helper exit code `1`
   for invalid plan state as well as blocked or unacceptable runs.
 - [2026-04-17] Re-ran a temp-fixture happy-path smoke command that created a
-  temporary plan from `plan/assets/plan-template.md`, created a temporary fake
+  temporary plan from `src/plan/assets/plan-template.md`, created a temporary fake
   external runner that marks one `## Progress` item complete per `execute`,
-  then invoked `python3 execute/scripts/plan_loop.py --yes --max-iterations 3 ...`;
+  then invoked `python3 src/execute/scripts/plan_loop.py --yes --max-iterations 3 ...`;
   it passed with `rc = 0`, `verification_verdict = "pass"` on each loop, and
   all three progress items marked complete in the temporary plan after the
   malformed-plan repair.
 - [2026-04-17] Ran a temp-fixture malformed-plan smoke command that created a
-  temporary plan from `plan/assets/plan-template.md`, created a temporary fake
+  temporary plan from `src/plan/assets/plan-template.md`, created a temporary fake
   external runner that deletes the `## Blockers` section during `execute`, then
-  invoked `python3 execute/scripts/plan_loop.py --yes ...`; it passed by
+  invoked `python3 src/execute/scripts/plan_loop.py --yes ...`; it passed by
   failing closed with structured stop event `invalid_plan_after_execute` and
   `rc = 1` instead of surfacing a Python traceback.
 - [2026-04-17] Ran `make validate` after the malformed-plan repair and it
@@ -209,7 +209,7 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Re-ran `python3 evals/scripts/harness.py --help` during the
   Milestone 3 doc-sync slice and it passed, still showing the direct
   `validate` and `init-run` harness surface behind the Makefile wrappers.
-- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` during the
+- [2026-04-17] Re-ran `python3 src/execute/scripts/plan_loop.py --help` during the
   Milestone 3 doc-sync slice and it passed, still documenting the optional
   explicit-plan helper contract, external runner requirement, and exit codes.
 - [2026-04-17] Re-ran `git diff --check` during the Milestone 3 doc-sync slice
@@ -218,7 +218,7 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Ran `git diff --check` again after the required final plan
   update and it still passed, confirming the final Milestone 3 tree is clean.
 - [2026-04-17] Re-ran `make help` after the self-describing-surface repair and
-  it passed, now listing the optional `python3 execute/scripts/plan_loop.py`
+  it passed, now listing the optional `python3 src/execute/scripts/plan_loop.py`
   `--help` and `--dry-run --plan ... --provider-command ...` commands alongside
   the Makefile-wrapped harness commands so the advertised maintenance surface
   no longer depends on docs-only command names.
@@ -229,12 +229,12 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] Re-ran `python3 evals/scripts/harness.py --help` after the
   self-describing-surface repair and it passed, still showing the direct
   `validate` and `init-run` harness interface behind the Makefile wrappers.
-- [2026-04-17] Re-ran `python3 execute/scripts/plan_loop.py --help` after the
+- [2026-04-17] Re-ran `python3 src/execute/scripts/plan_loop.py --help` after the
   self-describing-surface repair and it passed, still documenting the optional
   explicit-plan helper contract and exit codes.
 - [2026-04-17] Re-ran `git diff --check` after the self-describing-surface
   repair and it passed with no whitespace or patch-format issues.
-- [2026-04-17] Fresh `PROMPT_execute.md` follow-through re-read `AGENTS.md`,
+- [2026-04-17] Fresh `execute` follow-through re-read `AGENTS.md`,
   `README.md`, `TODO.md`, and this plan, then stopped without implementation
   changes because all three Phase 06 milestones were already complete and the
   recorded smoke checks above already cover the shipped maintenance surface.
@@ -274,7 +274,7 @@ six-skill system cleanly once the skills and eval harness exist.
   repo-level maintenance surface is self-describing without adding hidden logic
   or extra docs-only command names.
 - [2026-04-17] If a plan-driven convenience wrapper is justified, it belongs
-  under `execute/scripts/` because it composes `execute` and `verify`; if no
+  under `src/execute/scripts/` because it composes `execute` and `verify`; if no
   real gap remains after Milestone 1, close Milestone 2 explicitly without
   adding a helper just to satisfy the plan.
 - [2026-04-17] Use repo-root `MAINTENANCE.md` as the durable home for skill
@@ -285,7 +285,7 @@ six-skill system cleanly once the skills and eval harness exist.
   sync gate is the shipped maintenance surface in `AGENTS.md`, `README.md`,
   and `evals/README.md`.
 - [2026-04-17] Ship Milestone 2 as one optional helper at
-  `execute/scripts/plan_loop.py`; keep it dumb by requiring one explicit plan
+  `src/execute/scripts/plan_loop.py`; keep it dumb by requiring one explicit plan
   path, one explicit external runner command, file-backed continuation checks,
   and verify verdict exit codes instead of parsing model prose.
 - [2026-04-17] Treat malformed plan state after `execute` or `verify` as a
@@ -316,8 +316,8 @@ six-skill system cleanly once the skills and eval harness exist.
   execution riskier than the shipped `plan` contract allows.
 - [2026-04-17] The shipped skill surface has one consistent structure today:
   each skill owns `SKILL.md`, `agents/openai.yaml`, and `evals/evals.json`,
-  while only `plan/` and `specs/` currently ship required local assets worth
-  validating in the Phase 06 maintenance pass.
+  while only `src/plan/` and `src/specs/` currently ship required local assets
+  worth validating in the Phase 06 maintenance pass.
 - [2026-04-17] Re-reading the updated repo-truth docs after Milestone 1 showed
   that `AGENTS.md`, `README.md`, `evals/README.md`, and the new `Makefile`
   now describe the same thin maintenance surface instead of splitting command
@@ -346,13 +346,13 @@ six-skill system cleanly once the skills and eval harness exist.
   include optional direct helper entrypoints that the docs treat as shipped,
   not just the Makefile targets themselves.
 - [2026-04-17] This Phase 06 plan is now fully executed and consistent with the
-  current repo truth, so repeating `PROMPT_execute.md` against it should be a
-  no-op unless the plan is reopened with new unfinished scope.
+  current repo truth, so pointing a fresh `execute` run at it again should be
+  a no-op unless the plan is reopened with new unfinished scope.
 
 ## Outcomes / Retrospective
 
 - Phase 06 is complete. The repo now ships a thin repo-level maintenance
   surface (`Makefile`, `evals/scripts/harness.py`, and the optional
-  `execute/scripts/plan_loop.py`) plus a repo-root `MAINTENANCE.md` that keeps
+  `src/execute/scripts/plan_loop.py`) plus a repo-root `MAINTENANCE.md` that keeps
   `README.md`, `AGENTS.md`, and `evals/README.md` aligned around the same
   provider-agnostic maintenance loop.

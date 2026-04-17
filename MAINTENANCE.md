@@ -15,9 +15,9 @@ durable improvements discovered while using copied skills in downstream repos.
 
 ## Durable State
 
-- `AGENTS.md` and `specs/` = repo truth
+- `AGENTS.md` and a target repo's `specs/` = repo truth
 - tests = executable truth
-- `<skill>/evals/evals.json` and `evals/` = tracked eval truth
+- `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
 - `plans/*.md` = task truth
 - code = implemented reality
 - `.tmp/evals/` = generated local run artifacts
@@ -25,8 +25,8 @@ durable improvements discovered while using copied skills in downstream repos.
 ## Update Loop
 
 1. Change the owning skill or doc paths directly:
-   `<skill>/SKILL.md`, `<skill>/agents/openai.yaml`, local assets,
-   `<skill>/evals/evals.json`, `README.md`, `AGENTS.md`, `evals/README.md`,
+   `src/<skill>/SKILL.md`, `src/<skill>/agents/openai.yaml`, local assets,
+   `src/<skill>/evals/evals.json`, `README.md`, `AGENTS.md`, `evals/README.md`,
    or this file as needed.
 2. Keep boundaries sharp. Durable workflow truth belongs in repo docs and
    skills, not in shell wrappers or chat-only instructions.
@@ -56,9 +56,9 @@ durable improvements discovered while using copied skills in downstream repos.
 - `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
   Scaffolds a direct run workspace when you want the harness entrypoint
   instead of the Makefile wrapper.
-- `python3 execute/scripts/plan_loop.py --help`
-  Shows the optional plan-driven helper contract shipped with `execute/`.
-- `python3 execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/plan_loop.py --help`
+  Shows the optional plan-driven helper contract shipped with `src/execute/`.
+- `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Dry-runs the optional execute/verify loop helper against one explicit plan
   path and one explicit external runner.
 
