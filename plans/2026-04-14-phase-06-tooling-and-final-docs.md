@@ -234,6 +234,10 @@ six-skill system cleanly once the skills and eval harness exist.
   explicit-plan helper contract and exit codes.
 - [2026-04-17] Re-ran `git diff --check` after the self-describing-surface
   repair and it passed with no whitespace or patch-format issues.
+- [2026-04-17] Fresh `PROMPT_execute.md` follow-through re-read `AGENTS.md`,
+  `README.md`, `TODO.md`, and this plan, then stopped without implementation
+  changes because all three Phase 06 milestones were already complete and the
+  recorded smoke checks above already cover the shipped maintenance surface.
 
 ## Risks
 
@@ -255,6 +259,9 @@ six-skill system cleanly once the skills and eval harness exist.
 - [x] Milestone 1
 - [x] Milestone 2
 - [x] Milestone 3
+- [2026-04-17] Fresh `execute` follow-through confirmed there is no remaining
+  unfinished milestone or bounded slice in this Phase 06 plan, so the session
+  stopped without additional repo edits.
 
 ## Decision Log
 
@@ -293,6 +300,9 @@ six-skill system cleanly once the skills and eval harness exist.
   skill updates, eval refresh, and downstream-upstream sync without turning it
   into a second workflow contract; `AGENTS.md` remains the authoritative
   refresh and boundary document for the repo.
+- [2026-04-17] If a later `execute` session is pointed at this exact Phase 06
+  plan after all milestones are complete, stop and hand off rather than
+  inventing extra polish work outside the finished plan.
 
 ## Discoveries
 
@@ -335,6 +345,9 @@ six-skill system cleanly once the skills and eval harness exist.
 - [2026-04-17] For this repo, a "self-describing" `make help` surface needs to
   include optional direct helper entrypoints that the docs treat as shipped,
   not just the Makefile targets themselves.
+- [2026-04-17] This Phase 06 plan is now fully executed and consistent with the
+  current repo truth, so repeating `PROMPT_execute.md` against it should be a
+  no-op unless the plan is reopened with new unfinished scope.
 
 ## Outcomes / Retrospective
 
