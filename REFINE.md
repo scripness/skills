@@ -2,6 +2,42 @@
 
 This file tracks post-merge refinement work for the repo.
 
+## Current State
+
+This branch is a post-merge cleanup branch. The initial six-skill system is
+already shipped.
+
+Current shipped repo surface:
+
+- six skills under `src/`: `consult`, `execute`, `plan`, `specs`, `tests`,
+  `verify`
+- repo support surface: `Makefile`, `MAINTENANCE.md`, `SOURCES.md`, `evals/`
+- historical build records under `plans/`:
+  - `plans/2026-04-14-phase-00-design-doc.md`
+  - `plans/2026-04-14-phase-01-plan-skill-and-contract.md`
+  - `plans/2026-04-14-phase-02-execute-skill.md`
+  - `plans/2026-04-14-phase-03-consult-and-verify-refresh.md`
+  - `plans/2026-04-14-phase-04-specs-and-tests-refresh.md`
+  - `plans/2026-04-14-phase-05-evaluation-harness.md`
+  - `plans/2026-04-14-phase-06-tooling-and-final-docs.md`
+
+Current refinement problem:
+
+- the build is complete, but some top-level docs still surface the historical
+  Phase 00-06 files too prominently
+- durable repo-truth docs under top-level `specs/` do not exist yet and need
+  to be created from shipped reality
+- some eval cases still use the historical phase files as convenient fixture
+  inputs
+
+Intended steady state after refinement:
+
+- live operational truth: `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
+  `SOURCES.md`, top-level `specs/`, `src/`, and `evals/`
+- future task-local state: explicit `plans/*.md` files created for new work
+- completed Phase 00-06 files: historical background only, not default
+  required reading
+
 ## Current Refinement Plan
 
 Rebuild live repo truth first, then remove or replace the remaining references
