@@ -1,7 +1,49 @@
 # REFINE
 
-This file is only about a **future optional helper script** for plan-driven
-execution.
+This file tracks post-merge refinement work for the repo.
+
+## Current Refinement Plan
+
+Rebuild live repo truth first, then remove or replace the remaining references
+to historical build plans.
+
+Recommended sequence:
+
+1. Rebuild live repo truth with `specs`.
+   - Rewrite `AGENTS.md` from current shipped reality.
+   - Create `specs/` from scratch as durable topic truth.
+   - Rewrite `README.md` so it describes the shipped system, not the build
+     history.
+   - Use the historical phase plans only as background source material, not as
+     current truth.
+2. Demote historical Phase 00-06 files out of the live surface.
+   - Remove top-level doc references that make the completed phase plans look
+     like required reading.
+   - Keep generic `plans/*.md` workflow references only where they are still
+     part of the shipped `plan` and `execute` contracts.
+3. Replace eval coupling to historical phase plans.
+   - Inventory eval cases that currently use Phase 00-06 files as fixtures.
+   - Replace those inputs with neutral fixture plan files where plan artifacts
+     are still needed for testing.
+   - Delete historical-plan eval references that are no longer serving a real
+     test purpose.
+4. Decide archive policy for the completed build plans.
+   - Either keep them in `plans/` as clearly historical records, move them to
+     an archive location later, or trim them once they are no longer needed.
+
+Success criteria for this refinement:
+
+- `AGENTS.md`, `README.md`, and `specs/` are sufficient to understand and use
+  the repo safely.
+- Historical Phase 00-06 files are no longer part of the default operational
+  reading chain.
+- Evals do not depend on historical build-plan files unless that dependency is
+  explicitly intentional and justified as fixture data.
+
+## Helper Loop Note
+
+The remainder of this file is only about a **future optional helper script**
+for plan-driven execution.
 
 The intended future home is something like:
 
