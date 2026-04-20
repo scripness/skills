@@ -1,394 +1,145 @@
 # skills
 
-Provider-agnostic agent skills for end-to-end repository work.
+Provider-agnostic source repo for a portable six-skill workflow.
 
-The goal of this repo is not to store prompts. It is to define a portable
-workflow you can bring to any codebase:
+The model is simple:
 
 - provider = runtime shell
 - model = intelligence level
 - skills = workflow
 - repo files = durable state
 
-Manually copy the shipped skill directories from this repo into
-`.agents/skills/` in any target repo and invoke them from a normal interactive
-session with the strongest model and effort setting you want. The workflow
-should not depend on provider plan modes, plugins, auto-memory, or any other
-client-specific feature.
+This repo is not an application. It ships source skills, repo-truth docs,
+shared eval metadata, and thin local helpers that can be copied into other
+repos.
 
-Current shipped skills are:
+## Start With Shipped Reality
 
-- `consult`
-- `execute`
-- `plan`
-- `specs`
-- `tests`
-- `verify`
+Read this repo in the same order the shipped workflow expects:
 
-The source-of-truth skill directories live under `src/` in this repo:
+1. `AGENTS.md`
+2. `specs/README.md` and the relevant `specs/*.md`
+3. `README.md`
+4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` as needed
+5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/plan_loop.py`
 
-- `src/consult/`
-- `src/execute/`
-- `src/plan/`
-- `src/specs/`
-- `src/tests/`
-- `src/verify/`
+Completed `plans/2026-04-14-phase-*.md` files remain available as historical
+background, but they are not the default operational reading chain.
 
-The shipped six-skill workflow is:
+## What Ships
 
-- `specs`
-- `tests`
-- `consult`
-- `plan`
-- `execute`
-- `verify`
-
-See [Phase 00: Initial Design Doc](./plans/2026-04-14-phase-00-design-doc.md)
-for the implementation roadmap and
-[SOURCES.md](./SOURCES.md) for the durable design grounding captured from the
-official docs and example corpora.
+- six source skills under `src/`: `consult`, `execute`, `plan`, `specs`,
+  `tests`, and `verify`
+- live repo-truth docs: `AGENTS.md`, `specs/`, `README.md`,
+  `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md`
+- shared eval surface: `src/<skill>/evals/evals.json`, `evals/runtime.json`,
+  `evals/fixtures/cryptoli.json`, and `evals/scripts/harness.py`
+- thin repo maintenance wrapper: `Makefile`
+- optional explicit-plan execute/verify helper:
+  `src/execute/scripts/plan_loop.py`
+- `CLAUDE.md` as a symlink mirror to `AGENTS.md`
 
 ## Durable State
 
-- `AGENTS.md` and a target repo's `specs/` = repo truth
-- tests = executable truth
+- `AGENTS.md` and `specs/` = repo truth
+- checks and tests = executable truth
 - `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
 - `plans/*.md` = task truth
-- code = implemented reality
-
-The repo should stay in a state where a fresh agent can get oriented quickly,
-find the right code paths, and make correct changes with the highest practical
-chance of success.
+- code and checked-in docs = implemented reality
+- `.tmp/evals/` = generated local artifacts
 
 ## Repo Layout
 
-- `src/` contains only the six shipped source skills and their local assets,
-  eval definitions, and helper scripts.
-- Repo docs such as `AGENTS.md`, `README.md`, `MAINTENANCE.md`, and
-  `SOURCES.md`, plus the design doc and phase plans under `plans/`, define the
-  workflow contract, roadmap, and design grounding around those skills.
-- Repo-root `evals/`, `plans/`, and `.tmp/evals/` hold the harness metadata,
-  execution artifacts, and generated local outputs around the source skills.
+```text
+.
+├── AGENTS.md
+├── CLAUDE.md -> AGENTS.md
+├── README.md
+├── MAINTENANCE.md
+├── SOURCES.md
+├── REFINE.md
+├── specs/
+├── evals/
+├── Makefile
+├── src/
+│   ├── consult/
+│   ├── execute/
+│   ├── plan/
+│   ├── specs/
+│   ├── tests/
+│   └── verify/
+└── plans/
+    ├── 2026-04-14-phase-*.md
+    └── YYYY-MM-DD-short-task-slug.md
+```
+
+Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
+`evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
+ships the optional `scripts/plan_loop.py` helper.
+
+## Six-Skill Workflow
+
+- `specs`: bootstrap or sync repo truth when `AGENTS.md`, `specs/`, or owning
+  guidance is missing, stale, or too weak for safe work
+- `tests`: bootstrap or sync test truth when coverage is missing, stale, or
+  clearly below what safe execution and verification need
+- `consult`: clarify the safest next move when the work is not yet clear enough
+  to execute or plan
+- `plan`: create or maintain one explicit
+  `plans/YYYY-MM-DD-short-task-slug.md` file when work needs durable state
+- `execute`: implement one bounded task directly or one bounded slice from one
+  explicit plan file, then run the smallest meaningful checks
+- `verify`: adversarially review a concrete plan, implementation slice, diff,
+  or claim and return findings first
+
+## Target Repo Flow
+
+1. Copy the shipped skill directories from `src/` into `.agents/skills/` in
+   the target repo.
+2. Run `specs` when repo truth is weak, missing, stale, or blocking safe work.
+3. Run `tests` when test truth is weak, missing, stale, or clearly below what
+   the repo needs.
+4. Run `consult` when the next move is not yet clear.
+5. If the task is still locally clear and bounded, use `execute` directly,
+   then run `verify`.
+6. If the work needs durable task state, use `plan` and create or update one
+   explicit `plans/YYYY-MM-DD-short-task-slug.md` path.
+7. In plan-driven work, run `verify` on the plan, then run `execute` against
+   that exact path, update the plan after the slice, and hand back to
+   `verify`.
+
+Keep provider features such as plan modes, subagents, plugins, or auto-memory
+optional only. The baseline workflow should work from repo files plus a normal
+interactive session.
 
 ## Evaluation Harness
 
-Milestones 1 through 5 of the eval harness ship the tracked layout, storage
-contract, governance policy, the first concrete skill-local trigger and
-workflow definitions, the first pinned real-repo fixture, the initial must-run
-regression surface, and the first thin local runner helpers.
-
-- Each skill owns `src/<skill>/evals/evals.json` as its default tracked entrypoint
-  for trigger and workflow eval definitions.
-- The first concrete Milestone 3 cases still live in those six skill-local
-  `evals/evals.json` files as train and validation seeds.
-- `evals/fixtures/cryptoli.json` pins `scripness/cryptoli` as the first
-  official real-repo fixture for monorepo-aware workflow evaluation.
-- `evals/runtime.json` pins the canonical default gating profile while keeping
-  the profile list upgradeable later.
-- Repo-root `Makefile` is the thin operator surface for local maintenance:
-  `make validate` runs repo-level validation and
-  `make eval-init-run RUN_ID=<run-id>` scaffolds repeatable local eval
-  workspaces under `.tmp/evals/<run-id>/`.
-- `evals/scripts/harness.py` remains the underlying helper entrypoint. Its
-  `validate` command now checks shipped skill structure, `SKILL.md`
-  frontmatter, local asset integrity, and the tracked eval contract before the
-  repo-level wrappers delegate to it.
-- Use `train` splits for tuning and `validation` splits for regression gating;
-  reserve must-run cases for the validation split.
-- The initial must-run surface uses the validation boundary trigger pack for
-  each shipped skill plus one pinned `cryptoli` validation workflow case per
-  skill.
-- Run must-run validation cases three times for both candidate and baseline,
-  aggregate by majority or median as appropriate, and keep the compared runtime
-  profile identical.
-- Grade each eval as `assertion`, `rubric`, or `hybrid`, fail the gate on
-  unexplained must-run regressions or increased unresolved severe findings, and
-  require artifact review before accepting a skill change.
-- Compare a skill change against the previous committed version of that skill
-  by default; add a no-skill baseline only when it materially improves the
-  signal.
-- Keep generated outputs, transcripts, and temporary fixture clones under
-  ignored `.tmp/evals/`, not in tracked source.
-- The Milestone 5 helper surface is still intentionally thin: it validates
-  tracked definitions and scaffolds run directories, but it does not yet
-  execute model calls or grade runs automatically.
-
-See [evals/README.md](./evals/README.md) for the shared artifact contract,
-governance rules, and review procedure.
+- Each skill owns tracked eval intent under `src/<skill>/evals/evals.json`.
+- `evals/runtime.json` pins the canonical default profile and machine-readable
+  governance settings.
+- `evals/fixtures/cryptoli.json` pins the first shared real-repo fixture.
+- `evals/scripts/harness.py` validates the tracked harness surface and
+  scaffolds repeatable workspaces under `.tmp/evals/<run-id>/`.
+- Generated outputs stay under `.tmp/evals/`; do not commit them.
+- The current harness validates and scaffolds. It does not execute model calls
+  or grade runs automatically.
 
 ## Maintenance Surface
 
-- `make help` prints the repo-level maintenance targets.
-- `make validate` validates shipped skill metadata, local asset integrity,
-  tracked eval definitions, fixture manifests, runtime metadata, and must-run
-  invariants.
+- `make help`
+- `make validate`
 - `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
-  scaffolds `.tmp/evals/<run-id>/` for a repeatable eval-refresh pass without
-  re-implementing harness logic in the wrapper.
-- `python3 evals/scripts/harness.py --help` shows the direct script interface
-  behind the Makefile wrappers.
-- `python3 src/execute/scripts/plan_loop.py --help` shows the optional
-  plan-driven helper contract shipped with `src/execute/`.
-- `python3 src/execute/scripts/plan_loop.py --yes --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
-  runs fresh `execute` and `verify` cycles against one explicit plan path. The
-  external runner must accept `execute <plan>` and `verify <plan>` and map
-  `verify` outcomes to exit codes the helper can judge: `0` = pass,
-  `10` = pass with risks, `20` = fail.
+- `python3 evals/scripts/harness.py --help`
+- `python3 evals/scripts/harness.py validate`
+- `python3 src/execute/scripts/plan_loop.py --help`
+- `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
 
-See [MAINTENANCE.md](./MAINTENANCE.md) for the operator loop for updating
-skills, refreshing eval workspaces, and upstreaming durable improvements found
-in downstream repos.
+See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
+reference grounding, and `REFINE.md` for the current cleanup track.
 
-## Refresh Workflow
+## Historical Records
 
-The authoritative refresh-workflow contract lives in `AGENTS.md`.
-
-- Current default: manually copy the shipped skill directories from this repo
-  from `src/` into `.agents/skills/` in the target repo.
-- Refresh by re-copying only the skill directories and supporting assets that
-  changed here.
-- Treat install helpers, git subtree wiring, and provider-specific plugins as
-  optional future accelerators, not baseline workflow requirements.
-
-## Skill Roles
-
-### `specs`
-
-Owns repo truth.
-
-- trigger when repo truth is missing, stale, or too weak for safe agent work
-- bootstrap and sync `AGENTS.md`, `CLAUDE.md` symlink, and `specs/`
-- discover the actual repo topology and owning paths before writing guidance
-- evaluate codebase organization quality for agentic work
-- improve boundaries, naming, navigability, and discoverability when the
-  current structure reduces agent reliability
-- ignore generated, vendor, cache, and copied-artifact noise by default unless
-  the task explicitly targets it
-- keep durable architecture and domain truth aligned with code reality
-
-### `tests`
-
-Owns test truth.
-
-- trigger when test truth is missing, stale, or coverage gaps block safe work
-- bootstrap, extend, or sync the test layers that make sense for the repo's
-  actual topology
-- discover suite roots, owning packages/apps/services, and runner commands
-  before changing coverage
-- sync tests with changed behavior over time
-- on weak repos, start from the smallest credible automated layer before
-  suggesting broader expansion
-- keep coverage honest across unit, integration, e2e, smoke, security,
-  performance, and other applicable layers
-- report remaining blocked or uncovered layers explicitly instead of implying
-  full coverage
-- ignore generated, vendor, cache, and copied-artifact noise by default unless
-  the task explicitly targets it
-
-### `consult`
-
-Owns research and clarification.
-
-- trigger when the safest next move is not yet clear enough to hand off to
-  `execute` or `plan`
-- start from exploration, not blind implementation
-- understand the current code and specs
-- compare options, risks, and tradeoffs
-- recommend the safest next move
-- do not use for simple lookups, already-clear work, or judging a concrete
-  plan, implementation, diff, or claim; use `verify` for judgment
-- hand off to `plan` only when durable task state is needed after the direction
-  is already clear
-
-### `plan`
-
-Owns living task plans.
-
-- trigger when work needs durable state across sessions, milestones, review
-  loops, or fresh-session restarts
-- do not trigger for simple lookups, short clarification, or bounded
-  implementation that is still locally clear
-- do not trigger only because a task sounds large; promote based on the need
-  to preserve task state
-- start once the next move is clear enough to structure execution
-- own task-local plan files only, not durable repo truth or implementation
-- create or update one explicit `plans/YYYY-MM-DD-short-task-slug.md` path
-- create the `plans/` directory when missing
-- make `specs` and `tests` follow-through explicit inside the plan: owning or
-  missing specs, applicable test layers, and when sync is required
-- make each plan resumable from repo truth plus the plan file alone
-- hold milestones, verification, discoveries, decisions, blockers, and progress
-- hand off to `execute` and `verify` with that explicit plan path
-
-### `execute`
-
-Owns implementation.
-
-- trigger when the user wants implementation now and either the task is still
-  locally clear or there is already one explicit `plans/*.md` path to execute
-- do not use when the next move still needs clarification, tradeoff analysis,
-  or a recommendation; use `consult`
-- do not use when the work now needs durable task state but no explicit plan
-  file exists yet; use `plan`
-- do not use for adversarial sign-off, fact-checking, or final judgment; use
-  `verify`
-- direct mode: implement a bounded task only when it is still locally clear and
-  does not need durable task state
-- if direct-mode work stops being locally clear or starts needing durable task
-  state, stop and hand off to `plan` rather than improvising a hidden plan in
-  chat
-- plan-driven mode: implement only from one explicit `plans/*.md` path from
-  `plan`; never guess the latest plan file
-- in plan-driven mode, implement only the next milestone or other bounded slice
-  in a fresh session, then update the plan before stopping
-- own implementation and bounded mechanical checks only; hand adversarial
-  review back to `verify`
-- complete required `specs` or `tests` follow-through before claiming the
-  slice is done
-- take over after `plan` has produced an explicit path; do not own plan
-  creation or task-shaping
-- read repo truth before editing
-- stop cleanly when blocked or when the session has become noisy enough to
-  reduce reasoning quality
-
-### `verify`
-
-Owns adversarial review.
-
-- trigger when there is already a concrete plan, implementation slice, diff,
-  doc change, or claim to judge
-- treat plans, implementation slices, and claims as distinct verification
-  targets
-- verify plans before implementation
-- verify implementation slices after coding
-- verify final diffs or PRs as a code reviewer
-- fact-check concrete technical claims when judgment, not exploration, is the
-  task
-- return findings first
-- run the smallest meaningful mechanical checks and report blocked checks
-  honestly
-- missing required `specs` or `tests` sync is a failure when the obligation is
-  clear
-- do not use when the next move is still unclear; use `consult`
-- do not use to implement fixes or create plan files; use `execute` or `plan`
-- keep findings grounded in code, specs, tests, and command evidence
-
-## Target 0 -> 100 Flow
-
-This is the shipped workflow for bringing the repo truth, task truth, and code
-reality back into alignment in a fresh session.
-
-1. Manually copy the shipped skill directories from `scripness/skills` into
-   `.agents/skills/` in the repo you want to work on.
-2. Run `specs` when repo truth is weak, missing, stale, or blocking safe
-   planning, execution, or verification.
-3. Run `tests` when test truth is weak, missing, stale, or clearly below what
-   the codebase needs for safe execution and verification.
-4. Run `consult` when the next move is not yet clear and you need grounded
-   clarification about the current code, relevant specs, options, or risks.
-5. If the task is already bounded and does not need durable task state, use
-   `execute` directly, then run `verify`.
-6. If the task starts needing durable state across milestones, discoveries,
-   review loops, or restarts, run `plan` and create or update one explicit
-   `plans/YYYY-MM-DD-short-task-slug.md` path.
-   Promote based on durable-state need, not abstract task size, and skip
-   `plan` when the work is still locally clear enough to execute directly.
-7. Run `verify` on the plan before implementation when the task is plan-driven.
-8. Start a fresh session and invoke `execute` against that exact plan path.
-   Implement only the next milestone or bounded slice.
-9. After each slice, update the plan with progress, discoveries, decisions,
-   blockers, verification results, and any changed `specs` or `tests`
-   follow-through.
-10. If the session leaves the smart working zone, stop, persist truth to the
-    plan, and restart from a fresh session rather than relying on compaction or
-    chat memory.
-11. Run `verify` again on the implementation slice and once more on the final
-    diff or PR.
-12. Run `specs` and `tests` again when durable repo truth or test truth has
-    changed.
-
-## Working Style
-
-- Prefer repo files over chat memory.
-- Keep `AGENTS.md` concise and operational.
-- Keep durable subsystem truth in `specs/`, not task plans.
-- Keep task-local state in `plans/*.md`, not in long conversations.
-- Use provider features such as plan modes or subagents only as optional
-  accelerators, never as workflow requirements.
-- Prefer fresh sessions for serious plan-driven execution.
-
-## Example Invocation Pattern
-
-The examples below show the shipped workflow. The bootstrap prompt files remain
-in the repo only as reference artifacts from the pre-`execute` rollout.
-
-Bootstrap repo truth:
-
-```text
-Use specs.
-Prepare this repo for reliable agentic work.
-Map the real repo topology, ignore generated/vendor noise by default, and
-create or sync AGENTS.md, specs/, and any missing repo-truth guidance.
-Evaluate whether the codebase organization is clean enough for agents.
-```
-
-Bootstrap test truth:
-
-```text
-Use tests.
-Audit the repo's actual test topology, choose the smallest credible layers
-that matter, and bring them up to the level this repo needs.
-```
-
-Research a task:
-
-```text
-Use consult.
-The safest next move is not clear yet.
-Read the repo, relevant specs, and tests.
-Clarify the safest next move for <task>.
-```
-
-Write a plan:
-
-```text
-Use plan.
-The direction is already clear, but this work now needs durable task state
-across sessions, milestones, or review loops.
-Create or update plans/2026-04-14-short-task-slug.md.
-Do not promote based on task size alone.
-Make it a self-contained living task plan that a fresh session can resume from.
-```
-
-Execute directly:
-
-```text
-Use execute.
-Read AGENTS.md, relevant specs, tests, and the current code.
-Implement <bounded task> directly because it is still locally clear and does
-not need durable task state.
-Run the smallest meaningful mechanical checks, sync specs/tests if the work
-changed durable truth, then stop and hand off to verify.
-```
-
-Execute from a plan:
-
-```text
-Use execute.
-Read AGENTS.md, relevant specs, tests, and
-plans/2026-04-14-short-task-slug.md.
-Implement only the next milestone or other bounded slice from that exact plan
-path.
-Update the plan with progress, discoveries, decisions, blockers, verification
-notes, and any required specs/tests follow-through before stopping.
-```
-
-Review the work:
-
-```text
-Use verify.
-Review <plan path>, <implementation slice>, <diff>, or <claim> against repo
-truth, required sync, and the smallest meaningful checks.
-Identify the target type, return findings first, and say if checks were
-blocked.
-```
+The completed `plans/2026-04-14-phase-*.md` files remain in the repo as build
+records. Keep them available for background context and explicitly named legacy
+fixtures, but do not treat them as the default reading path for current repo
+work.
