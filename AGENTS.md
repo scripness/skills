@@ -38,8 +38,8 @@ surface.
 - `.tmp/evals/` = generated local run artifacts; never treat them as tracked
   truth
 
-Completed `plans/2026-04-14-phase-*.md` files are background records, not
-default operational reading.
+Completed historical plan records remain under `plans/` as background
+reference material, not default operational reading.
 
 ## Local Agent Toolbox
 
@@ -127,12 +127,12 @@ Keep generic `plans/*.md` references where they are part of the shipped
 │   ├── tests/
 │   └── verify/
 └── plans/
-    ├── 2026-04-14-phase-*.md
     └── YYYY-MM-DD-short-task-slug.md
 ```
 
 Bootstrap assets for target-repo truth live under `src/specs/assets/`.
 Generated eval outputs live under ignored `.tmp/evals/`.
+Completed historical records also remain under `plans/`.
 
 ## Commands
 

@@ -54,7 +54,7 @@ agent can understand and use this repo without treating the completed
 
 - The shipped repo surface under `src/`, `evals/`, `Makefile`, and
   `src/execute/scripts/plan_loop.py`
-- Historical `plans/2026-04-14-phase-*.md` files only as background source
+- Completed historical plan records under `plans/` only as background source
   material when needed
 
 ## Sync Expectations
@@ -81,8 +81,8 @@ agent can understand and use this repo without treating the completed
 
 - [2026-04-20] Inspected the rewritten truth layer against shipped files under
   `src/`, `evals/`, `Makefile`, and `src/execute/scripts/plan_loop.py`.
-- [2026-04-20] `rg -n "Phase 00|Phase 01|Phase 02|Phase 03|Phase 04|Phase 05|Phase 06|plans/2026-04-14-phase" AGENTS.md README.md specs`
-  returned only intentional background-record mentions.
+- [2026-04-20] A targeted search for old phase-centric references in the live
+  repo-truth docs returned only intentional background-record mentions.
 - [2026-04-20] `make validate` passed.
 - [2026-04-20] `git diff --check` passed.
 - [2026-04-20] `test -L CLAUDE.md && readlink CLAUDE.md` confirmed
@@ -131,9 +131,9 @@ agent can understand and use this repo without treating the completed
   `REFINE.md` or the completed phase records as the active plan for this work.
 - [2026-04-20] Create three top-level specs for the shipped repo surface:
   `workflow-contract.md`, `repo-surface.md`, and `evaluation-harness.md`.
-- [2026-04-20] Keep the completed 2026-04-14 build records in `plans/` as
-  historical reference material; do not add an archive workflow or archive
-  decision step to the refinement plan.
+- [2026-04-20] Keep completed historical plan records in `plans/` as
+  reference material; do not add an archive workflow or archive decision step
+  to the refinement plan.
 
 ## Discoveries
 

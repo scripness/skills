@@ -12,7 +12,7 @@ evaluation harness around it.
   `src/`, `evals/`, `Makefile`, and the top-level docs as implemented reality.
 - Keep task-local execution details in explicit `plans/*.md` files, not in
   these specs.
-- Completed `plans/2026-04-14-phase-*.md` files are background records, not
+- Completed historical plan records under `plans/` are background records, not
   default operational truth.
 - Update this index when specs are added, renamed, or materially repurposed.
 

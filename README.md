@@ -23,7 +23,7 @@ Read this repo in the same order the shipped workflow expects:
 4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` as needed
 5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/plan_loop.py`
 
-Completed `plans/2026-04-14-phase-*.md` files remain available as historical
+Completed historical plan records remain available under `plans/` as
 background, but they are not the default operational reading chain.
 
 ## What Ships
@@ -70,9 +70,10 @@ background, but they are not the default operational reading chain.
 │   ├── tests/
 │   └── verify/
 └── plans/
-    ├── 2026-04-14-phase-*.md
     └── YYYY-MM-DD-short-task-slug.md
 ```
+
+Completed historical records also remain under `plans/`.
 
 Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
 `evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
@@ -140,7 +141,6 @@ reference grounding, and `REFINE.md` for the current cleanup track.
 
 ## Historical Records
 
-The completed `plans/2026-04-14-phase-*.md` files remain in the repo as build
-records. Keep them available for background context and explicitly named legacy
-fixtures, but do not treat them as the default reading path for current repo
-work.
+Completed historical plan records remain in the repo under `plans/`. Keep them
+available for background context, but do not treat them as the default reading
+path for current repo work.

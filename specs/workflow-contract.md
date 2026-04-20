@@ -83,9 +83,8 @@ target repos.
 - For new task work, `plan` and `execute` must use one explicit
   `plans/YYYY-MM-DD-short-task-slug.md` path.
 - Never guess the latest plan file.
-- The completed `plans/2026-04-14-phase-*.md` files are historical build
-  records. They are available as background source material but are not the
-  default operational reading chain.
+- Completed historical plan records under `plans/` are available as background
+  source material but are not the default operational reading chain.
 - Tracked evals that need a real plan-shaped input now use neutral fixture
   files instead of depending on the completed historical build plans.
 

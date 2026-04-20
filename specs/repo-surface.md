@@ -73,9 +73,8 @@ Additional shipped local assets:
   work.
 - A small number of tracked plan-shaped eval fixtures may also live under
   `plans/` when a skill eval needs a real explicit `plans/*.md` input.
-- Completed `plans/2026-04-14-phase-*.md` files are build-history records.
-  They are still available in the repo but should not be treated as the default
-  live reading chain.
+- Completed historical plan records under `plans/` are still available in the
+  repo but should not be treated as the default live reading chain.
 
 ## Documentation Surface
 
