@@ -59,7 +59,7 @@
         {
           "id": "specs-near-miss-plan-file-maintenance",
           "expected_outcome": "no_trigger",
-          "prompt": "Update plans/2026-04-14-phase-05-evaluation-harness.md with the latest milestone status and blockers.",
+          "prompt": "Update plans/2026-04-20-eval-harness-fixture-plan.md with the latest milestone status and blockers.",
           "why": "Task-local plan maintenance belongs to plan."
         },
         {

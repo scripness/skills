@@ -53,7 +53,7 @@
         {
           "id": "consult-trigger-option-comparison",
           "expected_outcome": "trigger",
-          "prompt": "Compare manual copy refresh against adding an install helper now, then recommend the safest next move and the key risks before Phase 06 starts.",
+          "prompt": "Compare manual copy refresh against adding an install helper now, then recommend the safest next move and the key risks before the next tooling pass starts.",
           "why": "The user needs evidence-backed option comparison and recommendation, not implementation."
         },
         {
@@ -90,15 +90,15 @@
         ]
       },
       "scenario": {
-        "user_request": "The evaluation harness needs another phase after Milestone 2, but I am not sure whether the safest next move is direct execution, a new plan file, or a repo-truth sync. Recommend the next move.",
+        "user_request": "The evaluation harness still needs another multi-step follow-up, but I am not sure whether the safest next move is direct execution, a new plan file, or a repo-truth sync. Recommend the next move.",
         "repo_state": [
           "AGENTS.md says consult owns clarification and recommendation, plan owns durable task state, and execute owns implementation.",
-          "plans/2026-04-14-phase-00-design-doc.md describes multiple remaining evaluation-harness milestones.",
+          "evals/fixtures/eval-harness-roadmap.md describes multiple remaining evaluation-harness follow-up slices.",
           "The work will span more than one session if it becomes plan-driven."
         ],
         "required_inputs": [
           "AGENTS.md",
-          "plans/2026-04-14-phase-00-design-doc.md",
+          "evals/fixtures/eval-harness-roadmap.md",
           "README.md"
         ]
       },

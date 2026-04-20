@@ -46,8 +46,9 @@ target repos.
 - `MAINTENANCE.md` owns the operator loop for updates and eval refresh.
 - `SOURCES.md` owns durable external grounding.
 - `REFINE.md` owns current post-merge cleanup context.
-- `plans/*.md` own task-local plans for new work and also contain completed
-  historical build records.
+- `plans/*.md` own task-local plans for new work and also contain a small
+  number of tracked plan-shaped eval fixtures plus completed historical build
+  records.
 - `src/` and `evals/` are the shipped implementation surface behind those
   docs.
 
@@ -85,8 +86,8 @@ target repos.
 - The completed `plans/2026-04-14-phase-*.md` files are historical build
   records. They are available as background source material but are not the
   default operational reading chain.
-- Older evals may still name those historical files as fixture inputs until the
-  later refinement slice removes or replaces those references.
+- Tracked evals that need a real plan-shaped input now use neutral fixture
+  files instead of depending on the completed historical build plans.
 
 ## Verification
 

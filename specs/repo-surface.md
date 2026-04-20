@@ -46,8 +46,8 @@ system.
 - `src/`: source-of-truth skill payloads
 - `evals/`: shared harness metadata, fixture manifests, and harness helper
 - `Makefile`: thin wrapper over `evals/scripts/harness.py`
-- `plans/`: explicit task plans for current work plus completed historical
-  build records
+- `plans/`: explicit task plans for current work, a small number of tracked
+  plan-shaped eval fixtures, plus completed historical build records
 
 ## Skill Directory Contract
 
@@ -71,6 +71,8 @@ Additional shipped local assets:
   `plans/YYYY-MM-DD-short-task-slug.md` file.
 - `execute` and `verify` must use the exact named plan path in plan-driven
   work.
+- A small number of tracked plan-shaped eval fixtures may also live under
+  `plans/` when a skill eval needs a real explicit `plans/*.md` input.
 - Completed `plans/2026-04-14-phase-*.md` files are build-history records.
   They are still available in the repo but should not be treated as the default
   live reading chain.

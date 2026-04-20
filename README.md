@@ -44,7 +44,8 @@ background, but they are not the default operational reading chain.
 - `AGENTS.md` and `specs/` = repo truth
 - checks and tests = executable truth
 - `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
-- `plans/*.md` = task truth
+- `plans/*.md` = task truth plus plan-shaped eval fixtures used by tracked
+  skill evals
 - code and checked-in docs = implemented reality
 - `.tmp/evals/` = generated local artifacts
 

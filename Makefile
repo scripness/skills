@@ -9,7 +9,7 @@ SKILL ?=
 
 help:
 	@printf '%s\n' \
-		'Phase 06 maintenance surface:' \
+		'Repo maintenance surface:' \
 		'  make validate' \
 		'      Run repo-level validation for skill metadata, local asset integrity, and eval harness invariants.' \
 		'  make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]' \
@@ -26,7 +26,7 @@ validate:
 
 eval-init-run:
 	@if [ -z "$(RUN_ID)" ]; then \
-		echo "RUN_ID is required, e.g. make eval-init-run RUN_ID=phase06-m1" >&2; \
+		echo "RUN_ID is required, e.g. make eval-init-run RUN_ID=eval-refresh-01" >&2; \
 		exit 2; \
 	fi
 	$(PYTHON) evals/scripts/harness.py init-run --run-id "$(RUN_ID)" --selection "$(SELECTION)" $(if $(strip $(PROFILE)),--profile "$(PROFILE)",) $(foreach skill,$(SKILL),--skill "$(skill)")

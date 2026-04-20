@@ -74,8 +74,8 @@ agent can understand and use this repo without treating the completed
 2. Demote remaining historical references from live docs and helper text where
    they still read like operational truth while keeping valid generic
    `plans/*.md` workflow references intact.
-3. Replace eval coupling to historical build-plan files and decide the longer
-   archive policy for completed build records.
+3. Replace eval coupling to historical build-plan files while leaving the
+   completed build records in `plans/` as historical background.
 
 ## Verification
 
@@ -87,6 +87,19 @@ agent can understand and use this repo without treating the completed
 - [2026-04-20] `git diff --check` passed.
 - [2026-04-20] `test -L CLAUDE.md && readlink CLAUDE.md` confirmed
   `CLAUDE.md -> AGENTS.md`.
+- [2026-04-20] Adversarial verification correctly found that
+  `specs/evaluation-harness.md` overstated the artifacts scaffolded by
+  `python3 evals/scripts/harness.py init-run`.
+- [2026-04-20] `python3 evals/scripts/harness.py init-run --run-id refine-artifact-probe`
+  created only `fixtures/`, `outputs/`, `transcripts/`, `run.json`, and
+  `review-template.md`, confirming the mismatch was real.
+- [2026-04-20] `python3 evals/scripts/harness.py validate` passed after the
+  Milestone 2 and 3 edits.
+- [2026-04-20] `make help` passed after the helper-text cleanup and no longer
+  uses the old phase-centric header.
+- [2026-04-20] `git diff --check` passed after the Milestone 2 and 3 edits.
+- [2026-04-20] `rg -n "2026-04-14-phase-00|2026-04-14-phase-05|Phase 06 maintenance surface|before Phase 06 starts|Phase 06|historical phase files as convenient fixture inputs|older evals may still name|Milestone 5 introduced|Milestone 2 defines|Milestone 3 or later" AGENTS.md README.md specs/*.md evals/README.md Makefile src/*/evals/evals.json`
+  returned no matches after the cleanup.
 
 ## Risks
 
@@ -100,10 +113,7 @@ agent can understand and use this repo without treating the completed
 
 ## Open Questions
 
-- Should `evals/README.md` and `Makefile` historical wording move in Milestone
-  2 or wait until the eval-coupling cleanup slice?
-- Should completed 2026-04-14 build records remain under `plans/` long term or
-  move to an archive location later?
+- None currently.
 
 ## Blockers
 
@@ -112,8 +122,8 @@ agent can understand and use this repo without treating the completed
 ## Progress
 
 - [x] Milestone 1: rebuild live repo truth
-- [ ] Milestone 2: demote remaining historical live-surface references
-- [ ] Milestone 3: replace eval coupling and decide archive policy
+- [x] Milestone 2: demote remaining historical live-surface references
+- [x] Milestone 3: replace eval coupling while keeping historical plans in `plans/`
 
 ## Decision Log
 
@@ -121,6 +131,9 @@ agent can understand and use this repo without treating the completed
   `REFINE.md` or the completed phase records as the active plan for this work.
 - [2026-04-20] Create three top-level specs for the shipped repo surface:
   `workflow-contract.md`, `repo-surface.md`, and `evaluation-harness.md`.
+- [2026-04-20] Keep the completed 2026-04-14 build records in `plans/` as
+  historical reference material; do not add an archive workflow or archive
+  decision step to the refinement plan.
 
 ## Discoveries
 
@@ -132,13 +145,28 @@ agent can understand and use this repo without treating the completed
 - [2026-04-20] The highest-signal remaining historical references now live in
   `evals/README.md`, `Makefile`, and several skill-local `evals/evals.json`
   files rather than in the main repo-truth docs.
+- [2026-04-20] `evals/scripts/harness.py init-run` scaffolds directories plus
+  `run.json` and `review-template.md`, but it does not write grading artifact
+  files such as `timing.json` or `grading.json`.
+- [2026-04-20] The remaining historical coupling in skill-local evals was
+  narrow enough to replace with one neutral roadmap fixture under
+  `evals/fixtures/` and one neutral plan-shaped fixture under `plans/`.
 
 ## Outcomes / Retrospective
 
 - [2026-04-20] Completed Milestone 1 by rewriting `AGENTS.md`, creating
   top-level `specs/`, and rewriting `README.md` from shipped repo reality.
-- Next verify target: implementation review of `AGENTS.md`, `README.md`,
-  `specs/README.md`, `specs/workflow-contract.md`,
-  `specs/repo-surface.md`, and `specs/evaluation-harness.md` against
-  `plans/2026-04-20-refine-repo-truth-cleanup.md`, `src/`, `evals/`,
-  `Makefile`, and `src/execute/scripts/plan_loop.py`.
+- [2026-04-20] Fixed the Milestone 1 verify finding by correcting
+  `specs/evaluation-harness.md` to distinguish scaffolded artifacts from later
+  required run artifacts.
+- [2026-04-20] Completed Milestone 2 by rewriting `evals/README.md`,
+  `Makefile`, and the related repo-truth docs so the remaining live harness
+  surface no longer leans on build-phase narration.
+- [2026-04-20] Completed Milestone 3 by replacing skill-eval references to the
+  completed historical build-plan files with the neutral tracked fixtures
+  `evals/fixtures/eval-harness-roadmap.md` and
+  `plans/2026-04-20-eval-harness-fixture-plan.md`.
+- [2026-04-20] Verify pass for the Milestone 2 and 3 slice found no material
+  drift after the cleanup and follow-up checks.
+- Next verify target: none; the plan is complete unless a later refinement
+  follow-up is opened.

@@ -31,8 +31,8 @@ surface.
 - `MAINTENANCE.md` = operator loop for updates and eval refresh
 - `SOURCES.md` = durable external grounding
 - `REFINE.md` = post-merge cleanup context
-- `plans/*.md` = task-local plans for new work plus completed historical build
-  records
+- `plans/*.md` = task-local plans for new work, a small number of tracked
+  plan-shaped eval fixtures, plus completed historical build records
 - `src/` = source-of-truth skill payloads
 - `evals/` = shared harness metadata and helper surface
 - `.tmp/evals/` = generated local run artifacts; never treat them as tracked

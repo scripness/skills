@@ -49,17 +49,23 @@ contract, and it scaffolds repeatable local run workspaces under
 ## Generated Outputs
 
 Generated outputs belong under ignored `.tmp/evals/<run-id>/`, not tracked
-source. The shipped harness scaffolds:
+source.
+
+The shipped harness scaffolds:
 
 - `outputs/`
 - `transcripts/`
 - `fixtures/`
+- `run.json`
+- `review-template.md`
+
+The following files are required later for a completed reviewed run, but they
+are not created by `init-run`:
+
 - `timing.json`
 - `grading.json`
 - `benchmark.json`
 - `feedback.json`
-- `run.json`
-- `review-template.md`
 
 ## Governance Surface
 

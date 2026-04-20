@@ -53,7 +53,7 @@
         {
           "id": "execute-trigger-explicit-plan-path",
           "expected_outcome": "trigger",
-          "prompt": "Read AGENTS.md, README.md, plans/2026-04-14-phase-00-design-doc.md, and plans/2026-04-14-phase-05-evaluation-harness.md, then execute only the next unfinished milestone from that exact plan file.",
+          "prompt": "Read AGENTS.md, README.md, evals/fixtures/eval-harness-roadmap.md, and plans/2026-04-20-eval-harness-fixture-plan.md, then execute only the next unfinished milestone from that exact plan file.",
           "why": "The request is implementation now and it provides one explicit plan path."
         },
         {
@@ -131,7 +131,7 @@
         ]
       },
       "scenario": {
-        "user_request": "Read AGENTS.md, README.md, plans/2026-04-14-phase-00-design-doc.md, and plans/2026-04-14-phase-05-evaluation-harness.md, then execute only the next unfinished milestone and update the plan before stopping.",
+        "user_request": "Read AGENTS.md, README.md, evals/fixtures/eval-harness-roadmap.md, and plans/2026-04-20-eval-harness-fixture-plan.md, then execute only the next unfinished milestone and update the plan before stopping.",
         "repo_state": [
           "Milestones 1 and 2 in the plan are complete.",
           "Milestone 3 is the next unfinished milestone.",
@@ -140,8 +140,8 @@
         "required_inputs": [
           "AGENTS.md",
           "README.md",
-          "plans/2026-04-14-phase-00-design-doc.md",
-          "plans/2026-04-14-phase-05-evaluation-harness.md"
+          "evals/fixtures/eval-harness-roadmap.md",
+          "plans/2026-04-20-eval-harness-fixture-plan.md"
         ]
       },
       "assertions": [
