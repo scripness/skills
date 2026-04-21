@@ -65,6 +65,7 @@ Additional shipped local assets:
 - `src/specs/assets/specs/spec-template.md`
 - `src/execute/scripts/loop.py`
 - `src/execute/scripts/providers/codex_loop.py`
+- `src/execute/scripts/providers/codex_loop_dashboard.py`
 
 ## Plans Directory Semantics
 
@@ -79,8 +80,10 @@ Additional shipped local assets:
   rather than owning its own durable state, and in continuous mode it should
   only succeed after strict final review leaves the plan complete.
 - Optional provider-specific wrappers such as
-  `src/execute/scripts/providers/codex_loop.py` may sit on top of that generic
-  helper for local convenience, but they remain non-owning accelerators.
+  `src/execute/scripts/providers/codex_loop.py` and
+  `src/execute/scripts/providers/codex_loop_dashboard.py` may sit on top of
+  that generic helper for local convenience, but they remain non-owning
+  accelerators.
 - A small number of tracked plan-shaped eval fixtures may also live under
   `plans/` when a skill eval needs a real explicit `plans/*.md` input.
 - Completed historical plan records under `plans/` are still available in the

@@ -13,6 +13,11 @@ This repo is not an application. It ships source skills, repo-truth docs,
 shared eval metadata, and thin local helpers that can be copied into other
 repos.
 
+The shipped `src/*/SKILL.md` files remain the workflow source of truth.
+Helper scripts are optional accelerators only: they may change invocation,
+machine-readable transport, and presentation, but they must not redefine the
+skills themselves.
+
 ## Start With Shipped Reality
 
 Read this repo in the same order the shipped workflow expects:
@@ -41,6 +46,9 @@ background, but they are not the default operational reading chain.
 - optional repo-local Codex convenience wrapper that delegates to the generic
   helper and defaults real runs to continuous repair mode:
   `src/execute/scripts/providers/codex_loop.py`
+- optional repo-local Codex terminal dashboard that sits above the Codex
+  wrapper and renders loop progress without changing the raw loop contract:
+  `src/execute/scripts/providers/codex_loop_dashboard.py`
 - `CLAUDE.md` as a symlink mirror to `AGENTS.md`
 
 ## Durable State
@@ -126,6 +134,12 @@ ships the optional `scripts/loop.py` helper.
    `python3 src/execute/scripts/providers/codex_loop.py --plan ...`.
    That wrapper is a repo-local convenience layer only; the generic contract
    still lives in `src/execute/scripts/loop.py`.
+10. If you want a terminal dashboard over that same Codex flow in this source
+    repo, use
+    `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan ...`.
+    That dashboard is presentation only. It falls back to the raw Codex
+    wrapper output when the dashboard is unsuitable, and `--plain` bypasses it
+    explicitly.
 
 Keep provider features such as plan modes, subagents, plugins, or auto-memory
 optional only. The baseline workflow should work from repo files plus a normal
@@ -156,6 +170,8 @@ interactive session.
 - `python3 src/execute/scripts/providers/codex_loop.py --help`
 - `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md`
 - `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md`
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md`
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md`
 
 See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
 reference grounding, and `REFINE.md` for the current cleanup track.

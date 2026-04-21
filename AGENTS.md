@@ -23,6 +23,11 @@ Read this repo from shipped reality in this order:
 Code and checked-in files are reality. Docs must stay synced to the shipped
 surface.
 
+The shipped `src/*/SKILL.md` files are the workflow source of truth. Helper
+scripts in `src/execute/scripts/` may standardize invocation, exit-code
+mapping, machine-readable events, or terminal presentation, but they must not
+become a competing workflow contract.
+
 ## Repo Truth
 
 - `AGENTS.md` = repo-wide operational truth
@@ -68,6 +73,10 @@ When copied into a target repo, these directories are intended to live under
   repo-local Codex convenience wrapper that delegates back to the generic
   `scripts/loop.py` contract. It is a local accelerator only, not workflow
   truth.
+- This source repo also ships
+  `scripts/providers/codex_loop_dashboard.py` as an optional repo-local
+  terminal dashboard for the Codex wrapper. It is presentation only and falls
+  back to the raw wrapper output when the dashboard is unsuitable.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
@@ -161,6 +170,8 @@ Completed historical records also remain under `plans/`.
 | Show the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --help` |
 | Dry-run the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md` |
 | Run the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md` |
+| Run the optional Codex loop dashboard | `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md` |
+| Bypass the dashboard and use the raw Codex wrapper | `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md` |
 | Check git status | `git status --short` |
 
 ## Boundaries

@@ -33,6 +33,8 @@ target repos.
 - keep durable workflow truth in checked-in files rather than chat memory
 - keep `consult`, `plan`, `execute`, and `verify` as distinct steps with sharp
   trigger boundaries
+- keep the shipped `src/*/SKILL.md` files as the workflow source of truth;
+  helpers may standardize invocation, transport, and presentation only
 - use `specs` for repo-truth sync and `tests` for test-truth sync
 - use one explicit `plans/YYYY-MM-DD-short-task-slug.md` path when work becomes
   plan-driven
@@ -96,7 +98,14 @@ target repos.
   remains a thin helper rather than workflow truth.
 - Optional provider-specific accelerators may also exist under
   `src/execute/scripts/providers/`, but they must remain replaceable wrappers
-  over the generic helper rather than redefining the workflow contract.
+  or dashboards over the generic helper rather than redefining the workflow
+  contract.
+- Helper scripts may add machine-readable events, exit-code transport, default
+  provider commands, or terminal presentation, but they must not become a
+  competing source of workflow semantics against `src/*/SKILL.md`.
+- If the generic loop grows additive machine-readable events for local
+  dashboards, those events must remain backward-compatible and must not move
+  canonical task state out of the plan file.
 - Never guess the latest plan file.
 - Completed historical plan records under `plans/` are available as background
   source material but are not the default operational reading chain.

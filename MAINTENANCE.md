@@ -74,6 +74,13 @@ durable improvements discovered while using copied skills in downstream repos.
   Runs the repo-local Codex wrapper with its default real-run behavior:
   implicit `--yes`, implicit `--continue-after-fail`, and an internal runner
   that uses `codex exec --yolo` as shorthand for dangerous bypass.
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md`
+  Runs the repo-local Codex dashboard wrapper over the same Codex flow while
+  keeping loop control and plan truth in the underlying helpers.
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md`
+  Bypasses the dashboard explicitly and forwards straight to the raw Codex
+  wrapper surface. The dashboard wrapper also falls back automatically when
+  stdout is not a TTY.
 
 ## Eval Refresh
 

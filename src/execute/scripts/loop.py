@@ -8,6 +8,9 @@ This script stays intentionally dumb:
 - helper logs are supporting evidence only
 - the helper never writes canonical task state itself
 - the helper never guesses the latest plan or parses model prose for verdicts
+- the execute and verify skill contracts remain the workflow source of truth;
+  this helper only standardizes loop control, exit-code handling, and
+  machine-readable events
 
 The external runner contract is:
 
@@ -173,6 +176,40 @@ def emit_stop(
         "final_outcome": final_outcome,
     }
     event.update(details)
+    emit(event)
+
+
+def emit_phase(
+    phase: str,
+    *,
+    status: str,
+    iteration: int,
+    command: list[str],
+    label: str,
+    source: str | None = None,
+    state_before: dict[str, object] | None = None,
+    state_after: dict[str, object] | None = None,
+    result: dict[str, object] | None = None,
+    verification_verdict: str | None = None,
+) -> None:
+    event: dict[str, object] = {
+        "event": "phase",
+        "phase": phase,
+        "status": status,
+        "iteration": iteration,
+        "label": label,
+        "command": command,
+    }
+    if source is not None:
+        event["source"] = source
+    if state_before is not None:
+        event["state_before"] = state_before
+    if state_after is not None:
+        event["state_after"] = state_after
+    if result is not None:
+        event["result"] = result
+    if verification_verdict is not None:
+        event["verification_verdict"] = verification_verdict
     emit(event)
 
 
@@ -361,6 +398,16 @@ def maybe_run_final_review(
         )
 
     try:
+        final_verify_command = [*base_command, "verify", str(plan_path)]
+        emit_phase(
+            "final_verify",
+            status="start",
+            iteration=iteration,
+            command=final_verify_command,
+            label="final-verify",
+            source=source,
+            state_before=state_before.__dict__,
+        )
         verify_result = run_runner(
             base_command,
             "verify",
@@ -396,6 +443,18 @@ def maybe_run_final_review(
         verify_result.exit_code,
         pass_with_risks_code,
         fail_code,
+    )
+    emit_phase(
+        "final_verify",
+        status="end",
+        iteration=iteration,
+        command=verify_result.command,
+        label=verify_result.label,
+        source=source,
+        state_before=state_before.__dict__,
+        state_after=state_after.__dict__,
+        result=verify_result.__dict__,
+        verification_verdict=verdict,
     )
     strict_completion = verdict == "pass" and state_after.remaining_milestones == 0
     repairable_follow_up = (
@@ -591,6 +650,15 @@ def main() -> int:
             return 0
 
         try:
+            execute_command = [*base_command, "execute", str(plan_path)]
+            emit_phase(
+                "execute",
+                status="start",
+                iteration=iteration,
+                command=execute_command,
+                label="execute",
+                state_before=state_before.__dict__,
+            )
             execute_result = run_runner(base_command, "execute", plan_path, log_root, iteration)
         except RuntimeError as exc:
             emit_stop(
@@ -613,6 +681,16 @@ def main() -> int:
                 execute_result=execute_result,
             )
         plan_changed = state_before.digest != state_after_execute.digest
+        emit_phase(
+            "execute",
+            status="end",
+            iteration=iteration,
+            command=execute_result.command,
+            label=execute_result.label,
+            state_before=state_before.__dict__,
+            state_after=state_after_execute.__dict__,
+            result=execute_result.__dict__,
+        )
 
         if execute_result.exit_code != 0:
             emit(
@@ -637,6 +715,14 @@ def main() -> int:
             return 3
 
         try:
+            emit_phase(
+                "verify",
+                status="start",
+                iteration=iteration,
+                command=[*base_command, "verify", str(plan_path)],
+                label="verify",
+                state_before=state_after_execute.__dict__,
+            )
             verify_result = run_runner(base_command, "verify", plan_path, log_root, iteration)
         except RuntimeError as exc:
             emit_stop(
@@ -665,6 +751,17 @@ def main() -> int:
             verify_result.exit_code,
             args.pass_with_risks_code,
             args.fail_code,
+        )
+        emit_phase(
+            "verify",
+            status="end",
+            iteration=iteration,
+            command=verify_result.command,
+            label=verify_result.label,
+            state_before=state_after_execute.__dict__,
+            state_after=state_after_verify.__dict__,
+            result=verify_result.__dict__,
+            verification_verdict=verdict,
         )
         completion_review = (
             args.continue_after_fail and state_after_execute.remaining_milestones == 0

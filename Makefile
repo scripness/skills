@@ -23,7 +23,11 @@ help:
 		'  python3 src/execute/scripts/providers/codex_loop.py --help' \
 		'      Show the optional repo-local Codex convenience wrapper.' \
 		'  python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md' \
-		'      Run the repo-local Codex convenience wrapper with its default real-run settings.'
+		'      Run the repo-local Codex convenience wrapper with its default real-run settings.' \
+		'  python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md' \
+		'      Run the optional repo-local Codex dashboard over the wrapper flow.' \
+		'  python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md' \
+		'      Bypass the dashboard and use the raw Codex wrapper surface.'
 
 validate:
 	$(PYTHON) evals/scripts/harness.py validate

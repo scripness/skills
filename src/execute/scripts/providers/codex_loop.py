@@ -10,7 +10,9 @@ This script has two modes:
 
 The generic `loop.py` contract remains the provider-agnostic source of truth.
 This file is an optional accelerator for working on this source repo with the
-local Codex CLI.
+local Codex CLI. The shipped skill contracts remain the workflow source of
+truth; this wrapper only changes how those skills are invoked and how verify
+verdicts are transported back to the generic helper.
 """
 
 from __future__ import annotations
@@ -59,16 +61,23 @@ def codex_base_command(codex_command_text: str) -> list[str]:
 def execute_prompt(plan_path: Path) -> str:
     return textwrap.dedent(
         f"""\
-        Use the repository's execute skill contract from `src/execute/SKILL.md`.
+        Follow `src/execute/SKILL.md` as the workflow source of truth.
+
+        This runner is only providing invocation context for one plan-driven
+        execute call. If this prompt and the skill contract ever disagree, the
+        skill contract wins.
+
+        Invocation-specific constraints:
+        - explicit plan path: `{plan_path}`
+        - plan-driven mode
+        - execute exactly one bounded slice
+        - update that same plan file in place
+        - stop after that one slice
 
         Read `AGENTS.md`, the relevant `specs/*`, `src/execute/SKILL.md`,
-        `src/verify/SKILL.md`, and the explicit plan at `{plan_path}`.
-
-        This is plan-driven work. Execute exactly one bounded slice from that
-        explicit plan, update the same plan file in place, run the smallest
-        meaningful checks, and stop after that one slice.
-
-        Do not do adversarial verification in this step.
+        and the explicit plan at `{plan_path}`. Read code, docs, and tests as
+        required by that skill contract. Do not turn this execute invocation
+        into adversarial verification.
         """
     )
 
@@ -76,22 +85,20 @@ def execute_prompt(plan_path: Path) -> str:
 def verify_prompt(plan_path: Path) -> str:
     return textwrap.dedent(
         f"""\
-        Use the repository's verify skill contract from `src/verify/SKILL.md`.
+        Follow `src/verify/SKILL.md` as the workflow source of truth.
+
+        This runner is only providing invocation context and transport
+        constraints for one plan-driven verify call. If this prompt and the
+        skill contract ever disagree, the skill contract wins.
+
+        Invocation-specific constraints:
+        - explicit plan path: `{plan_path}`
+        - keep that same plan file as the canonical task record
+        - return JSON only matching the provided schema
 
         Read `AGENTS.md`, the relevant `specs/*`, `src/verify/SKILL.md`,
         `src/execute/SKILL.md`, `src/plan/assets/plan-template.md`, and the
         explicit plan at `{plan_path}`.
-
-        Update that exact plan file in place so it remains the canonical task
-        record for plan-driven work.
-
-        For repairable follow-up, keep `## Blockers` clear. Only record actual
-        blockers there. When the next safe move is another bounded execute
-        slice, leave `## Blockers` as `- None currently.` and record the
-        failure in `Verification`, `Progress`, `Decision Log`, and
-        `Discoveries` as appropriate.
-
-        Return JSON only matching the provided schema.
         """
     )
 
