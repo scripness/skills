@@ -56,11 +56,31 @@ durable improvements discovered while using copied skills in downstream repos.
 - `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
   Scaffolds a direct run workspace when you want the harness entrypoint
   instead of the Makefile wrapper.
-- `python3 src/execute/scripts/plan_loop.py --help`
+- `python3 src/execute/scripts/loop.py --help`
   Shows the optional plan-driven helper contract shipped with `src/execute/`.
-- `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Dry-runs the optional execute/verify loop helper against one explicit plan
   path and one explicit external runner.
+- `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+  Runs the opt-in continuous helper mode that may continue after repairable
+  verify failures and requires a strict final verify pass before success.
+- `python3 src/execute/scripts/providers/codex_loop.py --help`
+  Shows the optional repo-local Codex convenience wrapper around the generic
+  helper.
+- `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md`
+  Dry-runs the repo-local Codex wrapper while keeping its default provider
+  command and continuous-mode settings visible.
+- `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md`
+  Runs the repo-local Codex wrapper with its default real-run behavior:
+  implicit `--yes`, implicit `--continue-after-fail`, and an internal runner
+  that uses `codex exec --yolo` as shorthand for dangerous bypass.
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md`
+  Runs the repo-local Codex dashboard wrapper over the same Codex flow while
+  keeping loop control and plan truth in the underlying helpers.
+- `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md`
+  Bypasses the dashboard explicitly and forwards straight to the raw Codex
+  wrapper surface. The dashboard wrapper also falls back automatically when
+  stdout is not a TTY.
 
 ## Eval Refresh
 

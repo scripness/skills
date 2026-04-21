@@ -1,0 +1,298 @@
+# Continuous Plan Loop
+
+Use this file as the living plan for the continuous execute/verify loop
+follow-up. The goal is one opt-in helper run that can carry plan-driven work
+through bounded execution slices, verification after each slice, repairable
+verification failures, and a strict final completion review.
+
+## Goal
+
+Extend the optional `src/execute/scripts/loop.py` helper and the owning
+skill contracts so one explicit plan-driven run can continue safely until the
+plan is truly complete: each slice is executed and verified, repairable verify
+failures are fed back into the same plan for another bounded execute pass, and
+the loop only exits successfully after the verify pass against a complete plan
+returns a strict final `pass`.
+
+## Scope
+
+- Define the continuous-loop contract across `execute`, `verify`, and the
+  helper.
+- Implement opt-in continue-after-fail behavior in `loop.py` while
+  keeping the helper dumb and file-backed.
+- Add strict final review semantics that require a final whole-plan `verify`
+  pass before the helper can succeed.
+- Define how repairable and blocking verify failures affect `Progress`,
+  `Blockers`, and final follow-up milestones in the plan file.
+- Add a repo-local Codex convenience wrapper above the generic helper so daily
+  use can default to the local Codex CLI without weakening the generic loop
+  contract.
+- Sync repo-truth docs and tracked eval metadata to the implemented behavior.
+- Verify the helper with bounded repo checks and targeted synthetic smoke runs.
+
+## Non-Goals
+
+- Making continuous fail-recovery the default helper behavior.
+- Teaching the helper to parse model prose or infer fixes outside plan state and
+  exit codes.
+- Replacing the six-skill split with provider-specific orchestration.
+- Building a general-purpose automated test framework for helper scripts beyond
+  what this repo already ships.
+
+## Deliverables
+
+- An updated `src/execute/scripts/loop.py` with opt-in continuous repair
+  flow and strict final review.
+- An optional repo-local `src/execute/scripts/providers/codex_loop.py`
+  convenience wrapper that delegates to the generic helper and exposes a short
+  daily command for Codex users.
+- Updated `src/execute/SKILL.md`, `src/verify/SKILL.md`, and any plan-template
+  wording needed to keep plan semantics truthful.
+- Synced repo-truth docs and eval metadata for the new helper behavior.
+- Verification notes in this plan covering command-based checks and synthetic
+  runner smoke evidence.
+
+## Repo Context
+
+- Task source: user request on branch `refine-01` to make the helper
+  continuous so one run can carry execution plus verification through full
+  plan completion.
+- Owning code paths: `src/execute/scripts/loop.py`,
+  `src/execute/scripts/providers/codex_loop.py`,
+  `src/execute/SKILL.md`, `src/verify/SKILL.md`,
+  `src/plan/assets/plan-template.md`, `src/*/agents/openai.yaml`,
+  `src/*/evals/evals.json`
+- Owning spec paths: `AGENTS.md`, `README.md`,
+  `specs/workflow-contract.md`, `specs/repo-surface.md`, `REFINE.md`
+- Owning test paths: no dedicated automated helper-test tree exists today; use
+  bounded command checks and synthetic non-interactive runner smoke scenarios
+  for this slice.
+- Related docs and commands: `make validate`,
+  `python3 src/execute/scripts/loop.py --help`,
+  `python3 -m py_compile src/execute/scripts/loop.py`,
+  `python3 src/execute/scripts/loop.py --dry-run ...`
+
+## Dependencies
+
+- The current plan-driven `execute` contract that reads prior plan context
+  before choosing a slice.
+- The current plan-driven `verify` contract that writes review truth back into
+  the same explicit plan file.
+- The helper's existing file-backed state model based on `## Progress` and
+  `## Blockers`.
+- The absence of a shipped automated unit-test layer for helper scripts, which
+  makes command-driven verification the smallest meaningful existing test
+  surface.
+
+## Sync Expectations
+
+- `specs`: Required. Changing helper behavior and plan-driven workflow
+  semantics requires syncing the owning repo-truth docs under `AGENTS.md`,
+  `README.md`, `specs/workflow-contract.md`, `specs/repo-surface.md`, and
+  `REFINE.md` as needed.
+- `tests`: No `tests` skill follow-through is currently required because the
+  repo does not ship an existing automated test layer for this helper. Use the
+  smallest meaningful command-driven verification instead: repo validation,
+  helper CLI smoke checks, Python compile checks, and synthetic non-interactive
+  runner scenarios. If implementation complexity forces a tracked executable
+  test surface, stop and reassess before inventing one casually.
+
+## Milestones
+
+1. Define the continuous-loop contract: finalize the helper rules for opt-in
+   continue-after-fail behavior, strict final review, repairable versus
+   blocking verify failures, milestone reopening, appended follow-up
+   milestones for cross-cutting final-review failures, and the final helper
+   outcome model.
+2. Implement the helper flow in `src/execute/scripts/loop.py`: add the
+   new opt-in control flags and loop logic, keep the helper dumb and
+   file-backed, require verify plan write-back, and emit machine-readable final
+   outcome data without parsing prose.
+3. Sync the owning docs and skill surfaces: update `execute`, `verify`, the
+   plan template, top-level repo-truth docs, and tracked eval assertions so the
+   shipped surface matches the helper behavior exactly.
+4. Run bounded verification and follow-up: validate repo metadata, compile and
+   inspect the helper, and exercise targeted synthetic runner scenarios that
+   prove repairable fail recovery, strict final review, and appended follow-up
+   milestone behavior.
+5. Ship the repo-local Codex convenience layer: add the provider-specific
+   wrapper above the generic helper, keep the generic contract explicit, and
+   sync repo docs so the short daily Codex command is truthful.
+
+## Verification
+
+- [2026-04-21] Adversarial plan review against the current helper and skill
+  contracts found no material scope, sequencing, or ownership problems.
+- [2026-04-21] `rg -n "strict final|pass with risks|continue-after-fail|append.*milestone|final whole-plan|final_outcome|blocked|Progress|Blockers" plans/2026-04-21-continuous-plan-loop.md src/execute/scripts/loop.py src/execute/SKILL.md src/verify/SKILL.md src/plan/assets/plan-template.md REFINE.md AGENTS.md README.md specs/workflow-contract.md specs/repo-surface.md`
+  confirmed the plan is anchored to the current shipped surfaces and the open
+  helper gap in `REFINE.md`.
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/loop.py --help` passed and
+  showed the new `--continue-after-fail` flag plus the strict-final-review
+  exit-code wording.
+- [2026-04-21] `python3 src/execute/scripts/loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`
+  passed and reported the current explicit-plan state and next
+  `execute`/`verify` commands without mutating the plan.
+- [2026-04-21] `git diff --check` passed.
+- [2026-04-21] `make validate` passed.
+- [2026-04-21] Targeted synthetic non-interactive runner scenarios executed
+  through a one-off `python3 - <<'PY' ...` smoke harness against
+  `src/execute/scripts/loop.py` proved:
+  - repairable mid-loop `verify fail` reopens work and continues in
+    `--continue-after-fail` mode
+  - a strict completion review that fails can append one bounded follow-up
+    milestone and continue instead of stopping or losing provenance
+  - a blocking `verify fail` stops the helper with `final_outcome="blocked"`
+  - an initially complete plan still runs one strict final review in
+    continuous mode, and `pass_with_risks` reopens bounded work rather than
+    counting as completion
+- [2026-04-21] Follow-up adversarial verification after the rename surfaced
+  two real helper defects and one repo-truth sync gap:
+  - strict final review could claim success even when post-verify plan state
+    had reopened work
+  - a non-final `verify=pass` could complete the plan without a later strict
+    final review
+  - `read_plan_state()` treated prose in `## Blockers` as active blockers
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py`,
+  `python3 src/execute/scripts/loop.py --help`,
+  `python3 src/execute/scripts/loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`,
+  `make validate`, and `git diff --check` all passed again after the follow-up
+  fixes and helper rename sync.
+- [2026-04-21] A second one-off `python3 - <<'PY' ...` synthetic harness
+  proved the repaired edge cases:
+  - final review that returns `pass` while reopening work now continues and
+    reaches `completed_strict` only after the follow-up slice is executed and
+    verified
+  - a non-final `verify=pass` that completes the plan now triggers a later
+    `final_review` before success instead of exiting early
+  - template-style prose in `## Blockers` no longer marks the plan blocked
+- [2026-04-21] Six GPT-5.4 xhigh subagents audited the current implementation:
+  - three read-only `verify`-style audits found the final-review success bug,
+    the blocker-prose parsing bug, and the rename/doc drift
+  - one live temp-repo `codex exec --yolo` trial confirmed the blocked stop
+    path
+  - one live temp-repo trial confirmed strict-final-review reopening but was
+    interrupted before final completion
+  - one live temp-repo rerun proved `verify fail -> continue -> strict final
+    verify pass -> completed_strict` through a real provider-backed wrapper
+- [2026-04-21] Added a repo-local provider wrapper at
+  `src/execute/scripts/providers/codex_loop.py`.
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py src/execute/scripts/providers/codex_loop.py`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/providers/codex_loop.py --help`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md`
+  passed and showed the default provider command pointing back to the same file
+  in hidden `--runner` mode with default `codex exec --yolo --color never --ephemeral`.
+- [2026-04-21] A synthetic `python3 - <<'PY' ...` check against
+  `src/execute/scripts/providers/codex_loop.py --runner` proved the internal
+  runner mode returns `0` for execute and maps structured
+  `verify=pass_with_risks` output to exit code `10`.
+
+## Risks
+
+- The helper can livelock or stop incorrectly if the plan-state expectations
+  for repairable versus blocking failures are not precise enough.
+- Appending follow-up milestones after a final review could accidentally erase
+  provenance unless `Verification` and `Decision Log` carry the original
+  failure context clearly.
+- Strict final review could conflict with existing `Progress` semantics if the
+  helper or verifier fails to reopen work accurately after a disproven
+  completion claim.
+- Without a shipped automated test layer, the synthetic smoke scenarios need to
+  be thorough enough to catch control-flow mistakes in the helper.
+
+## Open Questions
+
+- None currently. The current design decisions are settled enough to implement:
+  strict final review is required, cross-cutting final failures may append one
+  new bounded follow-up milestone, and richer completion semantics should live
+  in helper events rather than in extra shell exit codes.
+
+## Blockers
+
+- None currently.
+
+## Progress
+
+- [x] Milestone 1: define the continuous-loop contract
+- [x] Milestone 2: implement the helper flow in `src/execute/scripts/loop.py`
+- [x] Milestone 3: sync the owning docs and skill surfaces
+- [x] Milestone 4: run bounded verification and follow-up
+- [x] Milestone 5: ship the repo-local Codex convenience layer and doc sync
+
+## Decision Log
+
+- [2026-04-21] Make the final helper review strict: the helper should only
+  exit successfully after the verify pass against a complete plan returns
+  `pass`.
+- [2026-04-21] Treat `pass with risks` as insufficient for strict final
+  completion even if it remains acceptable for mid-loop continuation.
+- [2026-04-21] Reopen an existing milestone only when the verify finding
+  clearly disproves that milestone's own done condition.
+- [2026-04-21] Allow verify to append one new bounded follow-up milestone when
+  a final cross-cutting failure does not map cleanly to any existing milestone.
+- [2026-04-21] Keep the helper's shell exit codes simple and put richer final
+  status in structured helper events.
+- [2026-04-21] Treat the verify pass that runs immediately after an execute
+  step which leaves zero remaining milestones as the strict final review
+  instead of adding a second trailing verify invocation.
+- [2026-04-21] When a completion review reopens work, keep the helper's
+  iteration event status at `continue`; reserve `completed` for accepted
+  completion only.
+- [2026-04-21] In continuous mode, success requires both `verify=pass` and
+  post-verify plan completeness; a passing verdict alone is not enough if
+  review reopened or appended work.
+- [2026-04-21] `## Blockers` parsing in the helper should count only actual
+  bullet-list blocker items and ignore section prose from the shipped template.
+- [2026-04-21] Keep provider-specific daily-use convenience separate from the
+  generic loop contract: ship a repo-local Codex wrapper above `loop.py`
+  instead of baking Codex defaults into the generic helper itself.
+
+## Discoveries
+
+- [2026-04-21] The current helper already enforces execute and verify plan
+  write-back, but it still stops on any unacceptable verify verdict or blocked
+  plan state.
+- [2026-04-21] `execute` already reads prior plan intelligence before choosing
+  the next slice, so the main remaining gap is helper orchestration rather than
+  missing task-local state.
+- [2026-04-21] This repo does not currently ship a dedicated automated test
+  layer for helper scripts, so command-based verification and synthetic runner
+  scenarios are the smallest meaningful existing test surface.
+- [2026-04-21] The strict completion review does not need a separate extra
+  runner pass after the last slice; the verify pass that first sees a complete
+  plan can serve as the final review as long as it may reopen work.
+- [2026-04-21] An initially complete plan in `--continue-after-fail` mode
+  still needs one strict final review, and a `pass_with_risks` verdict there
+  must reopen bounded work instead of counting as completion.
+- [2026-04-21] A non-final `verify` pass can finish the remaining milestones,
+  but continuous mode must still run one later strict final review before the
+  helper exits successfully.
+- [2026-04-21] Real provider-backed temp trials worked with `codex exec
+  --yolo ...` or the equivalent full bypass form; the helper contract itself
+  remained provider-agnostic because the temp wrapper translated verdicts to
+  `0`, `10`, and `20`.
+- [2026-04-21] A single self-dispatching provider wrapper is cleaner here than
+  separate wrapper and runner files: normal mode gives the short daily command,
+  while hidden `--runner` mode satisfies the generic helper contract.
+
+## Outcomes / Retrospective
+
+- [2026-04-21] Completed Milestone 1 by writing the explicit implementation
+  plan, settling the strict final-review and follow-up-milestone rules, and
+  verifying that the plan aligns with the current helper and skill contracts.
+- [2026-04-21] Completed Milestones 2-4 by shipping the opt-in continuous
+  helper flow, syncing the plan-driven execute/verify contracts and repo docs,
+  and validating the result with compile/help/dry-run checks plus targeted
+  synthetic runner scenarios for repairable, blocking, and initial-completion
+  review paths.
+- [2026-04-21] Follow-up adversarial verification caught and closed two
+  additional helper edge cases after the first implementation pass, then
+  confirmed the repaired logic locally and through real temp-repo provider
+  trials using a thin non-interactive Codex wrapper.
+- [2026-04-21] Added the repo-local Codex convenience layer as a separate
+  wrapper above the generic helper so daily local use can be
+  `python3 src/execute/scripts/providers/codex_loop.py --plan ...` while the
+  portable `loop.py` contract stays explicit and provider-agnostic.

@@ -1,11 +1,10 @@
 # Evaluation Harness
 
 This directory holds the tracked eval metadata for the six-skill workflow.
-Milestones 1 through 5 define the layout, artifact contract, governance rules,
-canonical runtime profile, the first skill-local trigger and workflow cases,
-the first pinned real-repo fixture, the initial must-run surface, and the
-first thin local runner helpers without changing the tracked-versus-generated
-split below.
+It defines the tracked layout, artifact contract, governance rules, canonical
+runtime profile, first skill-local trigger and workflow cases, first pinned
+real-repo fixture, current must-run surface, and the thin local helper layer
+without changing the tracked-versus-generated split below.
 
 ## Tracked Source
 
@@ -27,9 +26,9 @@ split below.
 
 ## Local Runner Surface
 
-Milestone 5 introduced the direct helper script and Phase 06 Milestone 1 adds
-a thin repo-root `Makefile` above it. The wrappers stay deliberately small and
-delegate unique logic back to `evals/scripts/harness.py`.
+The repo ships a direct harness helper plus a thin repo-root `Makefile`
+wrapper. The wrappers stay deliberately small and delegate unique logic back
+to `evals/scripts/harness.py`.
 
 See [../MAINTENANCE.md](../MAINTENANCE.md) for the repo-wide maintenance loop
 that uses this harness surface to refresh eval workspaces and upstream durable
@@ -72,7 +71,7 @@ improvements.
 
 ## Governance
 
-Milestone 2 defines the evaluation-governance contract now so manual review and
+This directory defines the evaluation-governance contract so manual review and
 future runners use the same rules.
 
 ### Split Policy
@@ -97,8 +96,8 @@ future runners use the same rules.
 
 ### Grading Protocol
 
-- Every concrete eval added in Milestone 3 or later should declare one grading
-  mode: `assertion`, `rubric`, or `hybrid`.
+- Every concrete eval should declare one grading mode: `assertion`, `rubric`,
+  or `hybrid`.
 - Use `assertion` grading when deterministic pass/fail checks are credible.
 - Use `rubric` grading when human judgment is required; retain reviewer notes
   in the run artifacts rather than collapsing them into an unexplained score.
@@ -162,7 +161,8 @@ Each run should retain, at minimum:
 
 ## Scope Note
 
-Milestones 1 through 5 define layout, storage, baseline policy, governance,
-review gates, the first concrete skill-local cases, the first pinned fixture,
-the initial must-run surface, and the thin validate-plus-scaffold helper
-surface. Broader execution and operator tooling still belongs to later work.
+The shipped harness currently defines layout, storage, baseline policy,
+governance, review gates, the first concrete skill-local cases, the first
+pinned fixture, the initial must-run surface, and the thin
+validate-plus-scaffold helper surface. Broader execution and operator tooling
+still belongs to later work.

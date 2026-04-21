@@ -21,7 +21,7 @@
         {
           "id": "verify-trigger-plan-review",
           "expected_outcome": "trigger",
-          "prompt": "Review plans/2026-04-14-phase-05-evaluation-harness.md against AGENTS.md and plans/2026-04-14-phase-00-design-doc.md and tell me whether the plan passes.",
+          "prompt": "Review plans/2026-04-20-eval-harness-fixture-plan.md against AGENTS.md and evals/fixtures/eval-harness-roadmap.md and tell me whether the plan passes.",
           "why": "There is a concrete plan target to judge."
         },
         {
@@ -90,21 +90,22 @@
         ]
       },
       "scenario": {
-        "user_request": "Verify plans/2026-04-14-phase-05-evaluation-harness.md before implementation starts.",
+        "user_request": "Verify plans/2026-04-20-eval-harness-fixture-plan.md before implementation starts.",
         "repo_state": [
           "AGENTS.md requires findings-first review and treats missing required specs/tests sync as fail.",
-          "plans/2026-04-14-phase-00-design-doc.md section 7 defines the evaluation-harness scope.",
+          "evals/fixtures/eval-harness-roadmap.md defines the evaluation-harness follow-up scope.",
           "Inspection may be enough if no mechanical check is needed."
         ],
         "required_inputs": [
           "AGENTS.md",
-          "plans/2026-04-14-phase-00-design-doc.md",
-          "plans/2026-04-14-phase-05-evaluation-harness.md"
+          "evals/fixtures/eval-harness-roadmap.md",
+          "plans/2026-04-20-eval-harness-fixture-plan.md"
         ]
       },
       "assertions": [
         "Returns findings first and names the verification target.",
         "Checks scope, sequencing, blockers, and explicit specs/tests follow-through against repo truth.",
+        "When the target is an explicit plan path, writes the verdict and any blocking follow-up back into that same plan file.",
         "Runs or skips only the smallest meaningful checks and explains skipped checks honestly.",
         "Ends with a verdict and remaining gaps."
       ],
