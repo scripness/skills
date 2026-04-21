@@ -28,6 +28,11 @@ repo, and remain easy to use locally while editing this source repo.
   explicit: the main agent should use the skill itself, dispatch the same skill
   independently when supported, and compare or synthesize both results rather
   than blindly trusting either side alone.
+- Fold in the highest-signal workflow refinements from the audit without
+  changing the six-skill model: structured `consult -> plan` carry-forward,
+  decision-complete plan slices, `execute` bounce on under-specified slices,
+  `verify(plan)` failure for weak slice contracts, and slice-level `specs` /
+  `tests` exit criteria.
 - Update the AGENTS bootstrap template Git section to cover commits, branches,
   and PR titles.
 - Add a broader `tests` eval case covering frontend/UI/e2e layer selection on
@@ -50,6 +55,9 @@ repo, and remain easy to use locally while editing this source repo.
   source skills.
 - Synced repo-truth docs, skill contracts, and bootstrap assets for the new
   portability and workflow clarifications.
+- Updated `consult`, `plan`, `execute`, and `verify` contract expectations in
+  the plan so the contract-tightening slice also captures the approved
+  baton-pass improvements before implementation starts.
 - Updated `tests` eval metadata and any owning eval-harness docs/runtime
   metadata needed for the broader frontend/UI/e2e must-run coverage addition.
 - Verification evidence proving the copied execute helper surface works from a
@@ -62,6 +70,9 @@ repo, and remain easy to use locally while editing this source repo.
   copy-readiness and workflow-clarity changes before downstream copy into
   `~/Code/cryptoli`.
 - Owning code paths: `src/execute/scripts/loop.py`,
+  `src/consult/SKILL.md`, `src/plan/SKILL.md`,
+  `src/plan/assets/plan-template.md`, `src/execute/SKILL.md`,
+  `src/verify/SKILL.md`,
   `src/execute/scripts/providers/codex_loop.py`,
   `src/execute/scripts/providers/codex_loop_dashboard.py`,
   `src/tests/evals/evals.json`
@@ -113,7 +124,10 @@ leaving drift behind.
    discovery promotion, Git naming, and preferred independent-pass behavior for
    `consult` and `verify` with fresh-session fallback, including explicit
    compare-and-synthesize guidance when both the main agent and an independent
-   pass are available.
+   pass are available. Fold in the approved baton-pass improvements here:
+   structured `consult -> plan` carry-forward, decision-complete next slices,
+   `execute` bounce on weak slice contracts, `verify(plan)` plan-quality
+   failure for weak slices, and slice-level `specs` / `tests` exit criteria.
 4. Eval coverage addition: broaden the `tests` skill eval surface so the
    frontend/UI/e2e layer-selection expectation is represented in tracked eval
    metadata and any owning harness docs/runtime mirror.
@@ -157,6 +171,9 @@ record the provenance here plus in `Decision Log`.
 - Letting the main agent defer too much to a subagent result even when the main
   session has broader context, which would weaken accuracy instead of improving
   it.
+- Pulling in too much of the audit verbatim and bloating the plan template with
+  duplicate state instead of keeping only the high-signal handoff
+  improvements.
 
 ## Open Questions
 
@@ -205,6 +222,11 @@ instead of overwriting unrelated historical progress.
   results, because the main session may hold broader context while the
   independent pass contributes reduced anchoring and better adversarial
   pressure.
+- [2026-04-21] Keep only the high-signal audit improvements: stronger
+  `consult -> plan` carry-forward, decision-complete slices, `execute` bounce
+  on under-specified work, `verify(plan)` plan-quality failure, and slice-level
+  `specs` / `tests` exit criteria. Do not import heavier template additions
+  that would duplicate state or complicate simple tasks.
 
 ## Discoveries
 
