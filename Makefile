@@ -19,7 +19,11 @@ help:
 		'  python3 src/execute/scripts/loop.py --help' \
 		'      Show the optional explicit-plan execute/verify helper contract.' \
 		'  python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"' \
-		'      Preview the optional explicit-plan execute/verify helper without stateful work.'
+		'      Preview the optional explicit-plan execute/verify helper without stateful work.' \
+		'  python3 src/execute/scripts/providers/codex_loop.py --help' \
+		'      Show the optional repo-local Codex convenience wrapper.' \
+		'  python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md' \
+		'      Run the repo-local Codex convenience wrapper with its default real-run settings.'
 
 validate:
 	$(PYTHON) evals/scripts/harness.py validate

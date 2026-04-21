@@ -126,6 +126,11 @@ Return:
 plan-driven work. It is not workflow truth and it does not replace the skill
 contract.
 
+This source repo may also ship provider-specific convenience wrappers above the
+generic helper, such as `scripts/providers/codex_loop.py`. Those wrappers are
+local accelerators only and must delegate back to the generic `scripts/loop.py`
+contract rather than redefining it.
+
 When used, pass one explicit plan path and one explicit non-interactive
 external runner command. The helper expects that runner to accept
 `execute <plan>` and `verify <plan>` invocations, keep durable state in repo

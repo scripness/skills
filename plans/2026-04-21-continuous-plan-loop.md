@@ -24,6 +24,9 @@ returns a strict final `pass`.
   pass before the helper can succeed.
 - Define how repairable and blocking verify failures affect `Progress`,
   `Blockers`, and final follow-up milestones in the plan file.
+- Add a repo-local Codex convenience wrapper above the generic helper so daily
+  use can default to the local Codex CLI without weakening the generic loop
+  contract.
 - Sync repo-truth docs and tracked eval metadata to the implemented behavior.
 - Verify the helper with bounded repo checks and targeted synthetic smoke runs.
 
@@ -40,6 +43,9 @@ returns a strict final `pass`.
 
 - An updated `src/execute/scripts/loop.py` with opt-in continuous repair
   flow and strict final review.
+- An optional repo-local `src/execute/scripts/providers/codex_loop.py`
+  convenience wrapper that delegates to the generic helper and exposes a short
+  daily command for Codex users.
 - Updated `src/execute/SKILL.md`, `src/verify/SKILL.md`, and any plan-template
   wording needed to keep plan semantics truthful.
 - Synced repo-truth docs and eval metadata for the new helper behavior.
@@ -52,6 +58,7 @@ returns a strict final `pass`.
   continuous so one run can carry execution plus verification through full
   plan completion.
 - Owning code paths: `src/execute/scripts/loop.py`,
+  `src/execute/scripts/providers/codex_loop.py`,
   `src/execute/SKILL.md`, `src/verify/SKILL.md`,
   `src/plan/assets/plan-template.md`, `src/*/agents/openai.yaml`,
   `src/*/evals/evals.json`
@@ -108,6 +115,9 @@ returns a strict final `pass`.
    inspect the helper, and exercise targeted synthetic runner scenarios that
    prove repairable fail recovery, strict final review, and appended follow-up
    milestone behavior.
+5. Ship the repo-local Codex convenience layer: add the provider-specific
+   wrapper above the generic helper, keep the generic contract explicit, and
+   sync repo docs so the short daily Codex command is truthful.
 
 ## Verification
 
@@ -166,6 +176,19 @@ returns a strict final `pass`.
     interrupted before final completion
   - one live temp-repo rerun proved `verify fail -> continue -> strict final
     verify pass -> completed_strict` through a real provider-backed wrapper
+- [2026-04-21] Added a repo-local provider wrapper at
+  `src/execute/scripts/providers/codex_loop.py`.
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py src/execute/scripts/providers/codex_loop.py`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/providers/codex_loop.py --help`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md`
+  passed and showed the default provider command pointing back to the same file
+  in hidden `--runner` mode with default `codex exec --yolo --color never --ephemeral`.
+- [2026-04-21] A synthetic `python3 - <<'PY' ...` check against
+  `src/execute/scripts/providers/codex_loop.py --runner` proved the internal
+  runner mode returns `0` for execute and maps structured
+  `verify=pass_with_risks` output to exit code `10`.
 
 ## Risks
 
@@ -197,6 +220,7 @@ returns a strict final `pass`.
 - [x] Milestone 2: implement the helper flow in `src/execute/scripts/loop.py`
 - [x] Milestone 3: sync the owning docs and skill surfaces
 - [x] Milestone 4: run bounded verification and follow-up
+- [x] Milestone 5: ship the repo-local Codex convenience layer and doc sync
 
 ## Decision Log
 
@@ -222,6 +246,9 @@ returns a strict final `pass`.
   review reopened or appended work.
 - [2026-04-21] `## Blockers` parsing in the helper should count only actual
   bullet-list blocker items and ignore section prose from the shipped template.
+- [2026-04-21] Keep provider-specific daily-use convenience separate from the
+  generic loop contract: ship a repo-local Codex wrapper above `loop.py`
+  instead of baking Codex defaults into the generic helper itself.
 
 ## Discoveries
 
@@ -247,6 +274,9 @@ returns a strict final `pass`.
   --yolo ...` or the equivalent full bypass form; the helper contract itself
   remained provider-agnostic because the temp wrapper translated verdicts to
   `0`, `10`, and `20`.
+- [2026-04-21] A single self-dispatching provider wrapper is cleaner here than
+  separate wrapper and runner files: normal mode gives the short daily command,
+  while hidden `--runner` mode satisfies the generic helper contract.
 
 ## Outcomes / Retrospective
 
@@ -262,3 +292,7 @@ returns a strict final `pass`.
   additional helper edge cases after the first implementation pass, then
   confirmed the repaired logic locally and through real temp-repo provider
   trials using a thin non-interactive Codex wrapper.
+- [2026-04-21] Added the repo-local Codex convenience layer as a separate
+  wrapper above the generic helper so daily local use can be
+  `python3 src/execute/scripts/providers/codex_loop.py --plan ...` while the
+  portable `loop.py` contract stays explicit and provider-agnostic.

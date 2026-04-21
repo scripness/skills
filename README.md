@@ -38,6 +38,9 @@ background, but they are not the default operational reading chain.
 - optional explicit-plan execute/verify helper with opt-in continuous
   repair flow and strict final review:
   `src/execute/scripts/loop.py`
+- optional repo-local Codex convenience wrapper that delegates to the generic
+  helper and defaults real runs to continuous repair mode:
+  `src/execute/scripts/providers/codex_loop.py`
 - `CLAUDE.md` as a symlink mirror to `AGENTS.md`
 
 ## Durable State
@@ -118,6 +121,11 @@ ships the optional `scripts/loop.py` helper.
    strict final completion review, use
    `python3 src/execute/scripts/loop.py --yes --continue-after-fail ...`
    against that same explicit plan path.
+9. In this source repo, if you want the same flow through the local Codex CLI
+   without restating the generic helper defaults each time, use
+   `python3 src/execute/scripts/providers/codex_loop.py --plan ...`.
+   That wrapper is a repo-local convenience layer only; the generic contract
+   still lives in `src/execute/scripts/loop.py`.
 
 Keep provider features such as plan modes, subagents, plugins, or auto-memory
 optional only. The baseline workflow should work from repo files plus a normal
@@ -145,6 +153,9 @@ interactive session.
 - `python3 src/execute/scripts/loop.py --help`
 - `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
 - `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/providers/codex_loop.py --help`
+- `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md`
+- `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md`
 
 See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
 reference grounding, and `REFINE.md` for the current cleanup track.

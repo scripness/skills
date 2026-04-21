@@ -94,6 +94,9 @@ target repos.
 - `src/execute/scripts/loop.py` may optionally continue after repairable
   verify failures and run one strict final whole-plan verify pass, but it
   remains a thin helper rather than workflow truth.
+- Optional provider-specific accelerators may also exist under
+  `src/execute/scripts/providers/`, but they must remain replaceable wrappers
+  over the generic helper rather than redefining the workflow contract.
 - Never guess the latest plan file.
 - Completed historical plan records under `plans/` are available as background
   source material but are not the default operational reading chain.

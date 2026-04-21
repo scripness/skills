@@ -64,6 +64,10 @@ When copied into a target repo, these directories are intended to live under
 - `src/execute/` also ships `scripts/loop.py` as an optional explicit-plan
   execute/verify helper with an opt-in continuous repair mode and strict final
   review before success.
+- This source repo also ships `scripts/providers/codex_loop.py` as an optional
+  repo-local Codex convenience wrapper that delegates back to the generic
+  `scripts/loop.py` contract. It is a local accelerator only, not workflow
+  truth.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
@@ -154,6 +158,9 @@ Completed historical records also remain under `plans/`.
 | Show the optional loop helper | `python3 src/execute/scripts/loop.py --help` |
 | Dry-run the optional loop helper | `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
 | Run the optional continuous loop helper | `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
+| Show the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --help` |
+| Dry-run the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md` |
+| Run the optional Codex loop wrapper | `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md` |
 | Check git status | `git status --short` |
 
 ## Boundaries

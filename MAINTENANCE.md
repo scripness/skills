@@ -64,6 +64,16 @@ durable improvements discovered while using copied skills in downstream repos.
 - `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Runs the opt-in continuous helper mode that may continue after repairable
   verify failures and requires a strict final verify pass before success.
+- `python3 src/execute/scripts/providers/codex_loop.py --help`
+  Shows the optional repo-local Codex convenience wrapper around the generic
+  helper.
+- `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/<file>.md`
+  Dry-runs the repo-local Codex wrapper while keeping its default provider
+  command and continuous-mode settings visible.
+- `python3 src/execute/scripts/providers/codex_loop.py --plan plans/<file>.md`
+  Runs the repo-local Codex wrapper with its default real-run behavior:
+  implicit `--yes`, implicit `--continue-after-fail`, and an internal runner
+  that uses `codex exec --yolo` as shorthand for dangerous bypass.
 
 ## Eval Refresh
 
