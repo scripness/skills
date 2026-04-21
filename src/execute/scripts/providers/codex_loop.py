@@ -113,7 +113,13 @@ def run_codex_execute(plan_path: Path, codex_command_text: str) -> int:
     return completed.returncode
 
 
-def run_codex_verify(plan_path: Path, codex_command_text: str) -> int:
+def run_codex_verify(
+    plan_path: Path,
+    codex_command_text: str,
+    *,
+    pass_with_risks_code: int,
+    fail_code: int,
+) -> int:
     command = codex_base_command(codex_command_text)
     schema = {
         "type": "object",
@@ -153,8 +159,8 @@ def run_codex_verify(plan_path: Path, codex_command_text: str) -> int:
         if verdict == "pass":
             return 0
         if verdict == "pass_with_risks":
-            return DEFAULT_PASS_WITH_RISKS_CODE
-        return DEFAULT_FAIL_CODE
+            return pass_with_risks_code
+        return fail_code
 
 
 def build_user_parser() -> argparse.ArgumentParser:
@@ -256,6 +262,16 @@ def build_runner_parser() -> argparse.ArgumentParser:
         "--codex-command",
         default=DEFAULT_CODEX_COMMAND,
     )
+    parser.add_argument(
+        "--pass-with-risks-code",
+        type=int,
+        default=DEFAULT_PASS_WITH_RISKS_CODE,
+    )
+    parser.add_argument(
+        "--fail-code",
+        type=int,
+        default=DEFAULT_FAIL_CODE,
+    )
     parser.add_argument("mode", choices=["execute", "verify"])
     parser.add_argument("plan")
     return parser
@@ -275,6 +291,10 @@ def wrapper_main(argv: list[str]) -> int:
             "--runner",
             "--codex-command",
             args.codex_command,
+            "--pass-with-risks-code",
+            str(args.pass_with_risks_code),
+            "--fail-code",
+            str(args.fail_code),
         ]
     )
 
@@ -305,7 +325,12 @@ def runner_main(argv: list[str]) -> int:
     plan_path = Path(args.plan).resolve()
     if args.mode == "execute":
         return run_codex_execute(plan_path, args.codex_command)
-    return run_codex_verify(plan_path, args.codex_command)
+    return run_codex_verify(
+        plan_path,
+        args.codex_command,
+        pass_with_risks_code=args.pass_with_risks_code,
+        fail_code=args.fail_code,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
