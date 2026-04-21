@@ -122,7 +122,7 @@ Return:
 
 ## Optional Helper
 
-`scripts/plan_loop.py` is an optional local convenience wrapper for
+`scripts/loop.py` is an optional local convenience wrapper for
 plan-driven work. It is not workflow truth and it does not replace the skill
 contract.
 

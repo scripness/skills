@@ -16,7 +16,7 @@ Read this repo from shipped reality in this order:
 4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` when the task needs
    operator guidance, design grounding, or current cleanup context
 5. the shipped surfaces under `src/`, `evals/`, `Makefile`, and
-   `src/execute/scripts/plan_loop.py`
+   `src/execute/scripts/loop.py`
 6. `plans/*.md` only when a task names an explicit plan path or when you need
    historical background
 
@@ -61,8 +61,9 @@ When copied into a target repo, these directories are intended to live under
   `evals/evals.json`.
 - `src/plan/` also ships `assets/plan-template.md`.
 - `src/specs/` also ships bootstrap assets for `AGENTS.md` and `specs/`.
-- `src/execute/` also ships `scripts/plan_loop.py` as an optional explicit-plan
-  execute/verify helper with an opt-in continuous repair mode.
+- `src/execute/` also ships `scripts/loop.py` as an optional explicit-plan
+  execute/verify helper with an opt-in continuous repair mode and strict final
+  review before success.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
@@ -150,9 +151,9 @@ Completed historical records also remain under `plans/`.
 | Scaffold a repeatable eval workspace | `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run\|validation\|all] [SKILL="consult execute"] [PROFILE=<profile>]` |
 | Show the direct harness CLI | `python3 evals/scripts/harness.py --help` |
 | Run validation directly | `python3 evals/scripts/harness.py validate` |
-| Show the optional plan-loop helper | `python3 src/execute/scripts/plan_loop.py --help` |
-| Dry-run the optional plan-loop helper | `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
-| Run the optional continuous plan-loop helper | `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
+| Show the optional loop helper | `python3 src/execute/scripts/loop.py --help` |
+| Dry-run the optional loop helper | `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
+| Run the optional continuous loop helper | `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
 | Check git status | `git status --short` |
 
 ## Boundaries

@@ -29,7 +29,7 @@ behavior.
 
 ## Repo Context
 
-- Owning code paths: `evals/`, `Makefile`, `src/execute/scripts/plan_loop.py`
+- Owning code paths: `evals/`, `Makefile`, `src/execute/scripts/loop.py`
 - Owning spec paths: `AGENTS.md`, `README.md`, `specs/evaluation-harness.md`
 - Owning test paths: `N/A`; use bounded maintenance checks only
 

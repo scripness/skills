@@ -91,7 +91,7 @@ target repos.
   `plans/YYYY-MM-DD-short-task-slug.md` path.
 - In plan-driven work, that explicit plan file remains the canonical task
   record across `plan`, `execute`, and `verify`.
-- `src/execute/scripts/plan_loop.py` may optionally continue after repairable
+- `src/execute/scripts/loop.py` may optionally continue after repairable
   verify failures and run one strict final whole-plan verify pass, but it
   remains a thin helper rather than workflow truth.
 - Never guess the latest plan file.

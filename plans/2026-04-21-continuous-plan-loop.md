@@ -7,7 +7,7 @@ verification failures, and a strict final completion review.
 
 ## Goal
 
-Extend the optional `src/execute/scripts/plan_loop.py` helper and the owning
+Extend the optional `src/execute/scripts/loop.py` helper and the owning
 skill contracts so one explicit plan-driven run can continue safely until the
 plan is truly complete: each slice is executed and verified, repairable verify
 failures are fed back into the same plan for another bounded execute pass, and
@@ -18,7 +18,7 @@ returns a strict final `pass`.
 
 - Define the continuous-loop contract across `execute`, `verify`, and the
   helper.
-- Implement opt-in continue-after-fail behavior in `plan_loop.py` while
+- Implement opt-in continue-after-fail behavior in `loop.py` while
   keeping the helper dumb and file-backed.
 - Add strict final review semantics that require a final whole-plan `verify`
   pass before the helper can succeed.
@@ -38,7 +38,7 @@ returns a strict final `pass`.
 
 ## Deliverables
 
-- An updated `src/execute/scripts/plan_loop.py` with opt-in continuous repair
+- An updated `src/execute/scripts/loop.py` with opt-in continuous repair
   flow and strict final review.
 - Updated `src/execute/SKILL.md`, `src/verify/SKILL.md`, and any plan-template
   wording needed to keep plan semantics truthful.
@@ -51,7 +51,7 @@ returns a strict final `pass`.
 - Task source: user request on branch `refine-01` to make the helper
   continuous so one run can carry execution plus verification through full
   plan completion.
-- Owning code paths: `src/execute/scripts/plan_loop.py`,
+- Owning code paths: `src/execute/scripts/loop.py`,
   `src/execute/SKILL.md`, `src/verify/SKILL.md`,
   `src/plan/assets/plan-template.md`, `src/*/agents/openai.yaml`,
   `src/*/evals/evals.json`
@@ -61,9 +61,9 @@ returns a strict final `pass`.
   bounded command checks and synthetic non-interactive runner smoke scenarios
   for this slice.
 - Related docs and commands: `make validate`,
-  `python3 src/execute/scripts/plan_loop.py --help`,
-  `python3 -m py_compile src/execute/scripts/plan_loop.py`,
-  `python3 src/execute/scripts/plan_loop.py --dry-run ...`
+  `python3 src/execute/scripts/loop.py --help`,
+  `python3 -m py_compile src/execute/scripts/loop.py`,
+  `python3 src/execute/scripts/loop.py --dry-run ...`
 
 ## Dependencies
 
@@ -97,7 +97,7 @@ returns a strict final `pass`.
    blocking verify failures, milestone reopening, appended follow-up
    milestones for cross-cutting final-review failures, and the final helper
    outcome model.
-2. Implement the helper flow in `src/execute/scripts/plan_loop.py`: add the
+2. Implement the helper flow in `src/execute/scripts/loop.py`: add the
    new opt-in control flags and loop logic, keep the helper dumb and
    file-backed, require verify plan write-back, and emit machine-readable final
    outcome data without parsing prose.
@@ -113,22 +113,22 @@ returns a strict final `pass`.
 
 - [2026-04-21] Adversarial plan review against the current helper and skill
   contracts found no material scope, sequencing, or ownership problems.
-- [2026-04-21] `rg -n "strict final|pass with risks|continue-after-fail|append.*milestone|final whole-plan|final_outcome|blocked|Progress|Blockers" plans/2026-04-21-continuous-plan-loop.md src/execute/scripts/plan_loop.py src/execute/SKILL.md src/verify/SKILL.md src/plan/assets/plan-template.md REFINE.md AGENTS.md README.md specs/workflow-contract.md specs/repo-surface.md`
+- [2026-04-21] `rg -n "strict final|pass with risks|continue-after-fail|append.*milestone|final whole-plan|final_outcome|blocked|Progress|Blockers" plans/2026-04-21-continuous-plan-loop.md src/execute/scripts/loop.py src/execute/SKILL.md src/verify/SKILL.md src/plan/assets/plan-template.md REFINE.md AGENTS.md README.md specs/workflow-contract.md specs/repo-surface.md`
   confirmed the plan is anchored to the current shipped surfaces and the open
   helper gap in `REFINE.md`.
-- [2026-04-21] `python3 -m py_compile src/execute/scripts/plan_loop.py`
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py`
   passed.
-- [2026-04-21] `python3 src/execute/scripts/plan_loop.py --help` passed and
+- [2026-04-21] `python3 src/execute/scripts/loop.py --help` passed and
   showed the new `--continue-after-fail` flag plus the strict-final-review
   exit-code wording.
-- [2026-04-21] `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`
+- [2026-04-21] `python3 src/execute/scripts/loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`
   passed and reported the current explicit-plan state and next
   `execute`/`verify` commands without mutating the plan.
 - [2026-04-21] `git diff --check` passed.
 - [2026-04-21] `make validate` passed.
 - [2026-04-21] Targeted synthetic non-interactive runner scenarios executed
   through a one-off `python3 - <<'PY' ...` smoke harness against
-  `src/execute/scripts/plan_loop.py` proved:
+  `src/execute/scripts/loop.py` proved:
   - repairable mid-loop `verify fail` reopens work and continues in
     `--continue-after-fail` mode
   - a strict completion review that fails can append one bounded follow-up
@@ -137,6 +137,35 @@ returns a strict final `pass`.
   - an initially complete plan still runs one strict final review in
     continuous mode, and `pass_with_risks` reopens bounded work rather than
     counting as completion
+- [2026-04-21] Follow-up adversarial verification after the rename surfaced
+  two real helper defects and one repo-truth sync gap:
+  - strict final review could claim success even when post-verify plan state
+    had reopened work
+  - a non-final `verify=pass` could complete the plan without a later strict
+    final review
+  - `read_plan_state()` treated prose in `## Blockers` as active blockers
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/loop.py`,
+  `python3 src/execute/scripts/loop.py --help`,
+  `python3 src/execute/scripts/loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`,
+  `make validate`, and `git diff --check` all passed again after the follow-up
+  fixes and helper rename sync.
+- [2026-04-21] A second one-off `python3 - <<'PY' ...` synthetic harness
+  proved the repaired edge cases:
+  - final review that returns `pass` while reopening work now continues and
+    reaches `completed_strict` only after the follow-up slice is executed and
+    verified
+  - a non-final `verify=pass` that completes the plan now triggers a later
+    `final_review` before success instead of exiting early
+  - template-style prose in `## Blockers` no longer marks the plan blocked
+- [2026-04-21] Six GPT-5.4 xhigh subagents audited the current implementation:
+  - three read-only `verify`-style audits found the final-review success bug,
+    the blocker-prose parsing bug, and the rename/doc drift
+  - one live temp-repo `codex exec --yolo` trial confirmed the blocked stop
+    path
+  - one live temp-repo trial confirmed strict-final-review reopening but was
+    interrupted before final completion
+  - one live temp-repo rerun proved `verify fail -> continue -> strict final
+    verify pass -> completed_strict` through a real provider-backed wrapper
 
 ## Risks
 
@@ -165,7 +194,7 @@ returns a strict final `pass`.
 ## Progress
 
 - [x] Milestone 1: define the continuous-loop contract
-- [x] Milestone 2: implement the helper flow in `src/execute/scripts/plan_loop.py`
+- [x] Milestone 2: implement the helper flow in `src/execute/scripts/loop.py`
 - [x] Milestone 3: sync the owning docs and skill surfaces
 - [x] Milestone 4: run bounded verification and follow-up
 
@@ -188,6 +217,11 @@ returns a strict final `pass`.
 - [2026-04-21] When a completion review reopens work, keep the helper's
   iteration event status at `continue`; reserve `completed` for accepted
   completion only.
+- [2026-04-21] In continuous mode, success requires both `verify=pass` and
+  post-verify plan completeness; a passing verdict alone is not enough if
+  review reopened or appended work.
+- [2026-04-21] `## Blockers` parsing in the helper should count only actual
+  bullet-list blocker items and ignore section prose from the shipped template.
 
 ## Discoveries
 
@@ -206,6 +240,13 @@ returns a strict final `pass`.
 - [2026-04-21] An initially complete plan in `--continue-after-fail` mode
   still needs one strict final review, and a `pass_with_risks` verdict there
   must reopen bounded work instead of counting as completion.
+- [2026-04-21] A non-final `verify` pass can finish the remaining milestones,
+  but continuous mode must still run one later strict final review before the
+  helper exits successfully.
+- [2026-04-21] Real provider-backed temp trials worked with `codex exec
+  --yolo ...` or the equivalent full bypass form; the helper contract itself
+  remained provider-agnostic because the temp wrapper translated verdicts to
+  `0`, `10`, and `20`.
 
 ## Outcomes / Retrospective
 
@@ -217,3 +258,7 @@ returns a strict final `pass`.
   and validating the result with compile/help/dry-run checks plus targeted
   synthetic runner scenarios for repairable, blocking, and initial-completion
   review paths.
+- [2026-04-21] Follow-up adversarial verification caught and closed two
+  additional helper edge cases after the first implementation pass, then
+  confirmed the repaired logic locally and through real temp-repo provider
+  trials using a thin non-interactive Codex wrapper.

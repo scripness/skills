@@ -16,9 +16,9 @@ help:
 		'      Scaffold .tmp/evals/<run-id>/ through evals/scripts/harness.py without duplicating its logic.' \
 		'  python3 evals/scripts/harness.py --help' \
 		'      Show the direct script interface behind the Makefile wrappers.' \
-		'  python3 src/execute/scripts/plan_loop.py --help' \
+		'  python3 src/execute/scripts/loop.py --help' \
 		'      Show the optional explicit-plan execute/verify helper contract.' \
-		'  python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"' \
+		'  python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"' \
 		'      Preview the optional explicit-plan execute/verify helper without stateful work.'
 
 validate:

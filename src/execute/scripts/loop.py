@@ -73,7 +73,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Example:\n"
-            "  python3 src/execute/scripts/plan_loop.py --dry-run \\\n"
+            "  python3 src/execute/scripts/loop.py --dry-run \\\n"
             "      --plan plans/YYYY-MM-DD-short-task-slug.md \\\n"
             "      --provider-command \"./bin/run-skill\"\n\n"
             "The external runner must be non-interactive and accept:\n"
@@ -177,7 +177,7 @@ def emit_stop(
 
 
 def diag(message: str) -> None:
-    print(f"[plan-loop] {message}", file=sys.stderr, flush=True)
+    print(f"[loop] {message}", file=sys.stderr, flush=True)
 
 
 def parse_command(command_text: str) -> list[str]:
@@ -240,6 +240,8 @@ def read_plan_state(plan_path: Path) -> PlanState:
     for raw_line in blockers_section:
         stripped = raw_line.strip()
         if not stripped:
+            continue
+        if not stripped.startswith("- "):
             continue
         if normalize_none_marker(stripped) in {"none", "none currently", "n/a"}:
             continue
@@ -395,10 +397,9 @@ def maybe_run_final_review(
         pass_with_risks_code,
         fail_code,
     )
-    strict_pass = verdict == "pass"
+    strict_completion = verdict == "pass" and state_after.remaining_milestones == 0
     repairable_follow_up = (
         continue_after_fail
-        and verdict in {"fail", "pass_with_risks"}
         and not state_after.blocked
         and state_after.remaining_milestones > 0
     )
@@ -409,7 +410,7 @@ def maybe_run_final_review(
         stop_reasons.append("missing_final_verify_plan_update")
     if state_after.blocked:
         stop_reasons.append("plan_blocked_after_final_verify")
-    if not strict_pass and not repairable_follow_up:
+    if not strict_completion and not repairable_follow_up:
         if state_after.remaining_milestones == 0 and not state_after.blocked:
             stop_reasons.append("final_review_did_not_reopen_work")
         else:
@@ -440,7 +441,7 @@ def maybe_run_final_review(
         return 3
     if not plan_changed:
         return 1
-    if strict_pass:
+    if strict_completion:
         emit_stop(
             "plan_completed_after_final_verify",
             final_outcome="completed_strict",
@@ -512,7 +513,7 @@ def main() -> int:
         emit(start_event)
         return 0 if not initial_state.blocked else 1
 
-    log_root = Path(tempfile.mkdtemp(prefix="plan-loop-"))
+    log_root = Path(tempfile.mkdtemp(prefix="loop-"))
     start_event["dry_run"] = False
     start_event["log_root"] = str(log_root)
     emit(start_event)
@@ -708,9 +709,16 @@ def main() -> int:
         status = "continue"
         if stop_reasons:
             status = "stop"
-        elif completion_review and acceptable:
+        elif (
+            completion_review
+            and verdict == "pass"
+            and state_after_verify.remaining_milestones == 0
+        ):
             status = "completed"
-        elif state_after_verify.remaining_milestones == 0:
+        elif (
+            state_after_verify.remaining_milestones == 0
+            and not args.continue_after_fail
+        ):
             status = "completed"
 
         emit(
@@ -797,7 +805,11 @@ def main() -> int:
                 verification_verdict=verdict,
             )
             return 1
-        if completion_review:
+        if (
+            completion_review
+            and verdict == "pass"
+            and state_after_verify.remaining_milestones == 0
+        ):
             emit_stop(
                 "plan_completed_after_verify",
                 final_outcome="completed_strict",
@@ -806,7 +818,7 @@ def main() -> int:
                 verify=verify_result.__dict__,
             )
             return 0
-        if state_after_verify.remaining_milestones == 0:
+        if state_after_verify.remaining_milestones == 0 and not args.continue_after_fail:
             emit_stop(
                 "plan_completed_after_verify",
                 final_outcome="completed",

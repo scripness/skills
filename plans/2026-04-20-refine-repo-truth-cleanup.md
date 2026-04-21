@@ -27,7 +27,7 @@ agent can understand and use this repo without treating the completed
 - Rewriting skill-local eval definitions in this slice unless repo-truth
   cleanup proves that strictly necessary.
 - Inventing new helpers or changing the optional helper contract in
-  `src/execute/scripts/plan_loop.py`.
+  `src/execute/scripts/loop.py`.
 
 ## Deliverables
 
@@ -42,7 +42,7 @@ agent can understand and use this repo without treating the completed
 - Task source: user request on branch `refine-01` to rebuild live repo truth
   from shipped reality.
 - Owning code paths: `AGENTS.md`, `README.md`, `specs/`, `src/`, `evals/`,
-  `Makefile`, `src/execute/scripts/plan_loop.py`
+  `Makefile`, `src/execute/scripts/loop.py`
 - Owning spec paths: `specs/README.md`, `specs/workflow-contract.md`,
   `specs/repo-surface.md`, `specs/evaluation-harness.md`
 - Owning test paths: `N/A` for product tests; use repo maintenance checks only
@@ -53,7 +53,7 @@ agent can understand and use this repo without treating the completed
 ## Dependencies
 
 - The shipped repo surface under `src/`, `evals/`, `Makefile`, and
-  `src/execute/scripts/plan_loop.py`
+  `src/execute/scripts/loop.py`
 - Completed historical plan records under `plans/` only as background source
   material when needed
 
@@ -80,7 +80,7 @@ agent can understand and use this repo without treating the completed
 ## Verification
 
 - [2026-04-20] Inspected the rewritten truth layer against shipped files under
-  `src/`, `evals/`, `Makefile`, and `src/execute/scripts/plan_loop.py`.
+  `src/`, `evals/`, `Makefile`, and `src/execute/scripts/loop.py`.
 - [2026-04-20] A targeted search for old phase-centric references in the live
   repo-truth docs returned only intentional background-record mentions.
 - [2026-04-20] `make validate` passed.
@@ -138,7 +138,7 @@ agent can understand and use this repo without treating the completed
 ## Discoveries
 
 - [2026-04-20] The shipped repo already includes
-  `src/execute/scripts/plan_loop.py`; the current gap is repo-truth cleanup,
+  `src/execute/scripts/loop.py`; the current gap is repo-truth cleanup,
   not missing helper invention.
 - [2026-04-20] Top-level `specs/` does not exist yet even though the shipped
   workflow expects durable repo truth to live there.

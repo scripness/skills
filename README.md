@@ -21,7 +21,7 @@ Read this repo in the same order the shipped workflow expects:
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
 4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` as needed
-5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/plan_loop.py`
+5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/loop.py`
 
 Completed historical plan records remain available under `plans/` as
 background, but they are not the default operational reading chain.
@@ -37,7 +37,7 @@ background, but they are not the default operational reading chain.
 - thin repo maintenance wrapper: `Makefile`
 - optional explicit-plan execute/verify helper with opt-in continuous
   repair flow and strict final review:
-  `src/execute/scripts/plan_loop.py`
+  `src/execute/scripts/loop.py`
 - `CLAUDE.md` as a symlink mirror to `AGENTS.md`
 
 ## Durable State
@@ -78,7 +78,7 @@ Completed historical records also remain under `plans/`.
 
 Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
 `evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
-ships the optional `scripts/plan_loop.py` helper.
+ships the optional `scripts/loop.py` helper.
 
 ## Six-Skill Workflow
 
@@ -116,7 +116,7 @@ ships the optional `scripts/plan_loop.py` helper.
    record.
 8. If you want one opt-in helper run to carry repairable verify failures and a
    strict final completion review, use
-   `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail ...`
+   `python3 src/execute/scripts/loop.py --yes --continue-after-fail ...`
    against that same explicit plan path.
 
 Keep provider features such as plan modes, subagents, plugins, or auto-memory
@@ -142,9 +142,9 @@ interactive session.
 - `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
 - `python3 evals/scripts/harness.py --help`
 - `python3 evals/scripts/harness.py validate`
-- `python3 src/execute/scripts/plan_loop.py --help`
-- `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
-- `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/loop.py --help`
+- `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
 
 See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
 reference grounding, and `REFINE.md` for the current cleanup track.

@@ -91,7 +91,7 @@ are not created by `init-run`:
 - `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
   scaffolds a run directly through the harness.
 
-`src/execute/scripts/plan_loop.py` is an adjacent plan-driven helper, not part
+`src/execute/scripts/loop.py` is an adjacent plan-driven helper, not part
 of eval grading or the eval governance contract.
 
 ## Verification

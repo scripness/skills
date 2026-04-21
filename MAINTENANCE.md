@@ -56,12 +56,12 @@ durable improvements discovered while using copied skills in downstream repos.
 - `python3 evals/scripts/harness.py init-run --run-id <run-id> --selection must-run`
   Scaffolds a direct run workspace when you want the harness entrypoint
   instead of the Makefile wrapper.
-- `python3 src/execute/scripts/plan_loop.py --help`
+- `python3 src/execute/scripts/loop.py --help`
   Shows the optional plan-driven helper contract shipped with `src/execute/`.
-- `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Dry-runs the optional execute/verify loop helper against one explicit plan
   path and one explicit external runner.
-- `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Runs the opt-in continuous helper mode that may continue after repairable
   verify failures and requires a strict final verify pass before success.
 

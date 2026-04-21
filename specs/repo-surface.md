@@ -6,13 +6,13 @@ Last verified: 2026-04-21
 # Repo Surface
 
 > Source of truth: `src/`, `plans/`, `Makefile`,
-> `src/execute/scripts/plan_loop.py`, and the top-level docs
+> `src/execute/scripts/loop.py`, and the top-level docs
 > Non-owning trees to ignore unless explicitly in scope: `.git/`, `.tmp/evals/`
 > If this spec contradicts the code, the code is correct — update this spec.
 
 <!-- Review when top-level layout changes -->
 <!-- Review when src/*/agents/openai.yaml changes -->
-<!-- Review when src/execute/scripts/plan_loop.py changes -->
+<!-- Review when src/execute/scripts/loop.py changes -->
 
 ## Overview
 
@@ -63,7 +63,7 @@ Additional shipped local assets:
 - `src/specs/assets/AGENTS.md`
 - `src/specs/assets/specs/README.md`
 - `src/specs/assets/specs/spec-template.md`
-- `src/execute/scripts/plan_loop.py`
+- `src/execute/scripts/loop.py`
 
 ## Plans Directory Semantics
 
@@ -73,9 +73,10 @@ Additional shipped local assets:
   work.
 - In plan-driven work, that explicit plan file is the canonical task record;
   helper logs and other generated artifacts are supporting evidence only.
-- The optional `src/execute/scripts/plan_loop.py` helper may drive continuous
+- The optional `src/execute/scripts/loop.py` helper may drive continuous
   plan execution, but it still reads canonical task state from the plan file
-  rather than owning its own durable state.
+  rather than owning its own durable state, and in continuous mode it should
+  only succeed after strict final review leaves the plan complete.
 - A small number of tracked plan-shaped eval fixtures may also live under
   `plans/` when a skill eval needs a real explicit `plans/*.md` input.
 - Completed historical plan records under `plans/` are still available in the
