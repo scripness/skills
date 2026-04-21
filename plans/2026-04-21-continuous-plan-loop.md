@@ -11,8 +11,8 @@ Extend the optional `src/execute/scripts/plan_loop.py` helper and the owning
 skill contracts so one explicit plan-driven run can continue safely until the
 plan is truly complete: each slice is executed and verified, repairable verify
 failures are fed back into the same plan for another bounded execute pass, and
-the loop only exits successfully after a strict final whole-plan verification
-pass.
+the loop only exits successfully after the verify pass against a complete plan
+returns a strict final `pass`.
 
 ## Scope
 
@@ -116,19 +116,27 @@ pass.
 - [2026-04-21] `rg -n "strict final|pass with risks|continue-after-fail|append.*milestone|final whole-plan|final_outcome|blocked|Progress|Blockers" plans/2026-04-21-continuous-plan-loop.md src/execute/scripts/plan_loop.py src/execute/SKILL.md src/verify/SKILL.md src/plan/assets/plan-template.md REFINE.md AGENTS.md README.md specs/workflow-contract.md specs/repo-surface.md`
   confirmed the plan is anchored to the current shipped surfaces and the open
   helper gap in `REFINE.md`.
-- Run `make validate`.
-- Run `python3 -m py_compile src/execute/scripts/plan_loop.py`.
-- Run `python3 src/execute/scripts/plan_loop.py --help`.
-- Run at least one `--dry-run` invocation against this plan or a small synthetic
-  plan to confirm the CLI remains coherent.
-- Run targeted synthetic non-interactive runner scenarios that prove:
-  - repairable `verify fail` can continue when opt-in mode is enabled and the
-    plan is not blocked
-  - the helper stops on blocking verify failures
-  - strict final review requires a final whole-plan `verify pass`
-  - a final cross-cutting verify failure can append a new bounded follow-up
-    milestone without losing the original context
-- Run `git diff --check`.
+- [2026-04-21] `python3 -m py_compile src/execute/scripts/plan_loop.py`
+  passed.
+- [2026-04-21] `python3 src/execute/scripts/plan_loop.py --help` passed and
+  showed the new `--continue-after-fail` flag plus the strict-final-review
+  exit-code wording.
+- [2026-04-21] `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/2026-04-21-continuous-plan-loop.md --provider-command "./path/to/non-interactive-runner"`
+  passed and reported the current explicit-plan state and next
+  `execute`/`verify` commands without mutating the plan.
+- [2026-04-21] `git diff --check` passed.
+- [2026-04-21] `make validate` passed.
+- [2026-04-21] Targeted synthetic non-interactive runner scenarios executed
+  through a one-off `python3 - <<'PY' ...` smoke harness against
+  `src/execute/scripts/plan_loop.py` proved:
+  - repairable mid-loop `verify fail` reopens work and continues in
+    `--continue-after-fail` mode
+  - a strict completion review that fails can append one bounded follow-up
+    milestone and continue instead of stopping or losing provenance
+  - a blocking `verify fail` stops the helper with `final_outcome="blocked"`
+  - an initially complete plan still runs one strict final review in
+    continuous mode, and `pass_with_risks` reopens bounded work rather than
+    counting as completion
 
 ## Risks
 
@@ -157,14 +165,15 @@ pass.
 ## Progress
 
 - [x] Milestone 1: define the continuous-loop contract
-- [ ] Milestone 2: implement the helper flow in `src/execute/scripts/plan_loop.py`
-- [ ] Milestone 3: sync the owning docs and skill surfaces
-- [ ] Milestone 4: run bounded verification and follow-up
+- [x] Milestone 2: implement the helper flow in `src/execute/scripts/plan_loop.py`
+- [x] Milestone 3: sync the owning docs and skill surfaces
+- [x] Milestone 4: run bounded verification and follow-up
 
 ## Decision Log
 
 - [2026-04-21] Make the final helper review strict: the helper should only
-  exit successfully after a final whole-plan `verify` pass.
+  exit successfully after the verify pass against a complete plan returns
+  `pass`.
 - [2026-04-21] Treat `pass with risks` as insufficient for strict final
   completion even if it remains acceptable for mid-loop continuation.
 - [2026-04-21] Reopen an existing milestone only when the verify finding
@@ -173,6 +182,12 @@ pass.
   a final cross-cutting failure does not map cleanly to any existing milestone.
 - [2026-04-21] Keep the helper's shell exit codes simple and put richer final
   status in structured helper events.
+- [2026-04-21] Treat the verify pass that runs immediately after an execute
+  step which leaves zero remaining milestones as the strict final review
+  instead of adding a second trailing verify invocation.
+- [2026-04-21] When a completion review reopens work, keep the helper's
+  iteration event status at `continue`; reserve `completed` for accepted
+  completion only.
 
 ## Discoveries
 
@@ -185,9 +200,20 @@ pass.
 - [2026-04-21] This repo does not currently ship a dedicated automated test
   layer for helper scripts, so command-based verification and synthetic runner
   scenarios are the smallest meaningful existing test surface.
+- [2026-04-21] The strict completion review does not need a separate extra
+  runner pass after the last slice; the verify pass that first sees a complete
+  plan can serve as the final review as long as it may reopen work.
+- [2026-04-21] An initially complete plan in `--continue-after-fail` mode
+  still needs one strict final review, and a `pass_with_risks` verdict there
+  must reopen bounded work instead of counting as completion.
 
 ## Outcomes / Retrospective
 
 - [2026-04-21] Completed Milestone 1 by writing the explicit implementation
   plan, settling the strict final-review and follow-up-milestone rules, and
   verifying that the plan aligns with the current helper and skill contracts.
+- [2026-04-21] Completed Milestones 2-4 by shipping the opt-in continuous
+  helper flow, syncing the plan-driven execute/verify contracts and repo docs,
+  and validating the result with compile/help/dry-run checks plus targeted
+  synthetic runner scenarios for repairable, blocking, and initial-completion
+  review paths.

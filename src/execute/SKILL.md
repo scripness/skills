@@ -133,6 +133,19 @@ files plus the plan file, persist plan-driven verification findings back into
 that same plan file, and map `verify` outcomes to exit codes the helper can
 judge: `0` = pass, `10` = pass with risks, `20` = fail.
 
+When `--continue-after-fail` is used, the helper may continue after a
+repairable `verify=fail` only when the updated plan is not blocked and still
+shows remaining work. In that opt-in mode, the `verify <plan>` pass that runs
+against a now-complete plan becomes the strict final review and succeeds only
+on `verify=pass`. If the plan is already complete before the next `execute`
+pass would start, the helper runs one strict completion review before exiting.
+
+`--allow-pass-with-risks` applies only to slice-level verify passes. Strict
+final review still requires `pass`. If final review finds a cross-cutting issue
+that does not map cleanly to an existing milestone, `verify` should append one
+new bounded follow-up milestone rather than hide the failure inside unrelated
+history.
+
 ## Quality Bar
 
 - Entry mode was chosen correctly and any anti-trigger was respected.
@@ -144,4 +157,6 @@ judge: `0` = pass, `10` = pass with risks, `20` = fail.
   blocking.
 - Plan-driven work leaves the explicit plan file resumable for the next fresh
   session.
+- In opt-in continuous helper mode, repairable verify failures reopen or append
+  bounded work in the plan instead of being lost in chat or helper logs.
 - The handoff to `verify` is explicit.

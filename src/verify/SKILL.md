@@ -90,11 +90,18 @@ Do not use this skill when:
      record for plan-driven work.
    - Record the dated verdict, findings summary, and supporting command
      evidence in `Verification`.
-   - Add or clear `Blockers` to reflect whether follow-up blocks the next safe
-     `execute` slice.
+   - Add or clear `Blockers` to reflect only whether follow-up blocks the next
+     safe `execute` slice.
    - Record any material repo facts learned during review in `Discoveries`.
    - Correct `Progress` only when review proves the current milestone status in
      the plan is materially inaccurate.
+   - For a repairable verification failure, keep `Blockers` clear and reopen
+     the affected milestone or append one new bounded follow-up milestone so
+     later `execute` work has an explicit slice to take.
+   - For a blocking verification failure, say why the next safe execute slice
+     cannot proceed and record that in `Blockers`.
+   - In a strict final completion review, `pass with risks` is not completion.
+     Reopen or append bounded work when more implementation is still required.
    - Do not implement fixes or broaden into general plan maintenance.
 
 ## Output
@@ -134,6 +141,9 @@ residual risk.
 - When the verification target is an explicit plan file, update only the
   task-local sections needed to keep that plan truthful; do not broaden into
   creating or reshaping the plan itself.
+- When review disproves completion but the work remains repairable, leave the
+  plan executable by reopening or appending one bounded follow-up slice rather
+  than marking the plan blocked by default.
 - If docs drifted during the work, recommend running the `specs` skill.
 - If test truth drifted during the work, recommend running the `tests` skill.
 - This skill is a verifier, not an implementer. It can suggest fixes, but its

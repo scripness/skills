@@ -73,6 +73,9 @@ Additional shipped local assets:
   work.
 - In plan-driven work, that explicit plan file is the canonical task record;
   helper logs and other generated artifacts are supporting evidence only.
+- The optional `src/execute/scripts/plan_loop.py` helper may drive continuous
+  plan execution, but it still reads canonical task state from the plan file
+  rather than owning its own durable state.
 - A small number of tracked plan-shaped eval fixtures may also live under
   `plans/` when a skill eval needs a real explicit `plans/*.md` input.
 - Completed historical plan records under `plans/` are still available in the

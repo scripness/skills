@@ -58,6 +58,7 @@ class PlanState:
 
 @dataclass
 class RunnerResult:
+    label: str
     command: list[str]
     exit_code: int
     stdout_log: str
@@ -81,7 +82,7 @@ def build_parser() -> argparse.ArgumentParser:
             "In plan-driven work, verify must persist its findings back into\n"
             "the same plan file; helper logs are supporting evidence only.\n\n"
             "Expected helper exit codes:\n"
-            "  0 = clean stop or completed plan\n"
+            "  0 = completed plan (strict final review when continuous mode is enabled)\n"
             "  1 = blocked plan, invalid plan state, unacceptable verify verdict, or missing execute/verify plan update\n"
             "  2 = invalid helper usage\n"
             "  3 = external runner failure\n"
@@ -109,9 +110,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Hard stop after this many execute/verify cycles. Default: 25.",
     )
     parser.add_argument(
+        "--continue-after-fail",
+        action="store_true",
+        help=(
+            "Keep looping after a repairable verify=fail by letting execute "
+            "consume the updated plan, and require a strict final verify=pass "
+            "before success."
+        ),
+    )
+    parser.add_argument(
         "--allow-pass-with-risks",
         action="store_true",
-        help="Continue the loop when verify returns pass-with-risks.",
+        help=(
+            "Continue after slice-level verify returns pass-with-risks. "
+            "Strict final review still requires verify=pass."
+        ),
     )
     parser.add_argument(
         "--pass-with-risks-code",
@@ -146,6 +159,21 @@ def build_parser() -> argparse.ArgumentParser:
 
 def emit(event: dict[str, object]) -> None:
     print(json.dumps(event, sort_keys=True), flush=True)
+
+
+def emit_stop(
+    reason: str,
+    *,
+    final_outcome: str,
+    **details: object,
+) -> None:
+    event: dict[str, object] = {
+        "event": "stop",
+        "reason": reason,
+        "final_outcome": final_outcome,
+    }
+    event.update(details)
+    emit(event)
 
 
 def diag(message: str) -> None:
@@ -241,8 +269,11 @@ def run_runner(
     plan_path: Path,
     log_root: Path,
     iteration: int,
+    *,
+    label: str | None = None,
 ) -> RunnerResult:
     command = [*base_command, mode, str(plan_path)]
+    log_label = label or mode
     diag(f"iteration {iteration}: running {' '.join(shlex.quote(part) for part in command)}")
     try:
         completed = subprocess.run(
@@ -256,12 +287,13 @@ def run_runner(
     except OSError as exc:
         raise RuntimeError(f"failed to start external runner: {exc}") from exc
 
-    stdout_log = log_root / f"{iteration:02d}-{mode}.stdout.log"
-    stderr_log = log_root / f"{iteration:02d}-{mode}.stderr.log"
+    stdout_log = log_root / f"{iteration:02d}-{log_label}.stdout.log"
+    stderr_log = log_root / f"{iteration:02d}-{log_label}.stderr.log"
     stdout_log.write_text(completed.stdout, encoding="utf-8")
     stderr_log.write_text(completed.stderr, encoding="utf-8")
 
     return RunnerResult(
+        label=log_label,
         command=command,
         exit_code=completed.returncode,
         stdout_log=str(stdout_log),
@@ -290,8 +322,6 @@ def stop_for_invalid_plan_state(
     verify_result: RunnerResult | None = None,
 ) -> int:
     event: dict[str, object] = {
-        "event": "stop",
-        "reason": reason,
         "plan": str(plan_path),
         "error": str(error),
     }
@@ -303,7 +333,144 @@ def stop_for_invalid_plan_state(
         event["execute"] = execute_result.__dict__
     if verify_result is not None:
         event["verify"] = verify_result.__dict__
-    emit(event)
+    emit_stop(reason, final_outcome="invalid_plan_state", **event)
+    return 1
+
+
+def maybe_run_final_review(
+    *,
+    base_command: list[str],
+    plan_path: Path,
+    log_root: Path,
+    iteration: int,
+    pass_with_risks_code: int,
+    fail_code: int,
+    continue_after_fail: bool,
+    source: str,
+) -> int | None:
+    try:
+        state_before = read_plan_state(plan_path)
+    except ValueError as exc:
+        return stop_for_invalid_plan_state(
+            reason="invalid_plan_before_final_verify",
+            plan_path=plan_path,
+            error=exc,
+            iteration=iteration,
+        )
+
+    try:
+        verify_result = run_runner(
+            base_command,
+            "verify",
+            plan_path,
+            log_root,
+            iteration,
+            label="final-verify",
+        )
+    except RuntimeError as exc:
+        emit_stop(
+            "final_verify_runner_failed_to_start",
+            final_outcome="runner_error",
+            iteration=iteration,
+            source=source,
+            error=str(exc),
+        )
+        return 3
+
+    try:
+        state_after = read_plan_state(plan_path)
+    except ValueError as exc:
+        return stop_for_invalid_plan_state(
+            reason="invalid_plan_after_final_verify",
+            plan_path=plan_path,
+            error=exc,
+            iteration=iteration,
+            state_before=state_before,
+            verify_result=verify_result,
+        )
+
+    plan_changed = state_before.digest != state_after.digest
+    verdict = verify_verdict(
+        verify_result.exit_code,
+        pass_with_risks_code,
+        fail_code,
+    )
+    strict_pass = verdict == "pass"
+    repairable_follow_up = (
+        continue_after_fail
+        and verdict in {"fail", "pass_with_risks"}
+        and not state_after.blocked
+        and state_after.remaining_milestones > 0
+    )
+    stop_reasons: list[str] = []
+    if verdict == "runner_error":
+        stop_reasons.append("final_verify_runner_error")
+    if not plan_changed:
+        stop_reasons.append("missing_final_verify_plan_update")
+    if state_after.blocked:
+        stop_reasons.append("plan_blocked_after_final_verify")
+    if not strict_pass and not repairable_follow_up:
+        if state_after.remaining_milestones == 0 and not state_after.blocked:
+            stop_reasons.append("final_review_did_not_reopen_work")
+        else:
+            stop_reasons.append("strict_final_review_requires_pass")
+
+    status = "completed"
+    if repairable_follow_up:
+        status = "continue"
+    elif stop_reasons:
+        status = "stop"
+
+    emit(
+        {
+            "event": "final_review",
+            "iteration": iteration,
+            "source": source,
+            "status": status,
+            "plan_changed": plan_changed,
+            "verification_verdict": verdict,
+            "stop_reasons": stop_reasons,
+            "state_before": state_before.__dict__,
+            "state_after": state_after.__dict__,
+            "verify": verify_result.__dict__,
+        }
+    )
+
+    if verdict == "runner_error":
+        return 3
+    if not plan_changed:
+        return 1
+    if strict_pass:
+        emit_stop(
+            "plan_completed_after_final_verify",
+            final_outcome="completed_strict",
+            iteration=iteration,
+            source=source,
+            state=state_after.__dict__,
+            verify=verify_result.__dict__,
+        )
+        return 0
+    if state_after.blocked:
+        emit_stop(
+            "plan_blocked_after_final_verify",
+            final_outcome="blocked",
+            iteration=iteration,
+            source=source,
+            state=state_after.__dict__,
+            verify=verify_result.__dict__,
+        )
+        return 1
+    if repairable_follow_up:
+        return None
+    emit_stop(
+        "strict_final_review_failed",
+        final_outcome="incomplete",
+        iteration=iteration,
+        source=source,
+        state=state_after.__dict__,
+        verify=verify_result.__dict__,
+        verification_verdict=verdict,
+    )
     return 1
 
 
@@ -332,6 +499,7 @@ def main() -> int:
         "provider_command": base_command,
         "initial_state": initial_state.__dict__,
         "max_iterations": args.max_iterations,
+        "continue_after_fail": args.continue_after_fail,
         "allow_pass_with_risks": args.allow_pass_with_risks,
     }
 
@@ -350,24 +518,34 @@ def main() -> int:
     emit(start_event)
 
     if initial_state.blocked:
-        emit(
-            {
-                "event": "stop",
-                "reason": "plan_blocked_before_loop",
-                "state": initial_state.__dict__,
-            }
+        emit_stop(
+            "plan_blocked_before_loop",
+            final_outcome="blocked",
+            state=initial_state.__dict__,
         )
         return 1
 
     if initial_state.remaining_milestones == 0:
-        emit(
-            {
-                "event": "stop",
-                "reason": "plan_already_complete",
-                "state": initial_state.__dict__,
-            }
-        )
-        return 0
+        if args.continue_after_fail:
+            exit_code = maybe_run_final_review(
+                base_command=base_command,
+                plan_path=plan_path,
+                log_root=log_root,
+                iteration=0,
+                pass_with_risks_code=args.pass_with_risks_code,
+                fail_code=args.fail_code,
+                continue_after_fail=args.continue_after_fail,
+                source="initial_complete_plan",
+            )
+            if exit_code is not None:
+                return exit_code
+        else:
+            emit_stop(
+                "plan_already_complete",
+                final_outcome="completed",
+                state=initial_state.__dict__,
+            )
+            return 0
 
     for iteration in range(1, args.max_iterations + 1):
         try:
@@ -380,37 +558,45 @@ def main() -> int:
                 iteration=iteration,
             )
         if state_before.blocked:
-            emit(
-                {
-                    "event": "stop",
-                    "reason": "plan_blocked_before_execute",
-                    "iteration": iteration,
-                    "state": state_before.__dict__,
-                }
+            emit_stop(
+                "plan_blocked_before_execute",
+                final_outcome="blocked",
+                iteration=iteration,
+                state=state_before.__dict__,
             )
             return 1
 
         if state_before.remaining_milestones == 0:
-            emit(
-                {
-                    "event": "stop",
-                    "reason": "plan_completed_before_execute",
-                    "iteration": iteration,
-                    "state": state_before.__dict__,
-                }
+            if args.continue_after_fail:
+                exit_code = maybe_run_final_review(
+                    base_command=base_command,
+                    plan_path=plan_path,
+                    log_root=log_root,
+                    iteration=iteration,
+                    pass_with_risks_code=args.pass_with_risks_code,
+                    fail_code=args.fail_code,
+                    continue_after_fail=args.continue_after_fail,
+                    source="completed_before_execute",
+                )
+                if exit_code is not None:
+                    return exit_code
+                continue
+            emit_stop(
+                "plan_completed_before_execute",
+                final_outcome="completed",
+                iteration=iteration,
+                state=state_before.__dict__,
             )
             return 0
 
         try:
             execute_result = run_runner(base_command, "execute", plan_path, log_root, iteration)
         except RuntimeError as exc:
-            emit(
-                {
-                    "event": "stop",
-                    "reason": "execute_runner_failed_to_start",
-                    "iteration": iteration,
-                    "error": str(exc),
-                }
+            emit_stop(
+                "execute_runner_failed_to_start",
+                final_outcome="runner_error",
+                iteration=iteration,
+                error=str(exc),
             )
             return 3
 
@@ -439,19 +625,25 @@ def main() -> int:
                     "execute": execute_result.__dict__,
                 }
             )
+            emit_stop(
+                "execute_runner_failed",
+                final_outcome="runner_error",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                execute=execute_result.__dict__,
+            )
             return 3
 
         try:
             verify_result = run_runner(base_command, "verify", plan_path, log_root, iteration)
         except RuntimeError as exc:
-            emit(
-                {
-                    "event": "stop",
-                    "reason": "verify_runner_failed_to_start",
-                    "iteration": iteration,
-                    "error": str(exc),
-                    "execute": execute_result.__dict__,
-                }
+            emit_stop(
+                "verify_runner_failed_to_start",
+                final_outcome="runner_error",
+                iteration=iteration,
+                error=str(exc),
+                execute=execute_result.__dict__,
             )
             return 3
 
@@ -473,8 +665,20 @@ def main() -> int:
             args.pass_with_risks_code,
             args.fail_code,
         )
+        completion_review = (
+            args.continue_after_fail and state_after_execute.remaining_milestones == 0
+        )
         acceptable = verdict == "pass" or (
-            verdict == "pass_with_risks" and args.allow_pass_with_risks
+            verdict == "pass_with_risks"
+            and args.allow_pass_with_risks
+            and not completion_review
+        )
+        repairable_failure = (
+            args.continue_after_fail
+            and verdict in {"fail", "pass_with_risks"}
+            and not state_after_verify.blocked
+            and state_after_verify.remaining_milestones > 0
+            and (verdict == "fail" or completion_review)
         )
         stop_reasons: list[str] = []
         if verdict == "runner_error":
@@ -485,11 +689,27 @@ def main() -> int:
             stop_reasons.append("missing_verify_plan_update")
         if state_after_verify.blocked:
             stop_reasons.append("plan_blocked_after_verify")
-        if not acceptable:
+        if (
+            completion_review
+            and verdict in {"fail", "pass_with_risks"}
+            and not state_after_verify.blocked
+            and state_after_verify.remaining_milestones == 0
+        ):
+            stop_reasons.append("final_review_did_not_reopen_work")
+        elif (
+            args.continue_after_fail
+            and verdict == "fail"
+            and not state_after_verify.blocked
+            and state_after_verify.remaining_milestones == 0
+        ):
+            stop_reasons.append("verify_fail_did_not_reopen_work")
+        elif not acceptable and not repairable_failure:
             stop_reasons.append("unacceptable_verify_verdict")
         status = "continue"
         if stop_reasons:
             status = "stop"
+        elif completion_review and acceptable:
+            status = "completed"
         elif state_after_verify.remaining_milestones == 0:
             status = "completed"
 
@@ -500,6 +720,7 @@ def main() -> int:
                 "status": status,
                 "plan_changed": plan_changed,
                 "verify_plan_changed": verify_plan_changed,
+                "completion_review": completion_review,
                 "verification_verdict": verdict,
                 "stop_reasons": stop_reasons,
                 "state_before": state_before.__dict__,
@@ -511,16 +732,88 @@ def main() -> int:
         )
 
         if verdict == "runner_error":
+            emit_stop(
+                "verify_runner_error",
+                final_outcome="runner_error",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                state_after_verify=state_after_verify.__dict__,
+                execute=execute_result.__dict__,
+                verify=verify_result.__dict__,
+            )
             return 3
         if not plan_changed:
+            emit_stop(
+                "missing_execute_plan_update",
+                final_outcome="incomplete",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                state_after_verify=state_after_verify.__dict__,
+                execute=execute_result.__dict__,
+                verify=verify_result.__dict__,
+            )
             return 1
         if not verify_plan_changed:
+            emit_stop(
+                "missing_verify_plan_update",
+                final_outcome="incomplete",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                state_after_verify=state_after_verify.__dict__,
+                execute=execute_result.__dict__,
+                verify=verify_result.__dict__,
+            )
             return 1
         if state_after_verify.blocked:
+            emit_stop(
+                "plan_blocked_after_verify",
+                final_outcome="blocked",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                state_after_verify=state_after_verify.__dict__,
+                execute=execute_result.__dict__,
+                verify=verify_result.__dict__,
+            )
             return 1
+        if repairable_failure:
+            continue
         if not acceptable:
+            stop_reason = "unacceptable_verify_verdict"
+            if stop_reasons:
+                stop_reason = stop_reasons[-1]
+            emit_stop(
+                stop_reason,
+                final_outcome="incomplete",
+                iteration=iteration,
+                state_before=state_before.__dict__,
+                state_after_execute=state_after_execute.__dict__,
+                state_after_verify=state_after_verify.__dict__,
+                execute=execute_result.__dict__,
+                verify=verify_result.__dict__,
+                verification_verdict=verdict,
+            )
             return 1
+        if completion_review:
+            emit_stop(
+                "plan_completed_after_verify",
+                final_outcome="completed_strict",
+                iteration=iteration,
+                state=state_after_verify.__dict__,
+                verify=verify_result.__dict__,
+            )
+            return 0
         if state_after_verify.remaining_milestones == 0:
+            emit_stop(
+                "plan_completed_after_verify",
+                final_outcome="completed",
+                iteration=iteration,
+                state=state_after_verify.__dict__,
+                verify=verify_result.__dict__,
+            )
             return 0
 
     try:
@@ -531,13 +824,11 @@ def main() -> int:
             plan_path=plan_path,
             error=exc,
         )
-    emit(
-        {
-            "event": "stop",
-            "reason": "max_iterations_reached",
-            "state": final_state.__dict__,
-            "max_iterations": args.max_iterations,
-        }
+    emit_stop(
+        "max_iterations_reached",
+        final_outcome="max_iterations",
+        state=final_state.__dict__,
+        max_iterations=args.max_iterations,
     )
     return 4
 

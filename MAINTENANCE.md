@@ -61,6 +61,9 @@ durable improvements discovered while using copied skills in downstream repos.
 - `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
   Dry-runs the optional execute/verify loop helper against one explicit plan
   path and one explicit external runner.
+- `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+  Runs the opt-in continuous helper mode that may continue after repairable
+  verify failures and requires a strict final verify pass before success.
 
 ## Eval Refresh
 

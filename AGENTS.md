@@ -62,7 +62,7 @@ When copied into a target repo, these directories are intended to live under
 - `src/plan/` also ships `assets/plan-template.md`.
 - `src/specs/` also ships bootstrap assets for `AGENTS.md` and `specs/`.
 - `src/execute/` also ships `scripts/plan_loop.py` as an optional explicit-plan
-  execute/verify helper.
+  execute/verify helper with an opt-in continuous repair mode.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
@@ -88,9 +88,10 @@ When copied into a target repo, these directories are intended to live under
   stale, or clearly below what safe execution and verification require.
 - `verify`: adversarially judge one concrete plan, implementation slice, diff,
   or claim; when verifying an explicit plan file, write the review back to that
-  same plan file so it remains the canonical task record; return findings
-  first; treat missing required `specs` or `tests` sync as `fail` when the
-  obligation is clear.
+  same plan file so it remains the canonical task record; reopen or append one
+  bounded follow-up slice when review disproves completion but the work remains
+  repairable; return findings first; treat missing required `specs` or `tests`
+  sync as `fail` when the obligation is clear.
 
 Keep generic `plans/*.md` references where they are part of the shipped
 `plan` and `execute` contracts. Never guess the latest plan file.
@@ -151,6 +152,7 @@ Completed historical records also remain under `plans/`.
 | Run validation directly | `python3 evals/scripts/harness.py validate` |
 | Show the optional plan-loop helper | `python3 src/execute/scripts/plan_loop.py --help` |
 | Dry-run the optional plan-loop helper | `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
+| Run the optional continuous plan-loop helper | `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"` |
 | Check git status | `git status --short` |
 
 ## Boundaries

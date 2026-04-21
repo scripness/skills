@@ -38,6 +38,8 @@ target repos.
   plan-driven
 - keep that explicit plan file as the canonical task record for plan-driven
   work
+- keep helper automation optional and file-backed, including opt-in continuous
+  helper flows that still rely on plan state rather than chat memory
 - use manual copy as the baseline distribution and refresh workflow
 
 ## Truth Layers
@@ -65,7 +67,8 @@ target repos.
   for the current execution slice.
 - `verify` owns adversarial review of a concrete plan, implementation slice,
   diff, or claim, and in plan-driven work writes its findings back into the
-  same explicit plan file.
+  same explicit plan file, reopening or appending one bounded follow-up slice
+  when repairable review failures disprove completion.
 - `specs` owns repo-truth bootstrap and sync in `AGENTS.md`, `CLAUDE.md`, and
   `specs/`.
 - `tests` owns test-truth bootstrap and sync when coverage is missing, stale,
@@ -88,6 +91,9 @@ target repos.
   `plans/YYYY-MM-DD-short-task-slug.md` path.
 - In plan-driven work, that explicit plan file remains the canonical task
   record across `plan`, `execute`, and `verify`.
+- `src/execute/scripts/plan_loop.py` may optionally continue after repairable
+  verify failures and run one strict final whole-plan verify pass, but it
+  remains a thin helper rather than workflow truth.
 - Never guess the latest plan file.
 - Completed historical plan records under `plans/` are available as background
   source material but are not the default operational reading chain.

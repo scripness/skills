@@ -35,7 +35,8 @@ background, but they are not the default operational reading chain.
 - shared eval surface: `src/<skill>/evals/evals.json`, `evals/runtime.json`,
   `evals/fixtures/cryptoli.json`, and `evals/scripts/harness.py`
 - thin repo maintenance wrapper: `Makefile`
-- optional explicit-plan execute/verify helper:
+- optional explicit-plan execute/verify helper with opt-in continuous
+  repair flow and strict final review:
   `src/execute/scripts/plan_loop.py`
 - `CLAUDE.md` as a symlink mirror to `AGENTS.md`
 
@@ -94,7 +95,8 @@ ships the optional `scripts/plan_loop.py` helper.
   resumable, then run the smallest meaningful checks
 - `verify`: adversarially review a concrete plan, implementation slice, diff,
   or claim, return findings first, and in plan-driven work write the review
-  back into the same explicit plan file
+  back into the same explicit plan file so repairable failures can reopen or
+  append bounded follow-up work
 
 ## Target Repo Flow
 
@@ -112,6 +114,10 @@ ships the optional `scripts/plan_loop.py` helper.
    that exact path, update the plan after the slice, and hand back to
    `verify` so the verification findings stay in that same canonical task
    record.
+8. If you want one opt-in helper run to carry repairable verify failures and a
+   strict final completion review, use
+   `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail ...`
+   against that same explicit plan path.
 
 Keep provider features such as plan modes, subagents, plugins, or auto-memory
 optional only. The baseline workflow should work from repo files plus a normal
@@ -138,6 +144,7 @@ interactive session.
 - `python3 evals/scripts/harness.py validate`
 - `python3 src/execute/scripts/plan_loop.py --help`
 - `python3 src/execute/scripts/plan_loop.py --dry-run --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
+- `python3 src/execute/scripts/plan_loop.py --yes --continue-after-fail --plan plans/<file>.md --provider-command "./path/to/non-interactive-runner"`
 
 See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
 reference grounding, and `REFINE.md` for the current cleanup track.
