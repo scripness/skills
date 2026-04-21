@@ -55,13 +55,18 @@ repo, and remain easy to use locally while editing this source repo.
   source skills.
 - Synced repo-truth docs, skill contracts, and bootstrap assets for the new
   portability and workflow clarifications.
+- Synced skill-local agent shims and eval metadata wherever contract changes
+  require shipped-surface follow-through.
 - Updated `consult`, `plan`, `execute`, and `verify` contract expectations in
   the plan so the contract-tightening slice also captures the approved
   baton-pass improvements before implementation starts.
 - Updated `tests` eval metadata and any owning eval-harness docs/runtime
-  metadata needed for the broader frontend/UI/e2e must-run coverage addition.
-- Verification evidence proving the copied execute helper surface works from a
-  simulated target layout.
+  metadata needed for the broader frontend/UI/e2e must-run coverage addition,
+  with `evals/runtime.json` selecting the broader case as the tests must-run
+  workflow and the narrower backend-only case retained as non-must-run
+  validation when it still adds signal.
+- Verification evidence proving the copied execute helper surface and copied
+  dashboard passthrough user mode work from a simulated target layout.
 
 ## Repo Context
 
@@ -70,20 +75,26 @@ repo, and remain easy to use locally while editing this source repo.
   copy-readiness and workflow-clarity changes before downstream copy into
   `~/Code/cryptoli`.
 - Owning code paths: `src/execute/scripts/loop.py`,
-  `src/consult/SKILL.md`, `src/plan/SKILL.md`,
+  `src/consult/SKILL.md`, `src/consult/agents/openai.yaml`,
+  `src/plan/SKILL.md`, `src/plan/agents/openai.yaml`,
   `src/plan/assets/plan-template.md`, `src/execute/SKILL.md`,
-  `src/verify/SKILL.md`,
+  `src/execute/agents/openai.yaml`, `src/verify/SKILL.md`,
+  `src/verify/agents/openai.yaml`,
   `src/execute/scripts/providers/codex_loop.py`,
   `src/execute/scripts/providers/codex_loop_dashboard.py`,
-  `src/tests/evals/evals.json`
+  `src/consult/evals/evals.json`, `src/execute/evals/evals.json`,
+  `src/plan/evals/evals.json`, `src/tests/evals/evals.json`,
+  `src/verify/evals/evals.json`
 - Owning spec paths: `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
   `specs/workflow-contract.md`, `specs/repo-surface.md`,
   `specs/evaluation-harness.md`, `src/specs/SKILL.md`,
   `src/specs/assets/AGENTS.md`, `evals/README.md`
-- Owning test paths: `src/tests/evals/evals.json`, `evals/runtime.json`,
-  `evals/fixtures/cryptoli.json`; there is still no dedicated automated
-  helper-test suite, so rely on focused mechanical validation plus synthetic
-  copied-layout smoke checks
+- Owning eval/test paths: `src/consult/evals/evals.json`,
+  `src/execute/evals/evals.json`, `src/plan/evals/evals.json`,
+  `src/tests/evals/evals.json`, `src/verify/evals/evals.json`,
+  `evals/runtime.json`, `evals/fixtures/cryptoli.json`; there is still no
+  dedicated automated helper-test suite, so rely on focused mechanical
+  validation, eval-workspace refresh, and synthetic copied-layout smoke checks
 - Related docs and commands: `src/consult/SKILL.md`, `src/execute/SKILL.md`,
   `src/plan/SKILL.md`, `src/tests/SKILL.md`, `src/verify/SKILL.md`,
   `make validate`
@@ -109,30 +120,41 @@ leaving drift behind.
   contract changes.
 - `tests`: No dedicated automated helper-test layer exists today. Use focused
   mechanical checks instead: `py_compile`, `make validate`, source-layout dry
-  runs, and copied-layout smoke checks against temporary workspaces. If a
-  durable test-layer addition becomes necessary, stop and reassess before
-  inventing one casually.
+  runs, copied-layout user-mode and runner-mode smoke checks against temporary
+  workspaces, and eval-workspace refresh plus artifact review when a slice
+  changes a shipped skill contract, `agents/openai.yaml`, `evals/evals.json`,
+  or eval-harness governance metadata. Milestone 5 should update
+  `src/tests/evals/evals.json` with one broader cryptoli layer-selection case,
+  switch `evals/runtime.json` to select that broader case as the tests
+  must-run workflow, and keep the narrower backend-only workflow case as
+  non-must-run validation if it still adds signal.
 
 ## Milestones
 
 1. Portability hardening: make the Codex provider wrappers resolve repo/skill
-   paths correctly in both source and copied layouts.
+   paths correctly in both source and copied layouts, including copied
+   user-mode proof for `codex_loop.py` and `codex_loop_dashboard.py`.
 2. Local mirror + repo-truth sync: add `.agents/skills` symlink support and
    update repo docs/specs to describe source-of-truth vs local mirror clearly.
-3. Contract tightening: update the relevant skills and AGENTS bootstrap asset
-   for explicit `specs`/`tests` follow-through, applicable test layers,
-   discovery promotion, Git naming, and preferred independent-pass behavior for
-   `consult` and `verify` with fresh-session fallback, including explicit
-   compare-and-synthesize guidance when both the main agent and an independent
-   pass are available. Fold in the approved baton-pass improvements here:
-   structured `consult -> plan` carry-forward, decision-complete next slices,
-   `execute` bounce on weak slice contracts, `verify(plan)` plan-quality
-   failure for weak slices, and slice-level `specs` / `tests` exit criteria.
-4. Eval coverage addition: broaden the `tests` skill eval surface so the
+3. Consult/verify handoff tightening: update `consult`, `verify`,
+   `src/plan/assets/plan-template.md`, and any owning shims/evals for
+   structured `consult -> plan` carry-forward, durable discovery promotion,
+   preferred independent-pass behavior with fresh-session fallback, and
+   explicit compare-and-synthesize guidance when both the main agent and an
+   independent pass are available.
+4. Plan/execute/Git tightening: update `plan`, `execute`, the relevant
+   `verify(plan)` slice-quality rules, and the AGENTS bootstrap Git section so
+   future plans demand decision-complete next slices, `execute` bounces on
+   under-specified work, `verify(plan)` fails weak slice contracts, and
+   slice-level `specs` / `tests` exit criteria are explicit.
+5. Eval coverage addition: broaden the `tests` skill eval surface so the
    frontend/UI/e2e layer-selection expectation is represented in tracked eval
-   metadata and any owning harness docs/runtime mirror.
-5. Validation: run bounded checks in the source repo and a synthetic copied
-   layout to prove the shipped surface is copy-safe.
+   metadata, keep the narrower backend-only case as non-must-run validation
+   when it still adds signal, and update `evals/runtime.json` so the broader
+   case becomes the selected tests must-run workflow.
+6. Validation: run bounded checks in the source repo and a synthetic copied
+   layout, then scaffold and review fresh eval workspaces for the changed
+   skill/eval surfaces so the shipped surface is both copy-safe and truth-synced.
 
 ## Verification
 
@@ -150,12 +172,22 @@ record the provenance here plus in `Decision Log`.
 - Run `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan <plan>`.
 - Run `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --dry-run --plan <plan>`.
 - Run `make validate`.
+- Run `make eval-init-run RUN_ID=<run-id> SELECTION=must-run SKILL="<changed skills>"`
+  or the equivalent direct harness command for each changed skill/eval surface,
+  then review the generated artifacts before calling the work done.
+- Run a temporary copied-layout smoke check that executes
+  `.agents/skills/execute/scripts/providers/codex_loop.py --dry-run --plan <plan>`
+  and
+  `.agents/skills/execute/scripts/providers/codex_loop_dashboard.py --plain --dry-run --plan <plan>`.
 - Run a temporary copied-layout smoke check that executes
   `.agents/skills/execute/scripts/providers/codex_loop.py --runner ...` and
   proves the resolved repo root and referenced skill paths are correct after
   copy.
 - Inspect the updated `tests` eval surface and confirm the broader frontend/UI
-  or e2e coverage expectation is now represented in tracked eval truth.
+  or e2e coverage expectation is now represented in tracked eval truth, with
+  `evals/runtime.json` selecting the broader tests case and the narrower
+  backend-only case retained only as non-must-run validation when it still
+  adds signal.
 
 ## Risks
 
@@ -201,9 +233,10 @@ instead of overwriting unrelated historical progress.
 
 - [ ] Milestone 1 - Portability hardening
 - [ ] Milestone 2 - Local mirror + repo-truth sync
-- [ ] Milestone 3 - Contract tightening
-- [ ] Milestone 4 - Eval coverage addition
-- [ ] Milestone 5 - Validation
+- [ ] Milestone 3 - Consult/verify handoff tightening
+- [ ] Milestone 4 - Plan/execute/Git tightening
+- [ ] Milestone 5 - Eval coverage addition
+- [ ] Milestone 6 - Validation
 
 ## Decision Log
 
@@ -227,6 +260,11 @@ instead of overwriting unrelated historical progress.
   on under-specified work, `verify(plan)` plan-quality failure, and slice-level
   `specs` / `tests` exit criteria. Do not import heavier template additions
   that would duplicate state or complicate simple tasks.
+- [2026-04-21] Replace the current selected tests must-run workflow case in
+  `evals/runtime.json` with one broader cryptoli layer-selection case, while
+  keeping the narrower backend-only case as non-must-run validation if it
+  continues to add signal. This keeps the must-run surface compact at one
+  high-signal workflow case per skill while preserving extra validation depth.
 
 ## Discoveries
 
