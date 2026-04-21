@@ -76,8 +76,9 @@ When copied into a target repo, these directories are intended to live under
 - `consult`: clarify current behavior, viable options, risks, and the safest
   next move when the work is not yet clear enough to execute or plan.
 - `execute`: implement one bounded task directly or one bounded slice from one
-  explicit plan path, run the smallest meaningful checks, complete required
-  `specs` or `tests` follow-through, and hand off to `verify`.
+  explicit plan path, read the current plan context before choosing the slice,
+  run the smallest meaningful checks, complete required `specs` or `tests`
+  follow-through, update the plan in place, and hand off to `verify`.
 - `plan`: create or maintain one explicit
   `plans/YYYY-MM-DD-short-task-slug.md` file when durable task state is needed
   across sessions, milestones, or review loops.
@@ -86,8 +87,10 @@ When copied into a target repo, these directories are intended to live under
 - `tests`: bootstrap or sync executable truth when test coverage is missing,
   stale, or clearly below what safe execution and verification require.
 - `verify`: adversarially judge one concrete plan, implementation slice, diff,
-  or claim; return findings first; treat missing required `specs` or `tests`
-  sync as `fail` when the obligation is clear.
+  or claim; when verifying an explicit plan file, write the review back to that
+  same plan file so it remains the canonical task record; return findings
+  first; treat missing required `specs` or `tests` sync as `fail` when the
+  obligation is clear.
 
 Keep generic `plans/*.md` references where they are part of the shipped
 `plan` and `execute` contracts. Never guess the latest plan file.

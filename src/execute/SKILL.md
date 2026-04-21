@@ -42,6 +42,9 @@ Do not use this skill when:
 2. Read repo truth before editing.
    - Read `AGENTS.md`, the relevant `specs/*`, the affected code and tests, and
      the explicit plan file when present.
+   - In plan-driven mode, read the current `Blockers`, `Progress`,
+     `Decision Log`, `Discoveries`, `Verification`, and `Open Questions`
+     before choosing the slice.
    - In plan-driven mode, identify the next unfinished milestone or other
      bounded slice.
    - Identify any required `specs` or `tests` follow-through from repo truth,
@@ -51,6 +54,9 @@ Do not use this skill when:
    - In direct mode, choose the smallest implementation slice that can be
      completed safely in the current session.
    - In plan-driven mode, implement only one milestone or other bounded slice.
+   - If current blockers or prior verification findings make the next
+     unfinished milestone unsafe or mislabeled, stop or narrow the slice
+     instead of pushing through.
    - Do not continue into the next milestone even if more work is obvious.
 
 4. Implement the slice.
@@ -80,7 +86,9 @@ Do not use this skill when:
    - Update the explicit plan file in place.
    - Record `Progress`, `Decision Log`, `Discoveries`, `Verification`, and any
      new blockers or scope corrections.
-   - Mark the milestone accurately: complete, partial, or blocked.
+   - Mark the milestone accurately for the execution slice: complete, partial,
+     or blocked, and leave enough truth behind for later `verify` to confirm or
+     correct it.
 
 8. Hand off to `verify`.
    - Return the bounded slice that was completed, the mechanical results, any
@@ -102,6 +110,8 @@ Return:
 ## Rules
 
 - `execute` owns implementation and bounded mechanical checks only.
+- In plan-driven work, do not ignore prior blockers, discoveries, decisions, or
+  verification findings when choosing the next slice.
 - Do not create or reshape durable task state when `plan` is required.
 - Never guess the active or latest plan file.
 - Keep provider features such as plan modes, subagents, or worktrees optional
@@ -119,13 +129,15 @@ contract.
 When used, pass one explicit plan path and one explicit non-interactive
 external runner command. The helper expects that runner to accept
 `execute <plan>` and `verify <plan>` invocations, keep durable state in repo
-files plus the plan file, and map `verify` outcomes to exit codes the helper
-can judge: `0` = pass, `10` = pass with risks, `20` = fail.
+files plus the plan file, persist plan-driven verification findings back into
+that same plan file, and map `verify` outcomes to exit codes the helper can
+judge: `0` = pass, `10` = pass with risks, `20` = fail.
 
 ## Quality Bar
 
 - Entry mode was chosen correctly and any anti-trigger was respected.
 - Repo truth was read before editing.
+- Plan-driven work reads the current plan context before selecting the slice.
 - Only one bounded slice was implemented.
 - Mechanical checks are specific, relevant, and honest about baseline noise.
 - Required `specs`/`tests` follow-through was completed or surfaced as

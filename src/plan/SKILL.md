@@ -59,7 +59,7 @@ Do not use this skill when:
      - repo context and owning code, spec, and test paths
      - explicit sync expectations for `specs` and `tests`
      - milestones or other bounded slices
-     - verification
+     - verification plan plus accumulated execution and verification history
      - risks and open questions
      - blockers
      - progress
@@ -77,7 +77,8 @@ Do not use this skill when:
 
 6. Hand off cleanly.
    - Return the exact plan path.
-   - Tell later `execute` and `verify` sessions to use that exact path.
+   - Tell later `execute` and `verify` sessions to use that exact path and keep
+     task-local truth in that same file.
    - Do not implement code, modify repo truth, or broaden into execution work
      inside `plan`.
 
@@ -101,6 +102,8 @@ Return:
   only.
 - Keep the plan concrete, update-in-place, and specific to the current task
   rather than turning it into a general backlog.
+- Keep the explicit plan file as the canonical task record for plan-driven
+  work.
 - If the task or scope is too unclear to plan safely, stop and surface the
   ambiguity instead of guessing.
 

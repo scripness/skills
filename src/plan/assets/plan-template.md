@@ -4,8 +4,8 @@ Use this file as a living task plan. Keep it updated in place. A fresh session
 should be able to resume from repo truth plus this file alone.
 
 Update `Progress`, `Decision Log`, `Discoveries`, `Verification`, and
-`Blockers` after each bounded slice. Hand off later `execute` and `verify`
-sessions with this exact file path.
+`Blockers` after each bounded slice or plan-driven verification pass. Hand off
+later `execute` and `verify` sessions with this exact file path.
 
 ## Goal
 
@@ -60,6 +60,10 @@ leaving drift behind.
 
 ## Verification
 
+Keep planned proof points here, then append dated execution and verification
+results, findings, verdicts, and remaining gaps so later sessions can resume
+from this file alone.
+
 - [Command, inspection pass, or evidence that should prove the slice worked]
 - [Command, inspection pass, or evidence that should prove docs, specs, and
   tests stayed aligned]
@@ -76,9 +80,15 @@ leaving drift behind.
 
 ## Blockers
 
+Use this section for anything that blocks the next safe execute slice,
+including unresolved verification failures.
+
 - None currently.
 
 ## Progress
+
+Reflect the current task state for each milestone. If later verification proves
+that an earlier completion claim was too optimistic, correct it here.
 
 - [ ] Milestone 1
 - [ ] Milestone 2

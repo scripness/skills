@@ -146,6 +146,7 @@
       },
       "assertions": [
         "Uses the explicit plan path rather than guessing another plan file.",
+        "Reads the current plan context, including blockers and verification notes, before choosing the slice.",
         "Identifies Milestone 3 as the next unfinished slice.",
         "Implements only that slice and stops before Milestone 4.",
         "Updates Progress, Decision Log, Discoveries, and Verification in the plan.",

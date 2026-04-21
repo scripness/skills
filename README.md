@@ -44,8 +44,8 @@ background, but they are not the default operational reading chain.
 - `AGENTS.md` and `specs/` = repo truth
 - checks and tests = executable truth
 - `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
-- `plans/*.md` = task truth plus plan-shaped eval fixtures used by tracked
-  skill evals
+- `plans/*.md` = canonical task truth for plan-driven work plus plan-shaped
+  eval fixtures used by tracked skill evals
 - code and checked-in docs = implemented reality
 - `.tmp/evals/` = generated local artifacts
 
@@ -90,9 +90,11 @@ ships the optional `scripts/plan_loop.py` helper.
 - `plan`: create or maintain one explicit
   `plans/YYYY-MM-DD-short-task-slug.md` file when work needs durable state
 - `execute`: implement one bounded task directly or one bounded slice from one
-  explicit plan file, then run the smallest meaningful checks
+  explicit plan file, using the current plan context to stay bounded and
+  resumable, then run the smallest meaningful checks
 - `verify`: adversarially review a concrete plan, implementation slice, diff,
-  or claim and return findings first
+  or claim, return findings first, and in plan-driven work write the review
+  back into the same explicit plan file
 
 ## Target Repo Flow
 
@@ -108,7 +110,8 @@ ships the optional `scripts/plan_loop.py` helper.
    explicit `plans/YYYY-MM-DD-short-task-slug.md` path.
 7. In plan-driven work, run `verify` on the plan, then run `execute` against
    that exact path, update the plan after the slice, and hand back to
-   `verify`.
+   `verify` so the verification findings stay in that same canonical task
+   record.
 
 Keep provider features such as plan modes, subagents, plugins, or auto-memory
 optional only. The baseline workflow should work from repo files plus a normal

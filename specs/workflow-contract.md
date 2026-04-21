@@ -1,6 +1,6 @@
 ---
 Status: Shipped
-Last verified: 2026-04-20
+Last verified: 2026-04-21
 ---
 
 # Workflow Contract
@@ -36,6 +36,8 @@ target repos.
 - use `specs` for repo-truth sync and `tests` for test-truth sync
 - use one explicit `plans/YYYY-MM-DD-short-task-slug.md` path when work becomes
   plan-driven
+- keep that explicit plan file as the canonical task record for plan-driven
+  work
 - use manual copy as the baseline distribution and refresh workflow
 
 ## Truth Layers
@@ -59,9 +61,11 @@ target repos.
 - `plan` owns one explicit plan file when durable task state is needed across
   sessions, milestones, or review loops.
 - `execute` owns one bounded implementation slice plus the smallest meaningful
-  checks and required `specs` or `tests` follow-through.
+  checks, required `specs` or `tests` follow-through, and truthful plan updates
+  for the current execution slice.
 - `verify` owns adversarial review of a concrete plan, implementation slice,
-  diff, or claim.
+  diff, or claim, and in plan-driven work writes its findings back into the
+  same explicit plan file.
 - `specs` owns repo-truth bootstrap and sync in `AGENTS.md`, `CLAUDE.md`, and
   `specs/`.
 - `tests` owns test-truth bootstrap and sync when coverage is missing, stale,
@@ -82,6 +86,8 @@ target repos.
 
 - For new task work, `plan` and `execute` must use one explicit
   `plans/YYYY-MM-DD-short-task-slug.md` path.
+- In plan-driven work, that explicit plan file remains the canonical task
+  record across `plan`, `execute`, and `verify`.
 - Never guess the latest plan file.
 - Completed historical plan records under `plans/` are available as background
   source material but are not the default operational reading chain.

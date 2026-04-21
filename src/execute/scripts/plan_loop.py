@@ -3,14 +3,19 @@
 
 This script stays intentionally dumb:
 
-- the plan file remains the durable state
+- the plan file remains the canonical task record
 - the external runner stays explicit and non-interactive
+- helper logs are supporting evidence only
+- the helper never writes canonical task state itself
 - the helper never guesses the latest plan or parses model prose for verdicts
 
 The external runner contract is:
 
     <runner> execute <plan-path>
     <runner> verify <plan-path>
+
+When `verify` runs against the explicit plan path, it must persist the
+plan-driven review back into that same plan file.
 
 `verify` must return:
 
@@ -72,10 +77,12 @@ def build_parser() -> argparse.ArgumentParser:
             "      --provider-command \"./bin/run-skill\"\n\n"
             "The external runner must be non-interactive and accept:\n"
             "  ./bin/run-skill execute <plan>\n"
-            "  ./bin/run-skill verify <plan>\n\n"
+            "  ./bin/run-skill verify <plan>\n"
+            "In plan-driven work, verify must persist its findings back into\n"
+            "the same plan file; helper logs are supporting evidence only.\n\n"
             "Expected helper exit codes:\n"
             "  0 = clean stop or completed plan\n"
-            "  1 = blocked plan, invalid plan state, unacceptable verify verdict, or missing plan update\n"
+            "  1 = blocked plan, invalid plan state, unacceptable verify verdict, or missing execute/verify plan update\n"
             "  2 = invalid helper usage\n"
             "  3 = external runner failure\n"
             "  4 = max iterations reached"
@@ -460,6 +467,7 @@ def main() -> int:
                 execute_result=execute_result,
                 verify_result=verify_result,
             )
+        verify_plan_changed = state_after_execute.digest != state_after_verify.digest
         verdict = verify_verdict(
             verify_result.exit_code,
             args.pass_with_risks_code,
@@ -468,14 +476,32 @@ def main() -> int:
         acceptable = verdict == "pass" or (
             verdict == "pass_with_risks" and args.allow_pass_with_risks
         )
+        stop_reasons: list[str] = []
+        if verdict == "runner_error":
+            stop_reasons.append("verify_runner_error")
+        if not plan_changed:
+            stop_reasons.append("missing_execute_plan_update")
+        if not verify_plan_changed:
+            stop_reasons.append("missing_verify_plan_update")
+        if state_after_verify.blocked:
+            stop_reasons.append("plan_blocked_after_verify")
+        if not acceptable:
+            stop_reasons.append("unacceptable_verify_verdict")
+        status = "continue"
+        if stop_reasons:
+            status = "stop"
+        elif state_after_verify.remaining_milestones == 0:
+            status = "completed"
 
         emit(
             {
                 "event": "iteration",
                 "iteration": iteration,
-                "status": "continue" if acceptable else "stop",
+                "status": status,
                 "plan_changed": plan_changed,
+                "verify_plan_changed": verify_plan_changed,
                 "verification_verdict": verdict,
+                "stop_reasons": stop_reasons,
                 "state_before": state_before.__dict__,
                 "state_after_execute": state_after_execute.__dict__,
                 "state_after_verify": state_after_verify.__dict__,
@@ -487,6 +513,8 @@ def main() -> int:
         if verdict == "runner_error":
             return 3
         if not plan_changed:
+            return 1
+        if not verify_plan_changed:
             return 1
         if state_after_verify.blocked:
             return 1

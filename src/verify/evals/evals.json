@@ -105,6 +105,7 @@
       "assertions": [
         "Returns findings first and names the verification target.",
         "Checks scope, sequencing, blockers, and explicit specs/tests follow-through against repo truth.",
+        "When the target is an explicit plan path, writes the verdict and any blocking follow-up back into that same plan file.",
         "Runs or skips only the smallest meaningful checks and explains skipped checks honestly.",
         "Ends with a verdict and remaining gaps."
       ],

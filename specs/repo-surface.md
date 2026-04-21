@@ -1,6 +1,6 @@
 ---
 Status: Shipped
-Last verified: 2026-04-20
+Last verified: 2026-04-21
 ---
 
 # Repo Surface
@@ -71,6 +71,8 @@ Additional shipped local assets:
   `plans/YYYY-MM-DD-short-task-slug.md` file.
 - `execute` and `verify` must use the exact named plan path in plan-driven
   work.
+- In plan-driven work, that explicit plan file is the canonical task record;
+  helper logs and other generated artifacts are supporting evidence only.
 - A small number of tracked plan-shaped eval fixtures may also live under
   `plans/` when a skill eval needs a real explicit `plans/*.md` input.
 - Completed historical plan records under `plans/` are still available in the
