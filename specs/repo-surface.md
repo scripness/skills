@@ -41,7 +41,6 @@ system.
 - `README.md`: shipped-system overview
 - `MAINTENANCE.md`: operator loop for maintenance and eval refresh
 - `SOURCES.md`: durable external grounding
-- `REFINE.md`: current post-merge cleanup context
 - `specs/`: durable topic truth for this repo
 - `src/`: source-of-truth skill payloads
 - `evals/`: shared harness metadata, fixture manifests, and harness helper

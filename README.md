@@ -25,7 +25,7 @@ Read this repo in the same order the shipped workflow expects:
 1. `AGENTS.md`
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
-4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` as needed
+4. `MAINTENANCE.md` and `SOURCES.md` as needed
 5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/loop.py`
 
 Completed historical plan records remain available under `plans/` as
@@ -36,7 +36,7 @@ background, but they are not the default operational reading chain.
 - six source skills under `src/`: `consult`, `execute`, `plan`, `specs`,
   `tests`, and `verify`
 - live repo-truth docs: `AGENTS.md`, `specs/`, `README.md`,
-  `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md`
+  `MAINTENANCE.md`, and `SOURCES.md`
 - shared eval surface: `src/<skill>/evals/evals.json`, `evals/runtime.json`,
   `evals/fixtures/cryptoli.json`, and `evals/scripts/harness.py`
 - thin repo maintenance wrapper: `Makefile`
@@ -70,7 +70,6 @@ background, but they are not the default operational reading chain.
 ├── README.md
 ├── MAINTENANCE.md
 ├── SOURCES.md
-├── REFINE.md
 ├── specs/
 ├── evals/
 ├── Makefile
@@ -173,8 +172,8 @@ interactive session.
 - `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plan plans/<file>.md`
 - `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --plan plans/<file>.md`
 
-See `MAINTENANCE.md` for the operator loop, `SOURCES.md` for the durable
-reference grounding, and `REFINE.md` for the current cleanup track.
+See `MAINTENANCE.md` for the operator loop and `SOURCES.md` for the durable
+reference grounding.
 
 ## Historical Records
 

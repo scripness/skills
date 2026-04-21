@@ -6,7 +6,7 @@ Last verified: 2026-04-21
 # Workflow Contract
 
 > Source of truth: `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `SOURCES.md`,
-> `REFINE.md`, and `src/*/SKILL.md`
+> and `src/*/SKILL.md`
 > Non-owning trees to ignore unless explicitly in scope: `.git/`, `.tmp/evals/`
 > If this spec contradicts the code, the code is correct — update this spec.
 
@@ -51,7 +51,6 @@ target repos.
 - `README.md` owns the high-level shipped-system overview.
 - `MAINTENANCE.md` owns the operator loop for updates and eval refresh.
 - `SOURCES.md` owns durable external grounding.
-- `REFINE.md` owns current post-merge cleanup context.
 - `plans/*.md` own task-local plans for new work and also contain a small
   number of tracked plan-shaped eval fixtures plus completed historical build
   records.

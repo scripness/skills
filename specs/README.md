@@ -20,7 +20,7 @@ evaluation harness around it.
 
 | Spec | Owning paths | Purpose |
 |------|--------------|---------|
-| [`workflow-contract.md`](./workflow-contract.md) | `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `SOURCES.md`, `REFINE.md`, `src/*/SKILL.md` | Defines the shipped six-skill workflow, truth layers, refresh workflow, and plan semantics for this repo. |
+| [`workflow-contract.md`](./workflow-contract.md) | `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `SOURCES.md`, `src/*/SKILL.md` | Defines the shipped six-skill workflow, truth layers, refresh workflow, and plan semantics for this repo. |
 
 ## Architecture And Shared Systems
 

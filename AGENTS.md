@@ -13,8 +13,8 @@ Read this repo from shipped reality in this order:
 1. `AGENTS.md`
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
-4. `MAINTENANCE.md`, `SOURCES.md`, and `REFINE.md` when the task needs
-   operator guidance, design grounding, or current cleanup context
+4. `MAINTENANCE.md` and `SOURCES.md` when the task needs operator guidance or
+   design grounding
 5. the shipped surfaces under `src/`, `evals/`, `Makefile`, and
    `src/execute/scripts/loop.py`
 6. `plans/*.md` only when a task names an explicit plan path or when you need
@@ -35,7 +35,6 @@ become a competing workflow contract.
 - `README.md` = overview and usage surface
 - `MAINTENANCE.md` = operator loop for updates and eval refresh
 - `SOURCES.md` = durable external grounding
-- `REFINE.md` = post-merge cleanup context
 - `plans/*.md` = task-local plans for new work, a small number of tracked
   plan-shaped eval fixtures, plus completed historical build records
 - `src/` = source-of-truth skill payloads
@@ -129,7 +128,6 @@ Keep generic `plans/*.md` references where they are part of the shipped
 ├── README.md
 ├── MAINTENANCE.md
 ├── SOURCES.md
-├── REFINE.md
 ├── specs/
 ├── evals/
 │   ├── README.md
