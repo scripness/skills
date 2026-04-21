@@ -22,8 +22,12 @@ repo, and remain easy to use locally while editing this source repo.
   skills from this repo.
 - Tighten the shipped skill/docs/template surface where important guarantees
   are currently only implied: `specs`/`tests` follow-through, applicable test
-  layers, durable discovery promotion, and optional fresh/independent
-  verification.
+  layers, durable discovery promotion, and preferred independent-pass behavior
+  for `consult` and `verify`.
+- For `consult` and `verify`, make the preferred independent-pass policy
+  explicit: the main agent should use the skill itself, dispatch the same skill
+  independently when supported, and compare or synthesize both results rather
+  than blindly trusting either side alone.
 - Update the AGENTS bootstrap template Git section to cover commits, branches,
   and PR titles.
 - Add a broader `tests` eval case covering frontend/UI/e2e layer selection on
@@ -32,7 +36,8 @@ repo, and remain easy to use locally while editing this source repo.
 
 ## Non-Goals
 
-- Redesigning the six-skill model or making subagents a required primitive.
+- Redesigning the six-skill model or making subagents a required primitive for
+  every skill.
 - Building a new automated test framework for helper scripts.
 - Changing the downstream `cryptoli` repo directly in this slice.
 - Rewriting historical plans or broadening into unrelated eval-policy work.
@@ -105,7 +110,10 @@ leaving drift behind.
    update repo docs/specs to describe source-of-truth vs local mirror clearly.
 3. Contract tightening: update the relevant skills and AGENTS bootstrap asset
    for explicit `specs`/`tests` follow-through, applicable test layers,
-   discovery promotion, Git naming, and optional fresh/independent verification.
+   discovery promotion, Git naming, and preferred independent-pass behavior for
+   `consult` and `verify` with fresh-session fallback, including explicit
+   compare-and-synthesize guidance when both the main agent and an independent
+   pass are available.
 4. Eval coverage addition: broaden the `tests` skill eval surface so the
    frontend/UI/e2e layer-selection expectation is represented in tracked eval
    metadata and any owning harness docs/runtime mirror.
@@ -143,6 +151,12 @@ record the provenance here plus in `Decision Log`.
   or help surface still hardcoded to `src/...`.
 - Adding local `.agents/skills` support without updating the repo truth, which
   would create a misleading second apparent source of truth.
+- Over-correcting and turning `consult` or `verify` into subagent-required
+  workflows instead of keeping independent passes as the preferred path and
+  fresh-session reuse as the fallback.
+- Letting the main agent defer too much to a subagent result even when the main
+  session has broader context, which would weaken accuracy instead of improving
+  it.
 
 ## Open Questions
 
@@ -183,6 +197,14 @@ instead of overwriting unrelated historical progress.
   same slice instead of deferring it, because the current portability pass is
   already tightening the copy contract and workflow guarantees before
   downstream rollout.
+- [2026-04-21] Treat independent subagent dispatch as the preferred accuracy
+  policy for `consult` and `verify` only, while keeping the rest of the
+  workflow provider-agnostic and file-backed with fresh-session fallback.
+- [2026-04-21] When `consult` or `verify` uses an independent pass, require the
+  main agent to also apply the skill itself and compare or synthesize the two
+  results, because the main session may hold broader context while the
+  independent pass contributes reduced anchoring and better adversarial
+  pressure.
 
 ## Discoveries
 
