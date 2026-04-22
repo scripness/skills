@@ -33,7 +33,8 @@ contract, and it scaffolds repeatable local run workspaces under
   `src/<skill>/evals/evals.json`
 - shared runtime metadata, fixture manifests, and the harness helper live under
   repo-root `evals/`
-- `Makefile` delegates to the harness script instead of duplicating its logic
+- `Makefile` includes thin repo-root maintenance targets; the eval-related
+  targets delegate to the harness script instead of duplicating its logic
 - tracked eval truth and generated run artifacts stay in different trees
 
 ## Tracked Inputs
@@ -44,7 +45,8 @@ contract, and it scaffolds repeatable local run workspaces under
 - `evals/fixtures/cryptoli.json`: pinned real-repo fixture manifest
 - `evals/README.md`: human-readable artifact and governance overview
 - `evals/scripts/harness.py`: validation and run-scaffolding entrypoint
-- `Makefile`: thin wrapper over the harness script
+- `Makefile`: thin repo-root maintenance wrapper whose eval-related targets
+  delegate to the harness script
 
 ## Generated Outputs
 
