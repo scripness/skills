@@ -98,7 +98,8 @@ Completed historical records also remain under `plans/`.
 
 Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
 `evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
-ships the optional `scripts/loop.py` helper.
+ships the optional `scripts/loop.py` helper plus
+`references/optional-helper.md`.
 
 In this source repo, `.agents/skills` resolves to the same files through the
 tracked symlink mirror. Edit `src/`; use the mirror only when you need

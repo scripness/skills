@@ -79,6 +79,8 @@ When copied into a target repo, these directories are intended to live under
 - `src/execute/` also ships `scripts/loop.py` as an optional explicit-plan
   execute/verify helper with an opt-in continuous repair mode and strict final
   review before success.
+- `src/execute/` also ships `references/optional-helper.md` for the helper's
+  detailed contract and wrapper notes.
 - This source repo also ships `scripts/providers/codex_loop.py` as an optional
   repo-local Codex convenience wrapper that delegates back to the generic
   `scripts/loop.py` contract. It is a local accelerator only, not workflow

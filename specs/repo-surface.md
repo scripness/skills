@@ -67,6 +67,7 @@ Additional shipped local assets:
 - `src/specs/assets/specs/README.md`
 - `src/specs/assets/specs/spec-template.md`
 - `src/execute/scripts/loop.py`
+- `src/execute/references/optional-helper.md`
 - `src/execute/scripts/providers/codex_loop.py`
 - `src/execute/scripts/providers/codex_loop_dashboard.py`
 
