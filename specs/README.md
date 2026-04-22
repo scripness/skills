@@ -9,7 +9,7 @@ evaluation harness around it.
 - Read the relevant spec before changing repo-wide workflow, source skill
   layout, or the evaluation harness.
 - Treat these specs as durable topic truth and the checked-in files under
-  `src/`, `evals/`, `Makefile`, and the top-level docs as implemented reality.
+  `src/`, `evals/`, `Makefile`, and the repo docs as implemented reality.
 - Keep task-local execution details in explicit `plans/*.md` files, not in
   these specs.
 - Completed historical plan records under `plans/` are background records, not
@@ -20,13 +20,13 @@ evaluation harness around it.
 
 | Spec | Owning paths | Purpose |
 |------|--------------|---------|
-| [`workflow-contract.md`](./workflow-contract.md) | `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `SOURCES.md`, `REFINE.md`, `src/*/SKILL.md` | Defines the shipped six-skill workflow, truth layers, refresh workflow, and plan semantics for this repo. |
+| [`workflow-contract.md`](./workflow-contract.md) | `AGENTS.md`, `README.md`, `docs/maintenance.md`, `docs/sources.md`, `src/*/SKILL.md` | Defines the shipped six-skill workflow, truth layers, refresh workflow, and plan semantics for this repo. |
 
 ## Architecture And Shared Systems
 
 | Spec | Owning paths | Purpose |
 |------|--------------|---------|
-| [`repo-surface.md`](./repo-surface.md) | `src/`, `plans/`, `CLAUDE.md`, top-level repo docs | Maps the actual repo layout, skill directory structure, helper placement, and the distinction between live task plans and completed historical records. |
+| [`repo-surface.md`](./repo-surface.md) | `src/`, `plans/`, `CLAUDE.md`, repo docs | Maps the actual repo layout, skill directory structure, helper placement, and the distinction between live task plans and completed historical records. |
 
 ## Quality And Operations
 

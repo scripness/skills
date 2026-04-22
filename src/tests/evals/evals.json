@@ -1,8 +1,8 @@
 {
   "version": 1,
   "skill": "tests",
-  "status": "milestone_4_real_repo_must_run",
-  "description": "Concrete tests trigger and workflow eval definitions through Milestone 4, including the must-run validation boundary pack and one pinned cryptoli real-repo workflow case.",
+  "status": "milestone_5_real_repo_layer_selection",
+  "description": "Concrete tests trigger and workflow eval definitions through Milestone 5, including the must-run validation boundary pack, one broader cryptoli layer-selection workflow case, and one retained narrower validation backend-coverage case.",
   "default_baseline": "previous_committed_skill_version",
   "optional_secondary_baseline": "no_skill_when_it_adds_signal",
   "trigger_evals": [
@@ -154,11 +154,11 @@
       ]
     },
     {
-      "id": "tests-workflow-validation-cryptoli-backend-coverage",
+      "id": "tests-workflow-validation-cryptoli-layer-selection",
       "split": "validation",
       "must_run": true,
       "grading": "hybrid",
-      "goal": "Judge whether tests can extend the smallest applicable executable-truth layer on the pinned cryptoli fixture while respecting its real backend/frontend/admin test topology.",
+      "goal": "Judge whether tests can select the right existing backend, frontend, and e2e layers on the pinned cryptoli fixture instead of defaulting to one backend-only suite.",
       "fixture": {
         "id": "cryptoli",
         "manifest_path": "evals/fixtures/cryptoli.json"
@@ -175,9 +175,54 @@
         ]
       },
       "scenario": {
+        "user_request": "A customer-visible cryptoli flow changed across the frontend UI and backend API. Update the smallest durable automated coverage at every applicable existing layer, and report any still-blocked higher-layer gaps.",
+        "repo_state": [
+          "The pinned fixture is a pnpm monorepo with backend unit, integration, and e2e suites plus separate Vitest suites for frontend and admin.",
+          "The evaluation branch under test changes a user-facing frontend flow backed by backend behavior, so stopping at one backend-only suite would miss part of the real risk surface.",
+          "Admin is unaffected by this change, and AGENTS.md plus specs/testing-strategy.md require applicable existing layers rather than blanket suite runs."
+        ],
+        "required_inputs": [
+          "evals/fixtures/cryptoli.json",
+          "cryptoli/AGENTS.md",
+          "cryptoli/specs/testing-strategy.md",
+          "cryptoli/apps/backend/package.json",
+          "cryptoli/apps/backend/test/integration",
+          "cryptoli/apps/backend/test/e2e",
+          "cryptoli/apps/frontend/package.json",
+          "cryptoli/apps/frontend/vitest.config.ts"
+        ]
+      },
+      "assertions": [
+        "Discovers the actual backend, frontend, and admin test topology before choosing layers.",
+        "Selects the smallest applicable mix of backend and UI-facing existing layers for the changed flow instead of defaulting to one backend-only suite.",
+        "Runs targeted commands for the owning layer or layers and reports blocked higher layers honestly.",
+        "Does not broaden into unrelated admin coverage or repo-truth editing."
+      ],
+      "review_questions": [
+        "Does the result choose layers that match the real risk surface instead of stopping too early or overshooting into unrelated suites?"
+      ]
+    },
+    {
+      "id": "tests-workflow-validation-cryptoli-backend-coverage",
+      "split": "validation",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether tests can still close a narrower cryptoli backend coverage gap while respecting the repo's broader backend/frontend/admin test topology.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the tests skill improves layer selection and honest gap reporting on a real monorepo fixture."
+          }
+        ]
+      },
+      "scenario": {
         "user_request": "A backend change landed in cryptoli without enough automated coverage. Add the smallest durable automated layer and report any still-blocked higher-layer gaps.",
         "repo_state": [
-          "The pinned fixture has backend unit tests in apps/backend/src/**/*.spec.ts, backend integration tests in apps/backend/test/integration, backend e2e tests in apps/backend/test/e2e, and separate Vitest suites for frontend and admin.",
+          "The cryptoli fixture manifest documents backend unit tests in apps/backend/src/**/*.spec.ts, backend integration tests in apps/backend/test/integration, backend e2e tests in apps/backend/test/e2e, and separate Vitest suites for frontend and admin.",
           "The evaluation branch under test adds backend behavior without the matching integration coverage.",
           "AGENTS.md and specs/testing-strategy.md require applicable layers, not one blanket suite."
         ],

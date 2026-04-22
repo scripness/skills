@@ -58,6 +58,12 @@ Do not use this skill when:
      - relevant constraints
      - options and tradeoffs
      - risks and edge cases
+   - When the provider supports an independent consult pass and the question is
+     non-trivial, prefer using it as a second look. If that is unavailable,
+     use a fresh-session fallback when extra scrutiny is still warranted.
+   - The main session must still apply the skill itself. Independent input is
+     supporting evidence that reduces anchoring, not a replacement for local
+     judgment.
    - Add external or ecosystem research only when repo truth is not enough to
      answer the question safely.
    - Keep the work bounded. Do not turn a small decision into a broad survey.
@@ -66,7 +72,11 @@ Do not use this skill when:
    - What is true now
    - What options exist
    - What you recommend and why
-   - What belongs in a durable plan, if the work should become plan-driven
+   - When both the main session and an independent pass exist, compare them
+     explicitly and synthesize one recommendation rather than blindly trusting
+     either side alone
+   - What belongs in a durable plan, if the work should become plan-driven,
+     including durable discoveries that should not stay trapped in chat
    - What remains unresolved, if anything
 
 ## Output
@@ -80,8 +90,9 @@ Return:
 3. `Recommendation`
    - The best next move
 4. `Plan carry-forward`
-   - Only when durable task state is warranted: the concrete facts, decisions,
-     risks, blockers, or owning paths that should be copied into a plan
+   - Only when durable task state is warranted: the concrete facts, owning
+     paths, decisions, rejected options that still matter, risks, blockers,
+     durable discoveries, and open questions that should be copied into a plan
 5. `Open questions`
    - Only the unresolved questions that block action
 
@@ -95,6 +106,9 @@ source references.
 
 - `consult` owns clarification and recommendation, not plan-file maintenance or
   implementation.
+- Independent passes are preferred only when they materially improve the
+  decision and the provider supports them. They are optional, and they do not
+  replace the main session's responsibility to reason from repo truth.
 - If external research is used, say why repo truth was insufficient and prefer
   primary or official sources.
 - If the task premise is wrong, say so directly.
@@ -105,7 +119,9 @@ source references.
 - Prefer current behavior over hypotheticals.
 - Keep the answer short enough to act on.
 - If a decision should change `specs/`, say that explicitly.
-- If the work should become plan-driven, surface exactly what should be carried
-  into that plan rather than vaguely saying "make a plan."
+- If the work should become plan-driven, surface copy-ready plan carry-forward
+  rather than vaguely saying "make a plan."
+- When an independent pass is used, compare and synthesize it with the main
+  session instead of echoing whichever side spoke last.
 - Stop once there is a safe evidence-backed recommendation. Do not turn small
   tasks into research theater.

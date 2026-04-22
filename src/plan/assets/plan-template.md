@@ -34,6 +34,16 @@ later `execute` and `verify` sessions with this exact file path.
 - Owning test paths: [path] or `N/A`
 - Related docs, commands, or external dependencies: [details]
 
+## Consult Carry-Forward
+
+Use this section when the task reached `plan` through `consult`. Promote the
+durable handoff here instead of leaving it trapped in chat.
+
+- Current behavior or repo facts that constrain the work
+- Recommended approach and rejected options that still matter
+- Owning paths, risks, blockers, or open questions that must survive
+- Durable discoveries to preserve for later `execute` or `verify` passes
+
 ## Dependencies
 
 - [Required prerequisite, prior phase, or upstream input]
@@ -46,6 +56,9 @@ implementation changes durable behavior, boundaries, operating guidance, or
 coverage expectations, follow through with `specs` and `tests` rather than
 leaving drift behind.
 
+If different milestones have different obligations, make the next unfinished
+slice explicit at the milestone level too.
+
 - `specs`: [Name the owning specs or missing specs to create/update. State when
   `specs` sync is required. If not currently required, say that explicitly.]
 - `tests`: [Name the applicable test layers and expected coverage
@@ -54,9 +67,18 @@ leaving drift behind.
 
 ## Milestones
 
-1. [Milestone name]: [bounded slice and done condition].
-2. [Milestone name]: [bounded slice and done condition].
-3. [Milestone name]: [bounded slice and done condition].
+Make the next unfinished milestone decision-complete so a fresh `execute`
+session can take it without re-planning: name the bounded slice, clear done
+condition, owning paths when they are not obvious from `Repo Context`,
+explicit slice-level `specs` / `tests` exit criteria, and any blockers or
+prerequisites that would make `execute` stop instead of guess.
+
+1. [Milestone name]: [bounded slice, clear done condition, and slice-level
+   `specs` / `tests` exit criteria].
+2. [Milestone name]: [bounded slice, clear done condition, and slice-level
+   `specs` / `tests` exit criteria].
+3. [Milestone name]: [bounded slice, clear done condition, and slice-level
+   `specs` / `tests` exit criteria].
 
 ## Verification
 

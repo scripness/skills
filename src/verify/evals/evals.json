@@ -94,7 +94,9 @@
         "repo_state": [
           "AGENTS.md requires findings-first review and treats missing required specs/tests sync as fail.",
           "evals/fixtures/eval-harness-roadmap.md defines the evaluation-harness follow-up scope.",
-          "Inspection may be enough if no mechanical check is needed."
+          "Inspection may be enough if no mechanical check is needed.",
+          "An independent verify pass is available, but the main session still owns the final verdict and must synthesize any disagreement.",
+          "The next unfinished milestone should already be decision-complete enough for execute to act without guessing."
         ],
         "required_inputs": [
           "AGENTS.md",
@@ -105,13 +107,56 @@
       "assertions": [
         "Returns findings first and names the verification target.",
         "Checks scope, sequencing, blockers, and explicit specs/tests follow-through against repo truth.",
+        "Checks whether the next unfinished slice is decision-complete enough for execute.",
         "When the target is an explicit plan path, writes the verdict and any blocking follow-up back into that same plan file.",
         "Runs or skips only the smallest meaningful checks and explains skipped checks honestly.",
+        "If it uses the independent verify pass, compares or synthesizes it with the main review instead of blindly trusting it.",
         "Ends with a verdict and remaining gaps."
       ],
       "review_questions": [
         "Does the review stay adversarial instead of defending the plan?",
-        "Are any findings grounded in specific file references or command evidence?"
+        "Are any findings grounded in specific file references or command evidence?",
+        "If an independent pass appears, does the response still own the final verdict instead of outsourcing judgment?",
+        "If the next slice is weak, does the review make that a fail rather than a soft suggestion?"
+      ]
+    },
+    {
+      "id": "verify-workflow-train-plan-review-weak-slice-contract",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether verify fails a plan whose next execute slice is too vague to run safely.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether the verify skill materially improves weak-plan detection over unguided review."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Verify plans/2026-04-20-eval-harness-fixture-plan.md before implementation starts.",
+        "repo_state": [
+          "AGENTS.md requires execute to stop instead of guessing when the next plan slice is under-specified.",
+          "The next unfinished milestone in the plan only says 'continue hardening' and omits a done condition, owning paths, and slice-level specs/tests exit criteria.",
+          "No code has been changed yet; the review should focus on the plan contract itself."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "plans/2026-04-20-eval-harness-fixture-plan.md"
+        ]
+      },
+      "assertions": [
+        "Returns findings first and names the weak next-slice contract.",
+        "Treats the missing done condition or slice-level specs/tests exit criteria as a fail, not a pass with risks.",
+        "Updates the same plan file with the verdict and blocker because the next safe execute slice cannot proceed yet.",
+        "Grounds the failure in plan text and repo-truth requirements instead of generic planning advice."
+      ],
+      "review_questions": [
+        "Does the review protect execute from guessing rather than merely recommending more detail?"
       ]
     },
     {

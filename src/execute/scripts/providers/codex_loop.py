@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repo-local Codex convenience wrapper around the generic plan loop helper.
+"""Optional Codex convenience wrapper around the generic plan loop helper.
 
 This script has two modes:
 
@@ -9,7 +9,7 @@ This script has two modes:
   generic helper can call non-interactively
 
 The generic `loop.py` contract remains the provider-agnostic source of truth.
-This file is an optional accelerator for working on this source repo with the
+This file is an optional accelerator for working on the current repo with the
 local Codex CLI. The shipped skill contracts remain the workflow source of
 truth; this wrapper only changes how those skills are invoked and how verify
 verdicts are transported back to the generic helper.
@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -32,16 +33,63 @@ DEFAULT_PASS_WITH_RISKS_CODE = 10
 DEFAULT_FAIL_CODE = 20
 
 
+def script_path() -> Path:
+    path = Path(__file__)
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    # Normalize lexical path segments like ".." without collapsing symlinks.
+    return Path(os.path.abspath(os.fspath(path)))
+
+
+def current_skill_root() -> Path:
+    skill_root = script_path().parents[2]
+    if skill_root.name != "execute":
+        raise RuntimeError(
+            "codex_loop.py must live under an execute skill directory"
+        )
+    return skill_root
+
+
+def skills_root() -> Path:
+    skill_root = current_skill_root()
+    parent = skill_root.parent
+    grandparent = parent.parent
+    if parent.name == "src":
+        return parent
+    if parent.name == "skills" and grandparent.name == ".agents":
+        return parent
+    raise RuntimeError(
+        "codex_loop.py must live under src/execute/ or .agents/skills/execute/"
+    )
+
+
 def repo_root() -> Path:
-    return Path(__file__).resolve().parents[4]
+    root = skills_root()
+    if root.name == "src":
+        return root.parent
+    return root.parent.parent
+
+
+def repo_relative_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(repo_root()))
+    except ValueError:
+        return str(path)
+
+
+def skill_path(skill_name: str, *parts: str) -> Path:
+    path = skills_root() / skill_name
+    for part in parts:
+        path /= part
+    return path
 
 
 def generic_loop_path() -> Path:
-    return Path(__file__).resolve().parents[1] / "loop.py"
+    return current_skill_root() / "scripts" / "loop.py"
 
 
 def this_script_path() -> Path:
-    return Path(__file__).resolve()
+    return script_path()
 
 
 def parse_command(command_text: str) -> list[str]:
@@ -59,9 +107,10 @@ def codex_base_command(codex_command_text: str) -> list[str]:
 
 
 def execute_prompt(plan_path: Path) -> str:
+    execute_skill = repo_relative_path(skill_path("execute", "SKILL.md"))
     return textwrap.dedent(
         f"""\
-        Follow `src/execute/SKILL.md` as the workflow source of truth.
+        Follow `{execute_skill}` as the workflow source of truth.
 
         This runner is only providing invocation context for one plan-driven
         execute call. If this prompt and the skill contract ever disagree, the
@@ -74,7 +123,7 @@ def execute_prompt(plan_path: Path) -> str:
         - update that same plan file in place
         - stop after that one slice
 
-        Read `AGENTS.md`, the relevant `specs/*`, `src/execute/SKILL.md`,
+        Read `AGENTS.md`, the relevant `specs/*`, `{execute_skill}`,
         and the explicit plan at `{plan_path}`. Read code, docs, and tests as
         required by that skill contract. Do not turn this execute invocation
         into adversarial verification.
@@ -83,9 +132,14 @@ def execute_prompt(plan_path: Path) -> str:
 
 
 def verify_prompt(plan_path: Path) -> str:
+    verify_skill = repo_relative_path(skill_path("verify", "SKILL.md"))
+    execute_skill = repo_relative_path(skill_path("execute", "SKILL.md"))
+    plan_template = repo_relative_path(
+        skill_path("plan", "assets", "plan-template.md")
+    )
     return textwrap.dedent(
         f"""\
-        Follow `src/verify/SKILL.md` as the workflow source of truth.
+        Follow `{verify_skill}` as the workflow source of truth.
 
         This runner is only providing invocation context and transport
         constraints for one plan-driven verify call. If this prompt and the
@@ -96,8 +150,8 @@ def verify_prompt(plan_path: Path) -> str:
         - keep that same plan file as the canonical task record
         - return JSON only matching the provided schema
 
-        Read `AGENTS.md`, the relevant `specs/*`, `src/verify/SKILL.md`,
-        `src/execute/SKILL.md`, `src/plan/assets/plan-template.md`, and the
+        Read `AGENTS.md`, the relevant `specs/*`, `{verify_skill}`,
+        `{execute_skill}`, `{plan_template}`, and the
         explicit plan at `{plan_path}`.
         """
     )
@@ -164,15 +218,17 @@ def run_codex_verify(
 
 
 def build_user_parser() -> argparse.ArgumentParser:
+    display_script = repo_relative_path(this_script_path())
+    display_loop = repo_relative_path(generic_loop_path())
     parser = argparse.ArgumentParser(
         description=(
-            "Run the generic plan loop helper with repo-local Codex defaults."
+            "Run the generic plan loop helper with local Codex defaults."
         ),
         epilog=(
             "Examples:\n"
-            "  python3 src/execute/scripts/providers/codex_loop.py \\\n"
+            f"  python3 {display_script} \\\n"
             "      --plan plans/YYYY-MM-DD-short-task-slug.md\n\n"
-            "  python3 src/execute/scripts/providers/codex_loop.py \\\n"
+            f"  python3 {display_script} \\\n"
             "      --dry-run \\\n"
             "      --plan plans/YYYY-MM-DD-short-task-slug.md\n\n"
             "Defaults in user mode:\n"
@@ -249,7 +305,7 @@ def build_user_parser() -> argparse.ArgumentParser:
         "--loop-command",
         help=(
             "Override the generic loop helper command prefix. By default this "
-            "uses the local `src/execute/scripts/loop.py`."
+            f"uses the local `{display_loop}`."
         ),
     )
     return parser

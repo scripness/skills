@@ -133,6 +133,17 @@ as owning test surfaces.
 
 ## Git
 
+Replace the placeholders below with the repo's actual conventions before
+relying on this section in automated work.
+
 Commit format: `[type(scope): description]`
+
+Example: `feat(auth): add refresh token rotation`
+
+Branch naming: `[type]/[short-topic-slug]`
+
+Example: `feat/refresh-token-rotation`
+
+PR title format: `[type(scope): description]`
 
 Example: `feat(auth): add refresh token rotation`

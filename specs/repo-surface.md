@@ -6,7 +6,7 @@ Last verified: 2026-04-21
 # Repo Surface
 
 > Source of truth: `src/`, `plans/`, `Makefile`,
-> `src/execute/scripts/loop.py`, and the top-level docs
+> `src/execute/scripts/loop.py`, and the repo docs
 > Non-owning trees to ignore unless explicitly in scope: `.git/`, `.tmp/evals/`
 > If this spec contradicts the code, the code is correct — update this spec.
 
@@ -29,8 +29,10 @@ system.
 
 ## Key Patterns
 
-- top-level docs are the live truth layer around the shipped source skills
+- repo docs are the live truth layer around the shipped source skills
 - each `src/<skill>/` directory is a copyable source skill payload
+- `.agents/skills` may exist as a local symlink mirror to `src/` for
+  copied-layout checks, but `src/` remains the owning tree
 - shared eval metadata lives under `evals/`, while generated run artifacts live
   under `.tmp/evals/`
 - `CLAUDE.md` is a thin mirror of `AGENTS.md`, not a separate contract
@@ -39,9 +41,10 @@ system.
 
 - `AGENTS.md`: repo-wide operational truth
 - `README.md`: shipped-system overview
-- `MAINTENANCE.md`: operator loop for maintenance and eval refresh
-- `SOURCES.md`: durable external grounding
-- `REFINE.md`: current post-merge cleanup context
+- `docs/maintenance.md`: operator loop for maintenance and eval refresh
+- `docs/sources.md`: durable external grounding
+- `.agents/skills`: tracked local symlink mirror to `src/` for copied-layout
+  ergonomics in this source repo
 - `specs/`: durable topic truth for this repo
 - `src/`: source-of-truth skill payloads
 - `evals/`: shared harness metadata, fixture manifests, and harness helper
@@ -66,6 +69,10 @@ Additional shipped local assets:
 - `src/execute/scripts/loop.py`
 - `src/execute/scripts/providers/codex_loop.py`
 - `src/execute/scripts/providers/codex_loop_dashboard.py`
+
+In this source repo, `.agents/skills` is a tracked symlink mirror to `src/`
+so copied-layout paths resolve locally without duplicating files. Edit `src/`,
+not the mirror.
 
 ## Plans Directory Semantics
 
@@ -95,8 +102,9 @@ Additional shipped local assets:
 - Put durable topic truth in `specs/`, not in task plans.
 - Keep `README.md` focused on the shipped system rather than historical build
   narration.
-- Use `MAINTENANCE.md` for operator commands and loops, and `SOURCES.md` for
-  external grounding instead of repeating them everywhere.
+- Use `docs/maintenance.md` for operator commands and loops, and
+  `docs/sources.md` for external grounding instead of repeating them
+  everywhere.
 
 ## Verification
 
@@ -104,4 +112,6 @@ Additional shipped local assets:
   spec tree are present.
 - Run `test -L CLAUDE.md` to confirm `CLAUDE.md` remains a symlink mirror to
   `AGENTS.md`.
+- Run `test -L .agents/skills` to confirm the local copied-layout mirror still
+  points at `src/`.
 - Run `find . -maxdepth 2 \\( -path './.git' -o -path './.tmp' \\) -prune -o -maxdepth 2 -type d | sort` to confirm the top-level layout described here still matches the repo.

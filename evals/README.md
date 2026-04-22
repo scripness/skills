@@ -30,9 +30,9 @@ The repo ships a direct harness helper plus a thin repo-root `Makefile`
 wrapper. The wrappers stay deliberately small and delegate unique logic back
 to `evals/scripts/harness.py`.
 
-See [../MAINTENANCE.md](../MAINTENANCE.md) for the repo-wide maintenance loop
-that uses this harness surface to refresh eval workspaces and upstream durable
-improvements.
+See [../docs/maintenance.md](../docs/maintenance.md) for the repo-wide
+maintenance loop that uses this harness surface to refresh eval workspaces and
+upstream durable improvements.
 
 - Run `make help` to list the shipped maintenance targets.
 - Run `make validate` to validate shipped skill structure, `SKILL.md`
@@ -126,6 +126,13 @@ future runners use the same rules.
 - The initial shipped must-run surface is the validation boundary trigger pack
   for each skill plus one pinned `cryptoli`-backed validation workflow case
   per skill.
+- For `tests`, that pinned workflow case is the broader
+  `tests-workflow-validation-cryptoli-layer-selection` scenario so the
+  must-run surface exercises frontend/UI/e2e layer choice instead of only a
+  backend-only gap.
+- The narrower `tests-workflow-validation-cryptoli-backend-coverage` scenario
+  remains in tracked validation eval truth for extra signal, but it stays
+  outside the must-run surface.
 - Skill-local `must_run: true` flags are the tracked source of truth for that
   surface, and `evals/runtime.json` mirrors the selected case ids for future
   runner defaults.

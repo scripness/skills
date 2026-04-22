@@ -41,7 +41,7 @@ dashboard is unavailable or unsuitable.
   terminal dashboard wrapper for local Codex runs.
 - Additive loop event support in `src/execute/scripts/loop.py` if needed so
   the dashboard can track live phases without scraping stderr.
-- Synced docs in `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
+- Synced docs in `AGENTS.md`, `README.md`, `docs/maintenance.md`,
   `src/execute/SKILL.md`, `Makefile`, and relevant `specs/*.md` for the new
   helper and its boundaries.
 
@@ -56,7 +56,7 @@ dashboard is unavailable or unsuitable.
 - Owning test paths: `N/A` for dedicated automated tests; rely on focused
   mechanical checks and synthetic temporary providers
 - Related docs, commands, or external dependencies: `AGENTS.md`, `README.md`,
-  `MAINTENANCE.md`, `src/execute/SKILL.md`, `Makefile`,
+  `docs/maintenance.md`, `src/execute/SKILL.md`, `Makefile`,
   `python3 src/execute/scripts/providers/codex_loop.py --help`
 
 ## Dependencies
@@ -77,7 +77,7 @@ leaving drift behind.
 
 - `specs`: Update `specs/workflow-contract.md` and `specs/repo-surface.md` if
   the dashboard script ships and if the generic loop gains additive event
-  types. Sync `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `Makefile`, and
+  types. Sync `AGENTS.md`, `README.md`, `docs/maintenance.md`, `Makefile`, and
   `src/execute/SKILL.md` where they expose the helper surface.
 - `tests`: No dedicated automated test layer exists for these local helper
   scripts today. Do not invent a new test framework in this slice. Instead run
@@ -96,7 +96,7 @@ leaving drift behind.
    `src/execute/scripts/providers/codex_loop_dashboard.py` as a full-screen
    terminal view over the Codex wrapper that falls back cleanly when not on a
    TTY.
-4. Repo-truth sync: update top-level docs and specs for the new dashboard
+4. Repo-truth sync: update repo docs and specs for the new dashboard
    command and keep the raw loop and Codex wrapper contracts clearly separate
    from the UI layer.
 5. Validation: run focused checks and synthetic temporary-provider runs that
@@ -234,7 +234,7 @@ instead of overwriting unrelated historical progress.
 - Added backward-compatible `phase` events in `src/execute/scripts/loop.py` so
   local dashboards can observe live execute, verify, and final-review progress
   without scraping stderr.
-- Synced `AGENTS.md`, `README.md`, `MAINTENANCE.md`, `Makefile`,
+- Synced `AGENTS.md`, `README.md`, `docs/maintenance.md`, `Makefile`,
   `specs/workflow-contract.md`, `specs/repo-surface.md`, and
   `src/execute/SKILL.md` to the new helper surface.
 - Tightened the helper-layering contract so the shipped skills remain the

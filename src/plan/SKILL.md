@@ -68,12 +68,23 @@ Do not use this skill when:
      - outcomes or retrospective
    - Break the work into bounded milestones that a fresh `execute` session can
      take one at a time.
+   - Make the next unfinished milestone decision-complete so a later
+     `execute` pass does not need to guess the core approach.
+   - A decision-complete next slice names the bounded change, clear done
+     condition, owning paths when they are not already obvious, any
+     prerequisite or blocker that would make `execute` bounce instead of
+     guess, and explicit slice-level `specs` / `tests` exit criteria when they
+     apply.
 
 5. Make sync expectations explicit.
    - Name the owning specs or missing specs that will need follow-through.
    - Name the applicable test layers and expected coverage follow-through.
    - Say when `specs` sync is required and when `tests` sync is required.
    - If either sync is not currently required, say that explicitly.
+   - When different milestones have different repo-truth or test-truth
+     obligations, spell out the slice-level `specs` / `tests` exit criteria
+     for the next unfinished milestone instead of leaving later `execute` or
+     `verify` to infer them.
 
 6. Hand off cleanly.
    - Return the exact plan path.
@@ -112,6 +123,8 @@ Return:
 - The trigger is evidence-backed: durable task state is actually needed.
 - The plan is self-contained enough for a fresh session to resume safely.
 - Milestones are bounded, ordered, and verifiable.
+- The next unfinished slice is decision-complete enough that `execute` can act
+  without re-planning or guessing required `specs` / `tests` follow-through.
 - Material blockers are named explicitly rather than left in chat.
 - `specs` and `tests` obligations are named explicitly rather than implied.
 - The handoff names one exact `plans/*.md` file.

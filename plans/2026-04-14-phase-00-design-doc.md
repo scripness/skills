@@ -12,8 +12,9 @@ Execution status of this design:
 - Section `7` was executed through Phase 05.
 - Sections `8-9` were executed through Phase 06.
 
-For current shipped truth, use `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
-`SOURCES.md`, and the completed phase plan files under `plans/`.
+For current shipped truth, use `AGENTS.md`, `README.md`,
+`docs/maintenance.md`, `docs/sources.md`, and the completed phase plan files
+under `plans/`.
 
 ## 1. Define Repo Contract
 

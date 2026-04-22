@@ -11,13 +11,17 @@ durable improvements discovered while using copied skills in downstream repos.
   the shipped workflow.
 - Do not add required orchestration, provider-specific workflow truth, or
   downstream-repo-specific assumptions here.
-- Keep `.agents/` plus `AGENTS.md` as the authoritative cross-client surface.
+- Keep `src/` as the authoritative skill surface in this repo. The tracked
+  `.agents/skills -> ../src` mirror exists only to exercise copied-layout
+  paths locally.
 
 ## Durable State
 
 - `AGENTS.md` and a target repo's `specs/` = repo truth
 - tests = executable truth
 - `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
+- `.agents/skills/` = local symlink mirror of `src/`, not an owning truth
+  layer
 - `plans/*.md` = task truth
 - code = implemented reality
 - `.tmp/evals/` = generated local run artifacts
@@ -27,7 +31,8 @@ durable improvements discovered while using copied skills in downstream repos.
 1. Change the owning skill or doc paths directly:
    `src/<skill>/SKILL.md`, `src/<skill>/agents/openai.yaml`, local assets,
    `src/<skill>/evals/evals.json`, `README.md`, `AGENTS.md`, `evals/README.md`,
-   or this file as needed.
+   or this file as needed. Do not edit through `.agents/skills/`; it is only
+   the local symlink mirror of `src/`.
 2. Keep boundaries sharp. Durable workflow truth belongs in repo docs and
    skills, not in shell wrappers or chat-only instructions.
 3. If shipped behavior changed, sync the owning docs in the same slice before
@@ -105,5 +110,5 @@ durable improvements discovered while using copied skills in downstream repos.
 - Do not encode downstream-specific stack details or one-off project habits as
   shared workflow truth in this repo.
 - After upstreaming a portable fix here, refresh downstream repos by re-copying
-  only the changed skill directories and supporting assets into
+  only the changed skill directories from `src/` and supporting assets into
   `.agents/skills/`.

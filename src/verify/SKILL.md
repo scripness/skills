@@ -34,8 +34,9 @@ Do not use this skill when:
 ## Process
 
 1. Determine verification target and obligations.
-   - `plan`: verify scope, sequencing, owning paths, blockers, and explicit
-     `specs` or `tests` follow-through against repo reality
+   - `plan`: verify scope, sequencing, owning paths, blockers, next-slice
+     contract quality, and explicit `specs` or `tests` follow-through against
+     repo reality
    - `implementation`: verify changed code, docs, tests, and behavior against
      the plan or claimed outcome
    - `claims`: verify each concrete technical statement against code, specs,
@@ -48,6 +49,9 @@ Do not use this skill when:
      verified.
    - Use `AGENTS.md`, relevant `specs/*`, the plan file when present, and code
      to determine what should be true.
+   - For non-trivial or high-risk targets, prefer one independent verify pass
+     when the provider supports it. If that is unavailable, use a fresh-session
+     fallback when practical.
    - If repo truth is missing, stale, or contradictory, say so explicitly.
 
 3. Run the smallest meaningful mechanical checks.
@@ -63,17 +67,26 @@ Do not use this skill when:
 
 4. Attack the target adversarially.
    - `plan`: look for scope mismatch, weak sequencing, missing owning paths,
-     hidden blockers, and missing required sync.
+     hidden blockers, under-specified next slices that would force `execute`
+     to guess, and missing required sync.
    - `implementation`: look for correctness bugs, regressions, stale docs or
      tests, missing required sync, and uncovered edge cases.
    - `claims`: look for unsupported statements, stale assumptions, or omitted
      contrary evidence.
+   - The main session still owns the review. Independent input is supporting
+     evidence, not delegated judgment.
    - Ground every finding in file references or command output.
 
 5. Check testing and spec obligations honestly.
    - Were tests added or updated at every applicable tier?
    - Do the tests prove the intended behavior rather than internal details?
    - Are important edge cases still uncovered?
+   - For `plan` targets, treat a non-decision-complete next slice as a
+     finding when `execute` would have to guess the scope, stop condition, or
+     owning paths.
+   - When the plan or repo truth makes slice-level `specs` / `tests` exit
+     criteria material, their absence is a finding even before implementation
+     starts.
    - If the plan or repo truth made `specs` or `tests` sync required and it is
      missing, treat that as a finding.
    - Missing required `specs` or `tests` sync is `fail`, not
@@ -84,6 +97,9 @@ Do not use this skill when:
    - Cover the angles that matter for the target, such as core correctness,
      regressions, coverage blind spots, and security or authorization when
      relevant.
+   - When both the main session and an independent pass exist, compare them
+     explicitly, investigate material disagreements, and synthesize one final
+     verdict rather than blindly trusting either side alone.
 
 7. Update the plan when verifying an explicit plan file.
    - Update that exact plan file in place so it remains the canonical task
@@ -100,6 +116,9 @@ Do not use this skill when:
      later `execute` work has an explicit slice to take.
    - For a blocking verification failure, say why the next safe execute slice
      cannot proceed and record that in `Blockers`.
+   - If the next unfinished slice is under-specified enough that `execute`
+     would have to guess, treat that as a blocking plan failure and record it
+     in `Blockers` rather than pretending execution can continue.
    - In a strict final completion review, `pass with risks` is not completion.
      Reopen or append bounded work when more implementation is still required.
    - Do not implement fixes or broaden into general plan maintenance.
@@ -133,8 +152,14 @@ residual risk.
 
 - Do not invent failures. Ground each claim in code, specs, or command output.
 - Prefer concrete reproduction paths over vague concern language.
+- Independent verify passes are preferred only when they materially improve
+  confidence and the provider supports them. They are optional, and the final
+  verdict still belongs to the main session.
 - Missing or weak tests are real findings when the repo's testing policy
   requires them.
+- For plan review, a weak next-slice contract is a `fail` when later
+  `execute` would have to guess scope, stop condition, owning paths, or
+  required slice-level `specs` / `tests` follow-through.
 - Missing required `specs` or `tests` sync is a `fail` when the obligation was
   explicit in the plan or clearly implied by repo truth.
 - Blocked or skipped checks are not silent passes. Say what was not run and why.
@@ -156,5 +181,6 @@ residual risk.
 - `pass with risks`: no blocking defect, but there are meaningful residual
   risks, weak coverage, or blocked checks that do not yet justify a fail
 - `fail`: concrete correctness, regression, or policy-compliance issues remain,
-  required `specs` or `tests` sync is missing, or blocked evidence leaves a
-  material claim unproven
+  required `specs` or `tests` sync is missing, blocked evidence leaves a
+  material claim unproven, or a plan leaves the next execute slice
+  under-specified

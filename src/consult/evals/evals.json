@@ -94,7 +94,8 @@
         "repo_state": [
           "AGENTS.md says consult owns clarification and recommendation, plan owns durable task state, and execute owns implementation.",
           "evals/fixtures/eval-harness-roadmap.md describes multiple remaining evaluation-harness follow-up slices.",
-          "The work will span more than one session if it becomes plan-driven."
+          "The work will span more than one session if it becomes plan-driven.",
+          "An independent consult pass is available, but the main session still has broader repo context and must synthesize the recommendation."
         ],
         "required_inputs": [
           "AGENTS.md",
@@ -106,11 +107,13 @@
         "Reads repo truth before recommending a next move.",
         "Names the current constraints or options instead of jumping straight to implementation.",
         "Recommends plan because durable task state is warranted once the direction is clear.",
-        "Includes plan carry-forward facts such as owning paths, risks, or blockers."
+        "Includes copy-ready plan carry-forward such as owning paths, decisions or rejected options that still matter, risks or blockers, and durable discoveries worth preserving.",
+        "If it uses the independent consult pass, compares or synthesizes it with the main analysis instead of blindly trusting it."
       ],
       "review_questions": [
         "Does the answer stay evidence-backed instead of turning into a broad survey?",
-        "Does it keep the recommendation concrete enough for the next session to act on immediately?"
+        "Does it keep the recommendation concrete enough for the next session to act on immediately?",
+        "If an independent pass appears, does the response still own the recommendation instead of outsourcing judgment?"
       ]
     },
     {
