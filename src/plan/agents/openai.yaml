@@ -1,3 +1,3 @@
 display_name: Living Plan
 short_description: Create or update a resumable task plan
-default_prompt: Use this skill to create or update a self-contained living task plan in plans/ for work that needs durable state and must stay resumable across execute and verify passes.
+default_prompt: Use this skill to create or update a self-contained living task plan in plans/ for work that needs durable state and must stay resumable across execute and verify passes. Keep the next unfinished milestone decision-complete by naming the bounded slice, clear done condition, and any slice-level specs/tests exit criteria so later execute can act without guessing.

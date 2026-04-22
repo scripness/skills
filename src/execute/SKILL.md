@@ -47,6 +47,11 @@ Do not use this skill when:
      before choosing the slice.
    - In plan-driven mode, identify the next unfinished milestone or other
      bounded slice.
+   - In plan-driven mode, check whether the next unfinished slice is
+     decision-complete enough to execute safely.
+   - Treat a slice as under-specified when it lacks a clear done condition,
+     leaves the core approach or owning paths ambiguous, or omits explicit
+     slice-level `specs` / `tests` exit criteria that later review would need.
    - Identify any required `specs` or `tests` follow-through from repo truth,
      the plan, and the changed paths.
 
@@ -57,6 +62,9 @@ Do not use this skill when:
    - If current blockers or prior verification findings make the next
      unfinished milestone unsafe or mislabeled, stop or narrow the slice
      instead of pushing through.
+   - If the next unfinished slice is under-specified, do not guess. Stop and
+     hand back to `plan`, or narrow the slice only when the narrower contract
+     is still truthful to the plan and safe to execute.
    - Do not continue into the next milestone even if more work is obvious.
 
 4. Implement the slice.
@@ -79,6 +87,8 @@ Do not use this skill when:
    - If the slice changed behavior that now needs added or updated coverage at
      the applicable existing test layers, sync the relevant `tests`
      follow-through before claiming completion.
+   - Use any slice-level `specs` / `tests` exit criteria already recorded in
+     the plan as part of the completion check for the current slice.
    - If required `specs` or `tests` follow-through is blocked, stop and report
      that blocker instead of claiming the slice is done.
 
@@ -166,10 +176,14 @@ history.
 - Entry mode was chosen correctly and any anti-trigger was respected.
 - Repo truth was read before editing.
 - Plan-driven work reads the current plan context before selecting the slice.
+- Under-specified plan slices cause `execute` to stop or narrow truthfully
+  instead of improvising missing plan detail.
 - Only one bounded slice was implemented.
 - Mechanical checks are specific, relevant, and honest about baseline noise.
 - Required `specs`/`tests` follow-through was completed or surfaced as
   blocking.
+- Slice-level `specs` / `tests` exit criteria were honored when the plan named
+  them.
 - Plan-driven work leaves the explicit plan file resumable for the next fresh
   session.
 - In opt-in continuous helper mode, repairable verify failures reopen or append

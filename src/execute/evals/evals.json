@@ -114,6 +114,45 @@
       ]
     },
     {
+      "id": "execute-workflow-train-plan-driven-under-specified-slice",
+      "split": "train",
+      "must_run": false,
+      "grading": "hybrid",
+      "goal": "Judge whether execute refuses to guess when the explicit plan's next slice is not decision-complete.",
+      "comparison_targets": {
+        "required": [
+          "previous_committed_skill_version"
+        ],
+        "optional": [
+          {
+            "target": "no_skill_when_it_adds_signal",
+            "why": "Use this only when skill-vs-no-skill output clarifies whether execute's stop-and-bounce behavior materially improves plan-driven safety when the next slice is vague."
+          }
+        ]
+      },
+      "scenario": {
+        "user_request": "Read AGENTS.md and plans/2026-04-20-eval-harness-fixture-plan.md, then execute only the next unfinished milestone and stop.",
+        "repo_state": [
+          "The explicit plan path exists, but the next unfinished milestone only says 'finish the remaining repo-truth cleanup' and does not name a done condition, owning paths, or slice-level specs/tests exit criteria.",
+          "Later milestones remain pending and must not be started in this session.",
+          "The safe move is to stop or hand back to plan instead of guessing the missing slice contract."
+        ],
+        "required_inputs": [
+          "AGENTS.md",
+          "plans/2026-04-20-eval-harness-fixture-plan.md"
+        ]
+      },
+      "assertions": [
+        "Reads the current plan context and identifies that the next slice is under-specified.",
+        "Does not guess missing implementation details or start adjacent milestones.",
+        "Stops cleanly or hands the work back to plan with the missing slice contract called out explicitly.",
+        "Keeps the next step and any blocker truthful instead of pretending the slice is complete."
+      ],
+      "review_questions": [
+        "Does the response protect the explicit-plan contract instead of improvising a replacement in chat?"
+      ]
+    },
+    {
       "id": "execute-workflow-validation-plan-driven-slice",
       "split": "validation",
       "must_run": false,
@@ -134,7 +173,7 @@
         "user_request": "Read AGENTS.md, README.md, evals/fixtures/eval-harness-roadmap.md, and plans/2026-04-20-eval-harness-fixture-plan.md, then execute only the next unfinished milestone and update the plan before stopping.",
         "repo_state": [
           "Milestones 1 and 2 in the plan are complete.",
-          "Milestone 3 is the next unfinished milestone.",
+          "Milestone 3 is the next unfinished milestone and it is decision-complete: the done condition and slice-level specs/tests exit criteria are explicit in the plan.",
           "Milestones 4 and 5 remain pending and must not be started in this session."
         ],
         "required_inputs": [
@@ -148,6 +187,7 @@
         "Uses the explicit plan path rather than guessing another plan file.",
         "Reads the current plan context, including blockers and verification notes, before choosing the slice.",
         "Identifies Milestone 3 as the next unfinished slice.",
+        "Uses the plan's current slice contract instead of inventing a new one in chat.",
         "Implements only that slice and stops before Milestone 4.",
         "Updates Progress, Decision Log, Discoveries, and Verification in the plan.",
         "Reports follow-through and next-step verify handoff explicitly."
@@ -182,7 +222,7 @@
         "user_request": "Read AGENTS.md, README.md, specs/testing-strategy.md, and plans/2026-04-20-cryptoli-agent-readiness-refresh.md in the pinned cryptoli fixture, then execute only the next unfinished milestone and update the plan before stopping.",
         "repo_state": [
           "The pinned fixture is a three-app pnpm workspace with root repo-truth docs and layered backend plus frontend/admin tests.",
-          "The harness provides the explicit plan file and marks Milestone 1 as the next unfinished slice; later milestones remain pending.",
+          "The harness provides the explicit plan file and marks Milestone 1 as the next unfinished slice with an explicit stop condition and follow-through; later milestones remain pending.",
           "Milestone 1 is a repo-truth sync slice that updates AGENTS.md and specs/README.md without starting later test-work."
         ],
         "required_inputs": [
@@ -195,6 +235,7 @@
       },
       "assertions": [
         "Uses the explicit plan path rather than inventing another plan or switching to direct mode.",
+        "Honors the provided slice contract instead of broadening or re-planning it in chat.",
         "Implements only the next unfinished milestone and stops before later milestones.",
         "Updates the provided plan in place with progress, discoveries, and verification notes.",
         "Runs the smallest meaningful checks for the repo-truth slice and leaves the verify handoff explicit."

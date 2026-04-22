@@ -94,7 +94,8 @@
         "repo_state": [
           "AGENTS.md requires one explicit plans/YYYY-MM-DD-short-task-slug.md path.",
           "The task will span implementation, verification, and documentation updates.",
-          "Specs and tests follow-through must be named explicitly inside the plan."
+          "Specs and tests follow-through must be named explicitly inside the plan.",
+          "The next execute slice must be specific enough that later execute will not have to guess the done condition or slice-level follow-through."
         ],
         "required_inputs": [
           "AGENTS.md",
@@ -105,12 +106,14 @@
       "assertions": [
         "Chooses one explicit plan path and uses it in the handoff.",
         "Captures goal, scope, milestones, verification, blockers, and resumability details.",
+        "Makes the next unfinished milestone decision-complete with a clear done condition and explicit slice-level specs/tests exit criteria.",
         "Names specs and tests follow-through explicitly instead of implying them.",
         "Keeps the plan task-local rather than turning it into a repo-wide backlog."
       ],
       "review_questions": [
         "Could a fresh session resume safely from repo truth plus the plan file alone?",
-        "Are the milestones bounded enough for execute to take one slice at a time?"
+        "Are the milestones bounded enough for execute to take one slice at a time?",
+        "Could execute take the next unfinished slice without re-planning what counts as done?"
       ]
     },
     {
@@ -135,7 +138,8 @@
         "repo_state": [
           "Milestones 1 and 2 are already complete.",
           "Milestone 3 has just been implemented in one bounded execute slice.",
-          "Milestones 4 and 5 remain pending."
+          "Milestones 4 and 5 remain pending.",
+          "The next unfinished milestone needs a clear slice contract so later execute can take it without re-planning."
         ],
         "required_inputs": [
           "AGENTS.md",
@@ -146,11 +150,13 @@
         "Updates the existing plan in place instead of creating a duplicate.",
         "Records Progress, Decision Log, Discoveries, Verification, and any new blockers.",
         "Marks the current milestone accurately as complete, partial, or blocked.",
+        "Leaves the next unfinished milestone decision-complete instead of vague carry-forward.",
         "Leaves the next handoff path explicit for execute and verify."
       ],
       "review_questions": [
         "Does the updated plan remain compact but genuinely resumable?",
-        "Does it preserve only the task-local truth needed for the next session?"
+        "Does it preserve only the task-local truth needed for the next session?",
+        "Would later execute know what to change, when to stop, and which specs/tests follow-through is part of done?"
       ]
     },
     {
@@ -179,7 +185,8 @@
         "repo_state": [
           "The pinned fixture is a three-app pnpm workspace with root AGENTS.md, README.md, specs/, and .agents/skills/ guidance.",
           "The work spans more than one session and needs explicit execute and verify handoffs.",
-          "Specs and tests follow-through both matter because the task touches repo truth and executable truth across multiple apps."
+          "Specs and tests follow-through both matter because the task touches repo truth and executable truth across multiple apps.",
+          "The first unfinished milestone must be specific enough that later execute can take it without guessing the slice contract."
         ],
         "required_inputs": [
           "evals/fixtures/cryptoli.json",
@@ -193,11 +200,13 @@
       "assertions": [
         "Chooses one explicit plans/YYYY-MM-DD-short-task-slug.md path and uses it consistently.",
         "Captures owning paths across root docs and the backend, frontend, and admin apps.",
+        "Makes the first unfinished milestone decision-complete with explicit slice-level specs/tests exit criteria.",
         "Names specs and tests follow-through explicitly instead of implying them.",
         "Leaves the plan bounded and resumable for execute and verify on later sessions."
       ],
       "review_questions": [
-        "Could a fresh session resume safely from repo truth plus the new plan alone?"
+        "Could a fresh session resume safely from repo truth plus the new plan alone?",
+        "Could execute take the first unfinished slice without re-planning the done condition or follow-through?"
       ]
     }
   ]

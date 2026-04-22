@@ -18,6 +18,10 @@ Helper scripts are optional accelerators only: they may change invocation,
 machine-readable transport, and presentation, but they must not redefine the
 skills themselves.
 
+This source repo also tracks `.agents/skills -> ../src` as a local symlink
+mirror so copied-layout skill paths work while editing here. `src/` remains
+the owning surface.
+
 ## Start With Shipped Reality
 
 Read this repo in the same order the shipped workflow expects:
@@ -35,6 +39,8 @@ background, but they are not the default operational reading chain.
 
 - six source skills under `src/`: `consult`, `execute`, `plan`, `specs`,
   `tests`, and `verify`
+- tracked local mirror: `.agents/skills -> ../src` for copied-layout
+  ergonomics in this source repo only
 - live repo-truth docs: `AGENTS.md`, `specs/`, `README.md`,
   `MAINTENANCE.md`, and `SOURCES.md`
 - shared eval surface: `src/<skill>/evals/evals.json`, `evals/runtime.json`,
@@ -56,6 +62,7 @@ background, but they are not the default operational reading chain.
 - `AGENTS.md` and `specs/` = repo truth
 - checks and tests = executable truth
 - `src/<skill>/evals/evals.json` and `evals/` = tracked eval truth
+- `.agents/skills/` = local symlink mirror of `src/`, not a second truth layer
 - `plans/*.md` = canonical task truth for plan-driven work plus plan-shaped
   eval fixtures used by tracked skill evals
 - code and checked-in docs = implemented reality
@@ -65,6 +72,8 @@ background, but they are not the default operational reading chain.
 
 ```text
 .
+├── .agents/
+│   └── skills -> ../src
 ├── AGENTS.md
 ├── CLAUDE.md -> AGENTS.md
 ├── README.md
@@ -89,6 +98,10 @@ Completed historical records also remain under `plans/`.
 Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
 `evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
 ships the optional `scripts/loop.py` helper.
+
+In this source repo, `.agents/skills` resolves to the same files through the
+tracked symlink mirror. Edit `src/`; use the mirror only when you need
+copied-layout paths locally.
 
 ## Six-Skill Workflow
 

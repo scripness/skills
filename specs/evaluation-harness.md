@@ -1,6 +1,6 @@
 ---
 Status: Shipped
-Last verified: 2026-04-20
+Last verified: 2026-04-22
 ---
 
 # Evaluation Harness
@@ -71,6 +71,10 @@ are not created by `init-run`:
 
 - Use `train` cases for tuning and `validation` cases for regression gating.
 - Must-run cases live on the `validation` split only.
+- A skill may keep additional non-must-run `validation` cases when they add
+  signal; for `tests`, the broader cryptoli layer-selection workflow is the
+  must-run case while the narrower backend-only coverage scenario remains
+  extra validation coverage.
 - Compare against the previous committed version of the same skill by default.
 - Add a no-skill baseline only when it adds real signal.
 - Run must-run validation cases three times by default.

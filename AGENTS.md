@@ -28,6 +28,11 @@ scripts in `src/execute/scripts/` may standardize invocation, exit-code
 mapping, machine-readable events, or terminal presentation, but they must not
 become a competing workflow contract.
 
+This source repo also tracks `.agents/skills -> ../src` as a local symlink
+mirror so copied-layout paths can be exercised without duplicating files.
+Edit the owning files under `src/`; do not treat the mirror as a second truth
+layer.
+
 ## Repo Truth
 
 - `AGENTS.md` = repo-wide operational truth
@@ -38,6 +43,8 @@ become a competing workflow contract.
 - `plans/*.md` = task-local plans for new work, a small number of tracked
   plan-shaped eval fixtures, plus completed historical build records
 - `src/` = source-of-truth skill payloads
+- `.agents/skills/` = local symlink mirror of `src/` for copied-layout checks;
+  not an owning truth layer
 - `evals/` = shared harness metadata and helper surface
 - `.tmp/evals/` = generated local run artifacts; never treat them as tracked
   truth
@@ -55,6 +62,10 @@ The shipped source skills live under `src/`:
 - `src/specs/`
 - `src/tests/`
 - `src/verify/`
+
+This source repo also exposes the same skill tree through `.agents/skills/`
+via the tracked `skills -> ../src` symlink mirror. `src/` remains
+authoritative.
 
 When copied into a target repo, these directories are intended to live under
 `.agents/skills/`.
@@ -82,6 +93,8 @@ When copied into a target repo, these directories are intended to live under
 - `evals/scripts/harness.py` validates tracked harness truth and scaffolds
   `.tmp/evals/<run-id>/`.
 - `Makefile` is a thin wrapper over the harness helper.
+- `.agents/skills -> ../src` is a tracked local convenience mirror for copied
+  layout testing only.
 - `CLAUDE.md` must remain a thin symlink mirror to `AGENTS.md`.
 
 ## Skill Roles
@@ -114,6 +127,8 @@ Keep generic `plans/*.md` references where they are part of the shipped
 - Use manual copy as the default distribution and refresh workflow.
 - Copy the shipped skill directories from `src/` into `.agents/skills/` in the
   target repo.
+- In this source repo, keep using `src/` as the owning surface; the local
+  `.agents/skills` mirror is convenience only.
 - Refresh downstream repos by re-copying only the changed skill directories
   and supporting assets.
 - Treat install helpers, git subtree wiring, provider-specific plugins, and
@@ -123,6 +138,8 @@ Keep generic `plans/*.md` references where they are part of the shipped
 
 ```text
 .
+├── .agents/
+│   └── skills -> ../src
 ├── AGENTS.md
 ├── CLAUDE.md -> AGENTS.md
 ├── README.md

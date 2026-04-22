@@ -87,7 +87,7 @@
           "execute:execute-workflow-validation-cryptoli-plan-slice",
           "plan:plan-workflow-validation-cryptoli-create-plan",
           "specs:specs-workflow-validation-cryptoli-sync-truth",
-          "tests:tests-workflow-validation-cryptoli-backend-coverage",
+          "tests:tests-workflow-validation-cryptoli-layer-selection",
           "verify:verify-workflow-validation-cryptoli-repo-truth-review"
         ]
       },
@@ -96,7 +96,8 @@
       ],
       "notes": [
         "The initial must-run trigger surface uses the validation boundary pack for each shipped skill.",
-        "The initial must-run workflow surface uses one cryptoli-backed validation case per skill."
+        "The initial must-run workflow surface uses one cryptoli-backed validation case per skill.",
+        "For tests, the selected workflow case covers broader cryptoli layer selection across backend, frontend, and e2e risk, while narrower backend-only validation coverage stays outside must-run when it still adds signal."
       ]
     },
     "artifact_review": {
