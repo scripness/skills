@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -36,7 +37,8 @@ def script_path() -> Path:
     path = Path(__file__)
     if not path.is_absolute():
         path = Path.cwd() / path
-    return path
+    # Normalize lexical path segments like ".." without collapsing symlinks.
+    return Path(os.path.abspath(os.fspath(path)))
 
 
 def current_skill_root() -> Path:
