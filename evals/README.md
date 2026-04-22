@@ -30,9 +30,9 @@ The repo ships a direct harness helper plus a thin repo-root `Makefile`
 wrapper. The wrappers stay deliberately small and delegate unique logic back
 to `evals/scripts/harness.py`.
 
-See [../MAINTENANCE.md](../MAINTENANCE.md) for the repo-wide maintenance loop
-that uses this harness surface to refresh eval workspaces and upstream durable
-improvements.
+See [../docs/maintenance.md](../docs/maintenance.md) for the repo-wide
+maintenance loop that uses this harness surface to refresh eval workspaces and
+upstream durable improvements.
 
 - Run `make help` to list the shipped maintenance targets.
 - Run `make validate` to validate shipped skill structure, `SKILL.md`

@@ -31,7 +31,7 @@ six-skill system cleanly once the skills and eval harness exist.
   delegating unique harness logic to `evals/scripts/harness.py`
 - Optional thin helper scripts under `src/execute/scripts/` only if they earn their
   place after the repo-level operator surface exists
-- Repo-root `MAINTENANCE.md` plus final `README.md`, `AGENTS.md`, and
+- `docs/maintenance.md` plus final `README.md`, `AGENTS.md`, and
   `evals/README.md` polish
 
 ## Repo Context
@@ -52,8 +52,9 @@ six-skill system cleanly once the skills and eval harness exist.
   generated run artifacts remain outside tracked source under `.tmp/evals/`
 - Owning spec paths: `AGENTS.md` for the authoritative workflow contract and
   command table, `README.md` for the shipped usage surface, `evals/README.md`
-  for eval artifact and review procedure details, and repo-root
-  `MAINTENANCE.md` for operator guidance on updating skills, running evals, and
+  for eval artifact and review procedure details, and
+  `docs/maintenance.md` for operator guidance on updating skills, running
+  evals, and
   upstreaming improvements from downstream repos; update `plans/2026-04-14-phase-00-design-doc.md` only if
   shipped behavior would otherwise make the roadmap wording false
 - Owning test paths: there is still no formal automated suite in this repo, so
@@ -79,7 +80,7 @@ six-skill system cleanly once the skills and eval harness exist.
   validation coverage, and eval refresh workflow, so keep `AGENTS.md`,
   `README.md`, and `evals/README.md` aligned before calling Milestone 1
   complete. Milestone 3 adds operator guidance, so keep those docs plus
-  `MAINTENANCE.md` aligned before calling the phase complete.
+  `docs/maintenance.md` aligned before calling the phase complete.
 - `tests`: required for any new executable surface in this phase. The minimum
   acceptable follow-through is smoke execution of each new `make` target or
   helper entrypoint, `--help` coverage for any script interface, and
@@ -104,7 +105,7 @@ six-skill system cleanly once the skills and eval harness exist.
    action; otherwise close the milestone by recording that no helper earned
    inclusion.
 3. Finish final docs and maintenance guidance so shipped truth matches the
-   implemented system: add repo-root `MAINTENANCE.md`, sync `README.md`,
+   implemented system: add `docs/maintenance.md`, sync `README.md`,
    `AGENTS.md`, and `evals/README.md`, and close any remaining wording drift
    about the durable-state model, maintenance loop, and upstreaming guidance.
 
@@ -119,7 +120,7 @@ six-skill system cleanly once the skills and eval harness exist.
   stderr diagnostics, report meaningful exit codes, and implement `--dry-run`
   or explicit confirmation when stateful behavior exists.
 - Confirm `AGENTS.md`, `README.md`, and `evals/README.md` describe the same
-  shipped command surface for Milestone 1; include `MAINTENANCE.md` in that
+  shipped command surface for Milestone 1; include `docs/maintenance.md` in that
   sync set once Milestone 3 lands.
 - Smoke-run each shipped command surface and record the exact commands and
   results in this plan before closing milestones.
@@ -201,7 +202,7 @@ six-skill system cleanly once the skills and eval harness exist.
   the relevant execute eval workspace for this skill slice.
 - [2026-04-17] Re-ran `make help` during the Milestone 3 doc-sync slice and it
   passed, still printing the shipped repo-level maintenance targets described
-  in `README.md`, `AGENTS.md`, and the new `MAINTENANCE.md`.
+  in `README.md`, `AGENTS.md`, and the new `docs/maintenance.md`.
 - [2026-04-17] Re-ran `make validate` during the Milestone 3 doc-sync slice
   and it passed, still reporting 6 skills, 6 skill frontmatter files, 6 agent
   shims, 4 required local assets, 12 trigger packs, 18 workflow cases, and 1
@@ -214,7 +215,7 @@ six-skill system cleanly once the skills and eval harness exist.
   explicit-plan helper contract, external runner requirement, and exit codes.
 - [2026-04-17] Re-ran `git diff --check` during the Milestone 3 doc-sync slice
   and it passed with no whitespace or patch-format issues after adding
-  `MAINTENANCE.md` and the final doc links.
+  `docs/maintenance.md` and the final doc links.
 - [2026-04-17] Ran `git diff --check` again after the required final plan
   update and it still passed, confirming the final Milestone 3 tree is clean.
 - [2026-04-17] Re-ran `make help` after the self-describing-surface repair and
@@ -277,10 +278,10 @@ six-skill system cleanly once the skills and eval harness exist.
   under `src/execute/scripts/` because it composes `execute` and `verify`; if no
   real gap remains after Milestone 1, close Milestone 2 explicitly without
   adding a helper just to satisfy the plan.
-- [2026-04-17] Use repo-root `MAINTENANCE.md` as the durable home for skill
+- [2026-04-17] Use `docs/maintenance.md` as the durable home for skill
   update guidance, eval-running guidance, and upstreaming notes from downstream
   repo work.
-- [2026-04-17] Keep `MAINTENANCE.md` as a Milestone 3 deliverable rather than
+- [2026-04-17] Keep `docs/maintenance.md` as a Milestone 3 deliverable rather than
   back-solving the missing file into the Milestone 1 slice; the Milestone 1
   sync gate is the shipped maintenance surface in `AGENTS.md`, `README.md`,
   and `evals/README.md`.
@@ -296,7 +297,7 @@ six-skill system cleanly once the skills and eval harness exist.
   relevant eval reports" for a skill edit as scaffolding a fresh
   `.tmp/evals/<run-id>/` workspace and review template for that skill, because
   the repo still does not ship automated model execution or grading.
-- [2026-04-17] Keep `MAINTENANCE.md` as an operator guide that ties together
+- [2026-04-17] Keep `docs/maintenance.md` as an operator guide that ties together
   skill updates, eval refresh, and downstream-upstream sync without turning it
   into a second workflow contract; `AGENTS.md` remains the authoritative
   refresh and boundary document for the repo.
@@ -353,6 +354,6 @@ six-skill system cleanly once the skills and eval harness exist.
 
 - Phase 06 is complete. The repo now ships a thin repo-level maintenance
   surface (`Makefile`, `evals/scripts/harness.py`, and the optional
-  `src/execute/scripts/loop.py`) plus a repo-root `MAINTENANCE.md` that keeps
+  `src/execute/scripts/loop.py`) plus `docs/maintenance.md` that keeps
   `README.md`, `AGENTS.md`, and `evals/README.md` aligned around the same
   provider-agnostic maintenance loop.

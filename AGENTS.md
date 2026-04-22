@@ -13,8 +13,8 @@ Read this repo from shipped reality in this order:
 1. `AGENTS.md`
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
-4. `MAINTENANCE.md` and `SOURCES.md` when the task needs operator guidance or
-   design grounding
+4. `docs/maintenance.md` and `docs/sources.md` when the task needs operator
+   guidance or design grounding
 5. the shipped surfaces under `src/`, `evals/`, `Makefile`, and
    `src/execute/scripts/loop.py`
 6. `plans/*.md` only when a task names an explicit plan path or when you need
@@ -38,8 +38,8 @@ layer.
 - `AGENTS.md` = repo-wide operational truth
 - `specs/` = durable topic truth for this repo
 - `README.md` = overview and usage surface
-- `MAINTENANCE.md` = operator loop for updates and eval refresh
-- `SOURCES.md` = durable external grounding
+- `docs/maintenance.md` = operator loop for updates and eval refresh
+- `docs/sources.md` = durable external grounding
 - `plans/*.md` = task-local plans for new work, a small number of tracked
   plan-shaped eval fixtures, plus completed historical build records
 - `src/` = source-of-truth skill payloads
@@ -143,8 +143,9 @@ Keep generic `plans/*.md` references where they are part of the shipped
 ├── AGENTS.md
 ├── CLAUDE.md -> AGENTS.md
 ├── README.md
-├── MAINTENANCE.md
-├── SOURCES.md
+├── docs/
+│   ├── maintenance.md
+│   └── sources.md
 ├── specs/
 ├── evals/
 │   ├── README.md
@@ -195,7 +196,7 @@ Always:
 
 - keep this repo provider-agnostic
 - keep docs synced to the shipped files under `src/`, `evals/`, `Makefile`,
-  and top-level repo docs
+  and repo docs
 - keep `AGENTS.md` concise and put durable topic truth in `specs/`
 - keep skill boundaries sharp
 - keep active task state in one explicit plan file when work becomes

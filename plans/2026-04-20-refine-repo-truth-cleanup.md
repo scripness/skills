@@ -47,7 +47,8 @@ agent can understand and use this repo without treating the completed
   `specs/repo-surface.md`, `specs/evaluation-harness.md`
 - Owning test paths: `N/A` for product tests; use repo maintenance checks only
   for this slice.
-- Related docs and commands: `MAINTENANCE.md`, `SOURCES.md`, `REFINE.md`,
+- Related docs and commands: `docs/maintenance.md`, `docs/sources.md`,
+  `REFINE.md`,
   `make validate`
 
 ## Dependencies

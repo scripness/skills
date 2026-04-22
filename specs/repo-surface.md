@@ -6,7 +6,7 @@ Last verified: 2026-04-21
 # Repo Surface
 
 > Source of truth: `src/`, `plans/`, `Makefile`,
-> `src/execute/scripts/loop.py`, and the top-level docs
+> `src/execute/scripts/loop.py`, and the repo docs
 > Non-owning trees to ignore unless explicitly in scope: `.git/`, `.tmp/evals/`
 > If this spec contradicts the code, the code is correct — update this spec.
 
@@ -29,7 +29,7 @@ system.
 
 ## Key Patterns
 
-- top-level docs are the live truth layer around the shipped source skills
+- repo docs are the live truth layer around the shipped source skills
 - each `src/<skill>/` directory is a copyable source skill payload
 - `.agents/skills` may exist as a local symlink mirror to `src/` for
   copied-layout checks, but `src/` remains the owning tree
@@ -41,8 +41,8 @@ system.
 
 - `AGENTS.md`: repo-wide operational truth
 - `README.md`: shipped-system overview
-- `MAINTENANCE.md`: operator loop for maintenance and eval refresh
-- `SOURCES.md`: durable external grounding
+- `docs/maintenance.md`: operator loop for maintenance and eval refresh
+- `docs/sources.md`: durable external grounding
 - `.agents/skills`: tracked local symlink mirror to `src/` for copied-layout
   ergonomics in this source repo
 - `specs/`: durable topic truth for this repo
@@ -102,8 +102,9 @@ not the mirror.
 - Put durable topic truth in `specs/`, not in task plans.
 - Keep `README.md` focused on the shipped system rather than historical build
   narration.
-- Use `MAINTENANCE.md` for operator commands and loops, and `SOURCES.md` for
-  external grounding instead of repeating them everywhere.
+- Use `docs/maintenance.md` for operator commands and loops, and
+  `docs/sources.md` for external grounding instead of repeating them
+  everywhere.
 
 ## Verification
 

@@ -85,7 +85,7 @@ repo, and remain easy to use locally while editing this source repo.
   `src/consult/evals/evals.json`, `src/execute/evals/evals.json`,
   `src/plan/evals/evals.json`, `src/tests/evals/evals.json`,
   `src/verify/evals/evals.json`
-- Owning spec paths: `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
+- Owning spec paths: `AGENTS.md`, `README.md`, `docs/maintenance.md`,
   `specs/workflow-contract.md`, `specs/repo-surface.md`,
   `specs/evaluation-harness.md`, `src/specs/SKILL.md`,
   `src/specs/assets/AGENTS.md`, `evals/README.md`
@@ -113,7 +113,7 @@ implementation changes durable behavior, boundaries, operating guidance, or
 coverage expectations, follow through with `specs` and `tests` rather than
 leaving drift behind.
 
-- `specs`: Required. Sync `AGENTS.md`, `README.md`, `MAINTENANCE.md`,
+- `specs`: Required. Sync `AGENTS.md`, `README.md`, `docs/maintenance.md`,
   `specs/workflow-contract.md`, `specs/repo-surface.md`,
   `specs/evaluation-harness.md`, `evals/README.md`, `src/specs/SKILL.md`, and
   `src/specs/assets/AGENTS.md` where the shipped portability and workflow
@@ -280,7 +280,7 @@ record the provenance here plus in `Decision Log`.
   works.
   Mechanical results: `git status --short` failed the tracked-state claim;
   `make validate`, `test -L .agents/skills && readlink .agents/skills && test -L CLAUDE.md`,
-  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md MAINTENANCE.md specs/workflow-contract.md specs/repo-surface.md`,
+  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md docs/maintenance.md specs/workflow-contract.md specs/repo-surface.md`,
   and `find . -maxdepth 2 \( -path './.git' -o -path './.tmp' \) -prune -o -maxdepth 2 -type d | sort`
   all passed. Verdict: `fail`. Remaining gaps: add the `.agents/skills ->
   ../src` mirror to tracked source (or remove the new tracked-mirror claims),
@@ -293,14 +293,14 @@ record the provenance here plus in `Decision Log`.
 - [2026-04-21 execute] Re-ran the Milestone 2 mirror checks after adding the
   symlink to git-tracked state:
   `test -L .agents/skills && readlink .agents/skills && test -L CLAUDE.md`,
-  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md MAINTENANCE.md specs/workflow-contract.md specs/repo-surface.md`,
+  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md docs/maintenance.md specs/workflow-contract.md specs/repo-surface.md`,
   `find . -maxdepth 2 \( -path './.git' -o -path './.tmp' \) -prune -o -maxdepth 2 -type d | sort`,
   and `make validate`; all passed. Milestone 2 is now ready for later
   `verify`, while Milestones 3-6 remain open.
 - [2026-04-21 verify] Findings: none for Milestone 2 local mirror + repo-truth
   sync. Re-ran `git status --short`, `git ls-files -s .agents/skills`,
   `test -L .agents/skills && readlink .agents/skills && test -L CLAUDE.md && readlink CLAUDE.md`,
-  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md MAINTENANCE.md specs/workflow-contract.md specs/repo-surface.md`,
+  `rg -n '\.agents/skills|symlink mirror|copied-layout' AGENTS.md README.md docs/maintenance.md specs/workflow-contract.md specs/repo-surface.md`,
   `find . -maxdepth 2 \( -path './.git' -o -path './.tmp' \) -prune -o -maxdepth 2 -type d | sort`,
   and `make validate`; all passed, and the tracked-mirror claims now match repo
   state. Verdict: `pass`. Remaining gaps: Milestones 3-6 remain open, and this
@@ -332,7 +332,7 @@ record the provenance here plus in `Decision Log`.
   plus `:36-123` show that scaffold only selected validation must-run cases.
   That leaves the required eval-workspace refresh and artifact review
   incomplete for the changed eval surface. Mechanical results:
-  `make validate` passed; `git diff --check -- AGENTS.md README.md MAINTENANCE.md specs/workflow-contract.md specs/repo-surface.md src/consult/SKILL.md src/consult/agents/openai.yaml src/consult/evals/evals.json src/plan/assets/plan-template.md src/verify/SKILL.md src/verify/agents/openai.yaml src/verify/evals/evals.json plans/2026-04-21-refine-02-portability-and-copy-readiness.md`
+  `make validate` passed; `git diff --check -- AGENTS.md README.md docs/maintenance.md specs/workflow-contract.md specs/repo-surface.md src/consult/SKILL.md src/consult/agents/openai.yaml src/consult/evals/evals.json src/plan/assets/plan-template.md src/verify/SKILL.md src/verify/agents/openai.yaml src/verify/evals/evals.json plans/2026-04-21-refine-02-portability-and-copy-readiness.md`
   passed; `rg -n "independent consult pass|copy-ready plan carry-forward|compare or synthesize|durable discoveries" src/consult/SKILL.md src/consult/agents/openai.yaml src/consult/evals/evals.json src/plan/assets/plan-template.md`
   and
   `rg -n "independent verify pass|final verdict|compare them explicitly|supporting evidence" src/verify/SKILL.md src/verify/agents/openai.yaml src/verify/evals/evals.json`
@@ -451,7 +451,7 @@ record the provenance here plus in `Decision Log`.
   mixes `SELECTION=must-run` guidance with later slice-specific
   `SELECTION=all` proof points, so a fresh `execute` pass would have to guess
   the concrete Milestone 6 contract. Mechanical results: `make validate`
-  passed; `git diff --check -- AGENTS.md MAINTENANCE.md README.md
+  passed; `git diff --check -- AGENTS.md docs/maintenance.md README.md
   evals/README.md evals/runtime.json
   plans/2026-04-21-refine-02-portability-and-copy-readiness.md
   specs/evaluation-harness.md specs/repo-surface.md
@@ -507,7 +507,7 @@ record the provenance here plus in `Decision Log`.
   edits were needed because this validation-only slice exposed no repo-truth
   or eval-truth drift.
 - [2026-04-22 verify] Findings: none. Re-ran `make validate`,
-  `git diff --check -- AGENTS.md MAINTENANCE.md README.md evals/README.md
+  `git diff --check -- AGENTS.md docs/maintenance.md README.md evals/README.md
   evals/runtime.json
   plans/2026-04-21-refine-02-portability-and-copy-readiness.md
   specs/evaluation-harness.md specs/repo-surface.md
@@ -527,7 +527,7 @@ record the provenance here plus in `Decision Log`.
   `python3 -m py_compile src/execute/scripts/providers/codex_loop.py src/execute/scripts/providers/codex_loop_dashboard.py`,
   `python3 src/execute/scripts/providers/codex_loop.py --dry-run --plan plans/2026-04-21-refine-02-portability-and-copy-readiness.md`,
   `python3 src/execute/scripts/providers/codex_loop_dashboard.py --plain --dry-run --plan plans/2026-04-21-refine-02-portability-and-copy-readiness.md`,
-  `rg -n "\\.agents/skills|symlink mirror|copied-layout|decision-complete|under-specified|slice-level|compare or synthesize|independent (consult|verify) pass|tests-workflow-validation-cryptoli-layer-selection|tests-workflow-validation-cryptoli-backend-coverage|branch|PR title|commit" AGENTS.md README.md MAINTENANCE.md evals/README.md specs/workflow-contract.md specs/repo-surface.md specs/evaluation-harness.md src/consult/SKILL.md src/consult/agents/openai.yaml src/consult/evals/evals.json src/execute/SKILL.md src/execute/agents/openai.yaml src/execute/evals/evals.json src/plan/SKILL.md src/plan/agents/openai.yaml src/plan/assets/plan-template.md src/plan/evals/evals.json src/specs/assets/AGENTS.md src/tests/evals/evals.json src/verify/SKILL.md src/verify/agents/openai.yaml src/verify/evals/evals.json evals/runtime.json`,
+  `rg -n "\\.agents/skills|symlink mirror|copied-layout|decision-complete|under-specified|slice-level|compare or synthesize|independent (consult|verify) pass|tests-workflow-validation-cryptoli-layer-selection|tests-workflow-validation-cryptoli-backend-coverage|branch|PR title|commit" AGENTS.md README.md docs/maintenance.md evals/README.md specs/workflow-contract.md specs/repo-surface.md specs/evaluation-harness.md src/consult/SKILL.md src/consult/agents/openai.yaml src/consult/evals/evals.json src/execute/SKILL.md src/execute/agents/openai.yaml src/execute/evals/evals.json src/plan/SKILL.md src/plan/agents/openai.yaml src/plan/assets/plan-template.md src/plan/evals/evals.json src/specs/assets/AGENTS.md src/tests/evals/evals.json src/verify/SKILL.md src/verify/agents/openai.yaml src/verify/evals/evals.json evals/runtime.json`,
   and inspected `.tmp/evals/2026-04-22-refine-02-m6-validation-all/run.json`
   plus `review-template.md`; all matched the tightened workflow and eval
   contract, including 28 scaffolded selected cases across the five changed
