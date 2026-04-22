@@ -43,13 +43,12 @@ chosen implementation changes behavior that needs coverage follow-through.
 
 No scripts ship with this skill.
 
-Optional plan-driven helpers for the broader workflow live under:
-- `../execute/scripts/loop.py`
-- `../execute/scripts/providers/codex_loop.py`
-- `../execute/scripts/providers/codex_loop_dashboard.py`
+Optional plan-driven execute helpers ship with the `execute` skill. If
+`execute` is installed locally, open its README for `loop.py` and the optional
+Codex wrappers.
 
 ## Related Skills
 
-- `../plan/README.md`: use when the direction is clear but the work needs durable task state
-- `../execute/README.md`: use when implementation should begin now
-- `../verify/README.md`: use when there is already a concrete plan, diff, or claim to judge
+- `plan`: use when the direction is clear but the work needs durable task state
+- `execute`: use when implementation should begin now
+- `verify`: use when there is already a concrete plan, diff, or claim to judge

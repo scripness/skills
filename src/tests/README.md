@@ -43,13 +43,12 @@ or, when a repo is weak on both repo truth and test truth:
 
 No scripts ship with this skill.
 
-Optional plan-driven helpers for the broader workflow live under:
-- `../execute/scripts/loop.py`
-- `../execute/scripts/providers/codex_loop.py`
-- `../execute/scripts/providers/codex_loop_dashboard.py`
+Optional plan-driven execute helpers ship with the `execute` skill. If
+`execute` is installed locally, open its README for `loop.py` and the optional
+Codex wrappers.
 
 ## Related Skills
 
-- `../execute/README.md`: use before test sync when implementation changes are still pending
-- `../verify/README.md`: use after test follow-through for adversarial review
-- `../specs/README.md`: use when repo-truth docs also need to be corrected
+- `execute`: use before test sync when implementation changes are still pending
+- `verify`: use after test follow-through for adversarial review
+- `specs`: use when repo-truth docs also need to be corrected

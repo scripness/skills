@@ -47,13 +47,12 @@ or, for a bounded implementation slice with stale docs:
 
 No scripts ship with this skill.
 
-Optional plan-driven helpers for the broader workflow live under:
-- `../execute/scripts/loop.py`
-- `../execute/scripts/providers/codex_loop.py`
-- `../execute/scripts/providers/codex_loop_dashboard.py`
+Optional plan-driven execute helpers ship with the `execute` skill. If
+`execute` is installed locally, open its README for `loop.py` and the optional
+Codex wrappers.
 
 ## Related Skills
 
-- `../consult/README.md`: use after repo truth is good enough to choose a direction
-- `../plan/README.md`: use when the task needs durable task-local state
-- `../tests/README.md`: use when test truth also needs syncing
+- `consult`: use after repo truth is good enough to choose a direction
+- `plan`: use when the task needs durable task-local state
+- `tests`: use when test truth also needs syncing

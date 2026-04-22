@@ -93,7 +93,8 @@ When copied into a target repo, these directories are intended to live under
   and falls back to the raw wrapper output when the dashboard is unsuitable.
 - `scripts/sync_downstream.py` syncs a filtered downstream skill install
   surface into a target repo's `.agents/skills/` and refreshes the target
-  `README.md` `## Agentic Workflow` section.
+  `README.md` `## Agentic Workflow` section so it stays truthful for the
+  currently installed shipped skills.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
@@ -208,8 +209,8 @@ Completed historical records also remain under `plans/`.
 Always:
 
 - keep this repo provider-agnostic
-- keep docs synced to the shipped files under `src/`, `evals/`, `Makefile`,
-  and repo docs
+- keep docs synced to the shipped files under `src/`, `scripts/`, `evals/`,
+  `Makefile`, and repo docs
 - keep `AGENTS.md` concise and put durable topic truth in `specs/`
 - keep skill boundaries sharp
 - keep active task state in one explicit plan file when work becomes

@@ -60,8 +60,8 @@ When copied into a target repo, these live under:
 
 ## Related Skills
 
-- `../consult/README.md`: use when the next move is still unclear
-- `../plan/README.md`: use when the work needs durable task state
-- `../verify/README.md`: use after implementation for adversarial review
-- `../specs/README.md`: use when repo truth needs syncing
-- `../tests/README.md`: use when test truth or coverage needs syncing
+- `consult`: use when the next move is still unclear
+- `plan`: use when the work needs durable task state
+- `verify`: use after implementation for adversarial review
+- `specs`: use when repo truth needs syncing
+- `tests`: use when test truth or coverage needs syncing

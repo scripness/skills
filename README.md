@@ -31,7 +31,8 @@ Read this repo in the same order the shipped workflow expects:
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
 4. `docs/maintenance.md` and `docs/sources.md` as needed
-5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/loop.py`
+5. `src/`, `scripts/`, `evals/`, `Makefile`, and
+   `src/execute/scripts/loop.py`
 
 Completed historical plan records remain available under `plans/` as
 background, but they are not the default operational reading chain.

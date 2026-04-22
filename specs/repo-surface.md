@@ -94,7 +94,7 @@ not the mirror.
   refresh and leaves unrelated custom skills in place.
 - The sync helper also creates or fully replaces the target `README.md`
   `## Agentic Workflow` section so the human-facing workflow overview stays in
-  sync with upstream wording.
+  sync with upstream wording and the currently installed shipped skills.
 
 ## Plans Directory Semantics
 

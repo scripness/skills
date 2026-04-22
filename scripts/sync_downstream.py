@@ -12,29 +12,12 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SRC_ROOT = REPO_ROOT / "src"
 DOWNSTREAM_SKILLS_RELATIVE = Path(".agents") / "skills"
 SECTION_HEADING = "## Agentic Workflow"
-MANAGED_SECTION = """## Agentic Workflow
-
-This repo uses a local six-skill workflow under `.agents/skills/`:
-`consult`, `plan`, `execute`, `verify`, `specs`, and `tests`.
-
-Use one skill when the task is narrow, or compose them into a full workflow:
-`consult` to clarify, `plan` to record durable task state, `execute` to
-complete one bounded slice, and `verify` to review the result. Use `specs`
-when repo truth is missing or stale, and `tests` when test truth or coverage
-needs to be added or synced.
-
-Optional helpers for plan-driven work live under
-`.agents/skills/execute/scripts/`:
-- `python3 .agents/skills/execute/scripts/loop.py --help`
-- `python3 .agents/skills/execute/scripts/providers/codex_loop.py --help`
-- `python3 .agents/skills/execute/scripts/providers/codex_loop_dashboard.py --help`
-
-For the longer human-facing description of each skill, open
-`.agents/skills/<skill>/README.md`.
-"""
+WORKFLOW_SKILLS = ("consult", "plan", "execute", "verify", "specs", "tests")
 IGNORED_DIRECTORY_NAMES = {"evals", "__pycache__"}
 IGNORED_FILE_SUFFIXES = {".pyc", ".pyo", ".pyd"}
-HEADING_RE = re.compile(r"^[ ]{0,3}(# |## )")
+SECTION_HEADING_RE = re.compile(r"^[ ]{0,3}## Agentic Workflow[ \t]*$")
+ATX_HEADING_RE = re.compile(r"^[ ]{0,3}(# |## )")
+SETEXT_UNDERLINE_RE = re.compile(r"^[ ]{0,3}(=+|-+)[ \t]*$")
 FENCE_RE = re.compile(r"^[ ]{0,3}([`~]{3,})")
 
 
@@ -106,12 +89,15 @@ def validate_target_root(target_root: Path) -> None:
         )
 
 
-def validate_target_skills_root(target_skills_root: Path) -> None:
-    if target_skills_root.is_symlink():
-        raise ValueError(
-            "downstream skills path must not be a symlink: "
-            f"{target_skills_root}"
-        )
+def validate_target_skills_root(target_root: Path, target_skills_root: Path) -> None:
+    current = target_root
+    for part in DOWNSTREAM_SKILLS_RELATIVE.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError(
+                "downstream skills path must not traverse symlinks: "
+                f"{current}"
+            )
     if target_skills_root.exists() and not target_skills_root.is_dir():
         raise ValueError(
             f"downstream skills path is not a directory: {target_skills_root}"
@@ -144,6 +130,74 @@ def ignore_downstream_noise(_directory: str, names: list[str]) -> set[str]:
 
 def prefix(dry_run: bool) -> str:
     return "[dry-run] " if dry_run else ""
+
+
+def ordered_workflow_skills(skills: list[str]) -> list[str]:
+    known = [name for name in WORKFLOW_SKILLS if name in skills]
+    extras = [name for name in skills if name not in WORKFLOW_SKILLS]
+    return known + extras
+
+
+def format_skill_list(skills: list[str]) -> str:
+    return ", ".join(f"`{name}`" for name in ordered_workflow_skills(skills))
+
+
+def resolve_installed_skills(
+    target_skills_root: Path, available_skills: list[str], selected_skills: list[str]
+) -> list[str]:
+    selected = set(selected_skills)
+    installed = []
+    for skill_name in ordered_workflow_skills(available_skills):
+        skill_path = target_skills_root / skill_name
+        if skill_name in selected or skill_path.exists():
+            installed.append(skill_name)
+    return installed
+
+
+def render_managed_section(installed_skills: list[str]) -> str:
+    section_lines = [
+        SECTION_HEADING,
+        "",
+        "This repo uses the upstream six-skill workflow through local skills under",
+        "`.agents/skills/`.",
+        "",
+        f"Shipped local skills currently installed here: {format_skill_list(installed_skills)}.",
+        "",
+        "Use one skill when the task is narrow, or compose them into a full workflow:",
+        "`consult` to clarify, `plan` to record durable task state, `execute` to",
+        "complete one bounded slice, and `verify` to review the result. Use `specs`",
+        "when repo truth is missing or stale, and `tests` when test truth or coverage",
+        "needs to be added or synced.",
+        "",
+    ]
+
+    if "execute" in installed_skills:
+        section_lines.extend(
+            [
+                "Optional helpers for plan-driven work are available under",
+                "`.agents/skills/execute/scripts/`:",
+                "- `python3 .agents/skills/execute/scripts/loop.py --help`",
+                "- `python3 .agents/skills/execute/scripts/providers/codex_loop.py --help`",
+                "- `python3 .agents/skills/execute/scripts/providers/codex_loop_dashboard.py --help`",
+                "",
+            ]
+        )
+    else:
+        section_lines.extend(
+            [
+                "If `execute` is installed locally later, optional plan-driven helpers",
+                "will live under `.agents/skills/execute/scripts/`.",
+                "",
+            ]
+        )
+
+    section_lines.extend(
+        [
+            "For the longer human-facing description of each installed skill, open",
+            "`.agents/skills/<skill>/README.md`.",
+        ]
+    )
+    return "\n".join(section_lines)
 
 
 def sync_skill(skill_name: str, target_skills_root: Path, dry_run: bool) -> None:
@@ -185,12 +239,26 @@ def update_fence_state(
     return fence_state
 
 
+def is_managed_heading(line: str) -> bool:
+    return bool(SECTION_HEADING_RE.match(line.rstrip("\r\n")))
+
+
+def is_setext_boundary(lines: list[str], index: int) -> bool:
+    if index <= 0:
+        return False
+    if not SETEXT_UNDERLINE_RE.match(lines[index].rstrip("\r\n")):
+        return False
+
+    previous = lines[index - 1].strip()
+    return bool(previous)
+
+
 def find_managed_section(lines: list[str]) -> tuple[int, int] | None:
     matches: list[int] = []
     fence_state: tuple[str, int] | None = None
     for index, line in enumerate(lines):
         fence_state = update_fence_state(line, fence_state)
-        if fence_state is None and line.strip() == SECTION_HEADING:
+        if fence_state is None and is_managed_heading(line):
             matches.append(index)
 
     if len(matches) > 1:
@@ -203,14 +271,16 @@ def find_managed_section(lines: list[str]) -> tuple[int, int] | None:
     fence_state = None
     for index in range(start + 1, len(lines)):
         fence_state = update_fence_state(lines[index], fence_state)
-        if fence_state is None and HEADING_RE.match(lines[index]):
+        if fence_state is None and ATX_HEADING_RE.match(lines[index]):
             return start, index
+        if fence_state is None and is_setext_boundary(lines, index):
+            return start, index - 1
 
     return start, len(lines)
 
 
-def render_readme(existing: str) -> str:
-    managed = MANAGED_SECTION.rstrip()
+def render_readme(existing: str, installed_skills: list[str]) -> str:
+    managed = render_managed_section(installed_skills).rstrip()
     if not existing.strip():
         return managed + "\n"
 
@@ -232,10 +302,18 @@ def render_readme(existing: str) -> str:
     return "\n\n".join(parts) + "\n"
 
 
-def prepare_readme_sync(target_root: Path) -> tuple[Path, str, str]:
+def prepare_readme_sync(
+    target_root: Path,
+    target_skills_root: Path,
+    available_skills: list[str],
+    selected_skills: list[str],
+) -> tuple[Path, str, str]:
     readme_path = target_root / "README.md"
     existing = readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
-    rendered = render_readme(existing)
+    installed_skills = resolve_installed_skills(
+        target_skills_root, available_skills, selected_skills
+    )
+    rendered = render_readme(existing, installed_skills)
     return readme_path, existing, rendered
 
 
@@ -258,7 +336,7 @@ def main(argv: list[str]) -> int:
         target_root = Path(args.target).expanduser().resolve()
         validate_target_root(target_root)
         target_skills_root = target_root / DOWNSTREAM_SKILLS_RELATIVE
-        validate_target_skills_root(target_skills_root)
+        validate_target_skills_root(target_root, target_skills_root)
     except (RuntimeError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -267,7 +345,9 @@ def main(argv: list[str]) -> int:
     print(f"skills: {', '.join(selected_skills)}")
 
     try:
-        readme_path, existing_readme, rendered_readme = prepare_readme_sync(target_root)
+        readme_path, existing_readme, rendered_readme = prepare_readme_sync(
+            target_root, target_skills_root, available_skills, selected_skills
+        )
         if not target_skills_root.exists():
             print(f"{prefix(args.dry_run)}ensure {target_skills_root}")
         if not target_skills_root.exists() and not args.dry_run:

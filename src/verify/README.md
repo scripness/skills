@@ -46,13 +46,12 @@ truthful over time.
 
 No scripts ship with this skill.
 
-Optional plan-driven helpers that call into `verify` live under:
-- `../execute/scripts/loop.py`
-- `../execute/scripts/providers/codex_loop.py`
-- `../execute/scripts/providers/codex_loop_dashboard.py`
+Optional plan-driven execute helpers ship with the `execute` skill. If
+`execute` is installed locally, open its README for `loop.py` and the optional
+Codex wrappers.
 
 ## Related Skills
 
-- `../execute/README.md`: use before verification when implementation is still pending
-- `../plan/README.md`: use when the task-local plan needs to be created or repaired
-- `../consult/README.md`: use when the next move is still ambiguous
+- `execute`: use before verification when implementation is still pending
+- `plan`: use when the task-local plan needs to be created or repaired
+- `consult`: use when the next move is still ambiguous

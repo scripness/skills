@@ -43,13 +43,12 @@ same exact plan file path.
 
 No scripts ship directly with this skill.
 
-Optional plan-driven helpers for executing and reviewing plan slices live under:
-- `../execute/scripts/loop.py`
-- `../execute/scripts/providers/codex_loop.py`
-- `../execute/scripts/providers/codex_loop_dashboard.py`
+Optional plan-driven execute helpers ship with the `execute` skill. If
+`execute` is installed locally, open its README for `loop.py` and the optional
+Codex wrappers.
 
 ## Related Skills
 
-- `../consult/README.md`: use before planning when the direction is not settled
-- `../execute/README.md`: use to implement one bounded slice from the plan
-- `../verify/README.md`: use to review the plan and later implementation slices
+- `consult`: use before planning when the direction is not settled
+- `execute`: use to implement one bounded slice from the plan
+- `verify`: use to review the plan and later implementation slices

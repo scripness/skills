@@ -71,8 +71,8 @@ target repos.
 - `plans/*.md` own task-local plans for new work and also contain a small
   number of tracked plan-shaped eval fixtures plus completed historical build
   records.
-- `src/` and `evals/` are the shipped implementation surface behind those
-  docs.
+- `src/`, `scripts/`, and `evals/` are the shipped implementation surface
+  behind those docs.
 - `.agents/skills/` may exist locally as a symlink mirror to `src/` for
   copied-layout checks, but it is not a separate truth layer.
 
@@ -110,7 +110,7 @@ target repos.
   `__pycache__/`, and `*.py[cod]`.
 - The sync helper also creates or fully replaces the target `README.md`
   `## Agentic Workflow` section with the managed human-facing workflow
-  overview.
+  overview, including the currently installed shipped skills.
 - In this source repo, `.agents/skills` may exist as a tracked symlink mirror
   to `src/` for local copied-layout checks; it does not replace `src/` as the
   authoritative source.

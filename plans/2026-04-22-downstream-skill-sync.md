@@ -144,6 +144,12 @@ Done means:
 These are the working default drafts for implementation. Treat them as the
 copy-ready baseline unless later review finds a concrete wording problem.
 
+- [2026-04-22] A later heavy verification pass found that the fixed six-skill
+  downstream root README copy and the path-based cross-skill README references
+  were not truthful under subset sync. Treat the shipped files under
+  `scripts/sync_downstream.py` and `src/*/README.md` as the current truth; the
+  older draft text below remains as historical design background.
+
 ### Downstream Root README
 
 Use this exact section shape for downstream `README.md`:
@@ -676,6 +682,23 @@ Optional plan-driven helpers for the broader workflow live under:
    Slice-level `tests` exit criteria: rerun the new target-rejection proofs,
    the disposable sync proof, and `make validate`; no `tests` skill sync
    required.
+7. Subset-safe README truth and heading hardening: update
+   `scripts/sync_downstream.py`, `src/<skill>/README.md`, and the owning
+   docs/specs so subset sync leaves truthful human-facing copy, managed
+   heading detection ignores indented code examples, and later setext headings
+   are preserved instead of being swallowed by the replacement. Done when a
+   subset sync advertises only the currently installed shipped skills, the
+   copied skill `README.md` files no longer depend on sibling skill paths,
+   indented or nested code examples containing `## Agentic Workflow` no longer
+   trigger false matches, setext `Keep Me` sections survive replacement, and
+   the repo-truth docs describe the subset-safe managed section truthfully.
+   Owning paths: `scripts/sync_downstream.py`, `src/<skill>/README.md`,
+   `AGENTS.md`, `specs/workflow-contract.md`, and `specs/repo-surface.md`.
+   Slice-level `specs` exit criteria: sync the affected repo-truth wording in
+   the same slice. Slice-level `tests` exit criteria: rerun the subset-sync
+   proof, indented-code proof, nested-fence proof, setext-boundary proof,
+   malformed-README preflight, `make validate`, and `git diff --check`; no
+   `tests` skill sync required.
 
 ## Verification
 
@@ -841,6 +864,55 @@ Optional plan-driven helpers for the broader workflow live under:
 - [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-duplicate-readme>`
   still fails before downstream mutation when the target `README.md` contains
   duplicate `## Agentic Workflow` headings.
+- [2026-04-22] A later seven-way read-only verification pass (six GPT-5.4
+  xhigh subagents plus one main-session review) disproved completion again:
+  subset sync still wrote a fixed six-skill root README block, the copied
+  skill `README.md` files still referenced sibling skill paths that might not
+  exist under subset installs, and `line.strip() == SECTION_HEADING` still
+  treated indented or nested code examples as real managed headings.
+- [2026-04-22] `make sync TARGET=<tmp-subset> SKILL="consult execute"` now
+  creates only `consult` and `execute`, preserves an unrelated custom skill,
+  writes a managed downstream `README.md` section that lists only the
+  currently installed shipped skills, and keeps the execute-helper commands
+  conditional on `execute` actually being present.
+- [2026-04-22] The copied `consult` and `execute` README files from that
+  subset proof now use skill-name guidance rather than sibling file paths, so
+  the downstream human-facing copy stays truthful even when other shipped
+  skills are absent.
+- [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-indented-code> --skill consult`
+  now leaves an indented `    ## Agentic Workflow` code example untouched and
+  appends the managed section later in the file instead of treating the code
+  line as the managed heading.
+- [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-nested-fence> --skill consult`
+  now succeeds when a nested fenced code example contains
+  `## Agentic Workflow`; the helper ignores that example text and updates only
+  the real managed section.
+- [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-setext> --skill consult`
+  now preserves a later setext `Keep Me` heading instead of swallowing it into
+  the managed section replacement.
+- [2026-04-22] `make help`, `python3 scripts/sync_downstream.py --help`,
+  `make validate`, and `git diff --check` all passed again after the
+  subset-truth and heading-hardening fix.
+- [2026-04-22] A fresh post-repair verification pass found one remaining
+  milestone 6 gap: the helper rejected a direct symlinked
+  `.agents/skills` leaf but still accepted a symlinked `.agents` parent, and
+  the highest-level shipped-reality summaries in `README.md`, `AGENTS.md`, and
+  `specs/workflow-contract.md` still omitted `scripts/`.
+- [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-parent-symlink> --skill consult`
+  unexpectedly passed before the final safety fix when `.agents` itself was a
+  symlink, so writes still followed that redirected path chain.
+- [2026-04-22] `python3 scripts/sync_downstream.py --target <tmp-leaf-symlink> --skill consult`
+  now exits 2 when `.agents/skills` is a symlink, and
+  `python3 scripts/sync_downstream.py --target <tmp-parent-symlink> --skill consult`
+  also now exits 2 when `.agents` is a symlink, so the helper rejects any
+  symlink traversal anywhere in the downstream `.agents/skills` path chain.
+- [2026-04-22] `README.md`, `AGENTS.md`, and `specs/workflow-contract.md` now
+  include `scripts/` anywhere they enumerate the shipped reality or shipped
+  implementation surface.
+- [2026-04-22] `make help`, `python3 scripts/sync_downstream.py --help`,
+  `make validate`, `git diff --check`, `rg --files src evals specs scripts`,
+  and the refreshed source-target plus both symlink-chain rejection proofs all
+  passed after the final milestone 6 hardening.
 
 ## Risks
 
@@ -876,6 +948,7 @@ Optional plan-driven helpers for the broader workflow live under:
 - [x] Milestone 4: Downstream README truth sync
 - [x] Milestone 5: Preflight malformed-README handling
 - [x] Milestone 6: Source-repo target safety and remaining repo-truth sync
+- [x] Milestone 7: Subset-safe README truth and heading hardening
 
 - [2026-04-22] Partial milestone 2 progress: added concise
   `src/<skill>/README.md` files for all six shipped skills and synced
@@ -930,6 +1003,37 @@ Optional plan-driven helpers for the broader workflow live under:
   skills-root rejection, normal disposable sync/rerun, malformed-README
   preflight, `make validate`, `git diff --check`, `make help`, and helper
   `--help`, so the plan is back to an honest complete state.
+- [2026-04-22] A later seven-way read-only verification disproved completion
+  again: subset sync still wrote a fixed six-skill managed README block, the
+  copied skill `README.md` files still assumed sibling skill paths existed,
+  and indented or nested code examples could still trigger false managed
+  heading matches.
+- [2026-04-22] Completed milestone 7 by making the managed downstream
+  `README.md` section list the currently installed shipped skills, making the
+  execute-helper copy conditional on `execute` actually being present,
+  removing subset-unsafe cross-skill path references from the six skill
+  `README.md` files, and hardening heading detection so indented code examples
+  and nested fenced examples no longer count as managed headings while later
+  setext headings stay intact.
+- [2026-04-22] Post-fix proof reran the subset-sync truth check, indented-code
+  proof, nested-fence proof, setext-boundary proof, malformed-README
+  preflight, `make validate`, `git diff --check`, `make help`, and helper
+  `--help`, so the plan is back to an honest complete state after the deeper
+  verification pass.
+- [2026-04-22] A later fresh verification disproved milestone 6 completeness
+  one more time: the helper rejected a direct symlinked `.agents/skills` leaf
+  but still accepted a symlinked `.agents` parent, and the highest-level
+  shipped-reality summaries still omitted `scripts/`.
+- [2026-04-22] Completed milestone 6 fully by rejecting any symlink anywhere
+  in the downstream `.agents/skills` path chain and by adding `scripts/` to
+  the remaining high-level shipped-reality summaries in `README.md`,
+  `AGENTS.md`, and `specs/workflow-contract.md`.
+- [2026-04-22] Final post-fix proof reran the source-target rejection, direct
+  `.agents/skills` symlink rejection, parent `.agents` symlink rejection,
+  subset-truth proof, parser-edge-case proofs, malformed-README preflight,
+  `make help`, helper `--help`, `make validate`, `git diff --check`, and
+  `rg --files src evals specs scripts`, so the plan is back to an honest
+  complete state on the final repaired tree.
 
 ## Decision Log
 
@@ -986,6 +1090,22 @@ Optional plan-driven helpers for the broader workflow live under:
 - [2026-04-22] Reuse the same `render_readme()` path for malformed-README
   preflight and the eventual write step so early validation does not introduce
   a second README parsing contract.
+- [2026-04-22] The managed downstream `README.md` section should describe the
+  current installed shipped skill set rather than always claiming all six
+  local skills are present under subset sync.
+- [2026-04-22] Skill-local `README.md` files should avoid sibling skill file
+  paths in their shipped copy because subset sync may intentionally omit those
+  sibling directories.
+- [2026-04-22] Managed heading detection should match only real
+  `## Agentic Workflow` H2 lines with up to three leading spaces, not indented
+  code examples, and preserving later setext headings is worth the small extra
+  parser complexity.
+- [2026-04-22] Downstream target safety should reject any symlink anywhere in
+  the `.agents/skills` path chain, not only a direct symlink at the final
+  `.agents/skills` leaf.
+- [2026-04-22] High-level shipped-reality summaries must mention `scripts/`
+  wherever they enumerate the shipped implementation surface, not only the
+  more detailed maintenance and repo-surface docs.
 - [2026-04-22] Reject the source repo root and any symlinked downstream
   `.agents/skills/` path during target validation so the helper never deletes
   through this repo's local `.agents/skills -> ../src` mirror.
@@ -1039,6 +1159,22 @@ Optional plan-driven helpers for the broader workflow live under:
 - [2026-04-22] The current helper also restores manual edits inside the
   managed downstream workflow section on rerun while still preserving later
   sibling sections and fenced code blocks.
+- [2026-04-22] Fixed six-skill managed README copy becomes untruthful on a
+  fresh subset sync because the helper installs only the selected skills while
+  still advertising all six local skills and the execute helpers.
+- [2026-04-22] Cross-skill path references inside the shipped skill README
+  files become untruthful under subset sync because the referenced sibling
+  skill directories may not exist locally.
+- [2026-04-22] Using `line.strip() == SECTION_HEADING` lets indented code
+  examples and nested code-fence content count as real managed headings even
+  though they are not part of the Markdown section structure.
+- [2026-04-22] Preserving later setext headings during replacement avoids
+  swallowing realistic downstream sections such as `Keep Me` plus `-------`.
+- [2026-04-22] Checking only whether the final `.agents/skills` leaf is a
+  symlink misses redirected writes through a symlinked `.agents` parent.
+- [2026-04-22] High-level repo summaries can still drift even when the more
+  detailed maintenance docs and repo-surface spec are already accurate, so the
+  final verify pass still needs to read those summary layers directly.
 - [2026-04-22] This source repo's tracked `.agents/skills -> ../src` mirror
   creates a real destructive edge case for any downstream sync helper that
   blindly treats `.agents/skills/` as a writable directory instead of
