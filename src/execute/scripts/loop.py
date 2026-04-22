@@ -68,7 +68,46 @@ class RunnerResult:
     stderr_log: str
 
 
+def script_path() -> Path:
+    return Path(__file__).resolve()
+
+
+def current_skill_root() -> Path:
+    skill_root = script_path().parents[1]
+    if skill_root.name != "execute":
+        raise RuntimeError("loop.py must live under an execute skill directory")
+    return skill_root
+
+
+def skills_root() -> Path:
+    skill_root = current_skill_root()
+    parent = skill_root.parent
+    grandparent = parent.parent
+    if parent.name == "src":
+        return parent
+    if parent.name == "skills" and grandparent.name == ".agents":
+        return parent
+    raise RuntimeError(
+        "loop.py must live under src/execute/ or .agents/skills/execute/"
+    )
+
+
+def repo_root() -> Path:
+    root = skills_root()
+    if root.name == "src":
+        return root.parent
+    return root.parent.parent
+
+
+def repo_relative_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(repo_root()))
+    except ValueError:
+        return str(path)
+
+
 def build_parser() -> argparse.ArgumentParser:
+    display_script = repo_relative_path(script_path())
     parser = argparse.ArgumentParser(
         description=(
             "Run a thin, file-backed execute/verify loop against one explicit "
@@ -76,7 +115,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Example:\n"
-            "  python3 src/execute/scripts/loop.py --dry-run \\\n"
+            f"  python3 {display_script} --dry-run \\\n"
             "      --plan plans/YYYY-MM-DD-short-task-slug.md \\\n"
             "      --provider-command \"./bin/run-skill\"\n\n"
             "The external runner must be non-interactive and accept:\n"

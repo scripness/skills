@@ -140,14 +140,14 @@ The shipped skill contracts remain the workflow source of truth. Any helper
 script in this repo may only add invocation mechanics, machine-readable event
 transport, exit-code mapping, or presentation on top of those contracts.
 
-This source repo may also ship provider-specific convenience wrappers above the
-generic helper, such as `scripts/providers/codex_loop.py`. Those wrappers are
-local accelerators only and must delegate back to the generic `scripts/loop.py`
+A repo may also ship provider-specific convenience wrappers above the generic
+helper, such as `scripts/providers/codex_loop.py`. Those wrappers are local
+accelerators only and must delegate back to the generic `scripts/loop.py`
 contract rather than redefining it.
 
-This source repo may also ship provider-specific dashboard wrappers above those
-provider wrappers, such as `scripts/providers/codex_loop_dashboard.py`. Those
-dashboard layers are presentation only. They may consume the generic helper's
+A repo may also ship provider-specific dashboard wrappers above those provider
+wrappers, such as `scripts/providers/codex_loop_dashboard.py`. Those dashboard
+layers are presentation only. They may consume the generic helper's
 machine-readable event stream, but they must not become the owner of loop
 control, verdicts, or plan truth.
 
