@@ -913,6 +913,37 @@ Optional plan-driven helpers for the broader workflow live under:
   `make validate`, `git diff --check`, `rg --files src evals specs scripts`,
   and the refreshed source-target plus both symlink-chain rejection proofs all
   passed after the final milestone 6 hardening.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-reviewer-repro> --skill consult`
+  reproduced the later PR review finding on the pre-fix tree: a downstream
+  `README.md` containing `- item` then `---` inside the managed section kept
+  stale trailing content after replacement instead of deleting the full stale
+  section body.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-list-break> --skill consult`,
+  the ordered-list variant, and the blockquote variant now all remove stale
+  managed tail text and preserve later `## Keep Me` content instead of
+  treating the thematic break as a section boundary.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-setext> --skill consult`
+  still preserves a later real setext heading `Keep Me` plus `-------` after
+  the thematic-break hardening.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-indented-code> --skill consult`
+  and `python3 scripts/sync_downstream.py --target <tmp-nested-fence> --skill consult`
+  still ignore heading-like text inside indented code and nested fenced
+  examples.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-duplicate-readme>`
+  still fails before downstream mutation when duplicate managed headings are
+  present.
+- [2026-04-23] `make sync TARGET=<tmp> SKILL="consult execute"` still installs
+  only the selected skills and writes the subset-truthful managed downstream
+  `README.md` section with execute helper commands.
+- [2026-04-23] `make help`, `python3 scripts/sync_downstream.py --help`,
+  `make validate`, and `git diff --check` all passed after the thematic-break
+  hardening fix.
+- [2026-04-23] Verify verdict: `pass`. `scripts/sync_downstream.py` now
+  distinguishes real later setext headings from thematic breaks after list
+  items, ordered-list items, blockquotes, ATX headings, fences, and indented
+  code, so the managed downstream `README.md` section is fully replaced
+  without regressing the earlier heading-hardening cases. No additional
+  `specs` or `tests` follow-through is required.
 
 ## Risks
 
@@ -1034,6 +1065,20 @@ Optional plan-driven helpers for the broader workflow live under:
   `make help`, helper `--help`, `make validate`, `git diff --check`, and
   `rg --files src evals specs scripts`, so the plan is back to an honest
   complete state on the final repaired tree.
+- [2026-04-23] A later PR review disproved milestone 7 completeness one more
+  time: the README parser still treated any non-empty line before `---` as
+  setext heading text, so a thematic break after a list item could stop
+  replacement early and leave stale managed-section tail content behind.
+- [2026-04-23] Completed milestone 7 fully by tightening
+  `scripts/sync_downstream.py` setext-boundary detection so only
+  paragraph-like lines can start later setext headings; list items,
+  ordered-list items, blockquotes, ATX headings, fences, and indented code no
+  longer count as the next section boundary.
+- [2026-04-23] Post-fix proof reran the reviewer repro, ordered-list and
+  blockquote thematic-break proofs, the preserved-setext proof, indented-code
+  proof, nested-fence proof, duplicate-heading preflight, subset `make sync`
+  proof, `make help`, helper `--help`, `make validate`, and `git diff --check`,
+  so the plan is back to an honest complete state after the PR-review repair.
 
 ## Decision Log
 
@@ -1111,6 +1156,10 @@ Optional plan-driven helpers for the broader workflow live under:
   through this repo's local `.agents/skills -> ../src` mirror.
 - [2026-04-22] Repo-truth docs that mention `Makefile` must describe the full
   shipped maintenance surface, not only the eval harness wrapper subset.
+- [2026-04-23] Keep later setext-heading support in downstream `README.md`
+  replacement, but only when the preceding line looks like plain paragraph
+  text; do not drop setext support just to avoid thematic-break false
+  positives.
 
 ## Discoveries
 
@@ -1182,6 +1231,10 @@ Optional plan-driven helpers for the broader workflow live under:
 - [2026-04-22] Repo-truth docs outside the main downstream-sync contract
   (`evals/README.md` and `specs/evaluation-harness.md`) also needed wording
   updates because `Makefile` no longer wraps only the eval harness surface.
+- [2026-04-23] Treating any non-empty line before `---` as setext heading text
+  misclassifies thematic breaks after list items, ordered-list items, and
+  blockquotes as section boundaries and can leave stale managed-section tail
+  text in downstream `README.md`.
 
 ## Outcomes / Retrospective
 

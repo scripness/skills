@@ -17,6 +17,10 @@ IGNORED_DIRECTORY_NAMES = {"evals", "__pycache__"}
 IGNORED_FILE_SUFFIXES = {".pyc", ".pyo", ".pyd"}
 SECTION_HEADING_RE = re.compile(r"^[ ]{0,3}## Agentic Workflow[ \t]*$")
 ATX_HEADING_RE = re.compile(r"^[ ]{0,3}(# |## )")
+ATX_HEADING_TEXT_RE = re.compile(r"^[ ]{0,3}#{1,6}(?:[ \t]+|$)")
+BLOCKQUOTE_RE = re.compile(r"^[ ]{0,3}>")
+LIST_MARKER_RE = re.compile(r"^[ ]{0,3}(?:[-+*][ \t]+|\d+[.)][ \t]+)")
+INDENTED_CODE_RE = re.compile(r"^(?: {4,}|\t)")
 SETEXT_UNDERLINE_RE = re.compile(r"^[ ]{0,3}(=+|-+)[ \t]*$")
 FENCE_RE = re.compile(r"^[ ]{0,3}([`~]{3,})")
 
@@ -243,14 +247,30 @@ def is_managed_heading(line: str) -> bool:
     return bool(SECTION_HEADING_RE.match(line.rstrip("\r\n")))
 
 
+def looks_like_setext_heading_text(line: str) -> bool:
+    stripped = line.rstrip("\r\n")
+    if not stripped.strip():
+        return False
+    if INDENTED_CODE_RE.match(stripped):
+        return False
+    if BLOCKQUOTE_RE.match(stripped):
+        return False
+    if ATX_HEADING_TEXT_RE.match(stripped):
+        return False
+    if LIST_MARKER_RE.match(stripped):
+        return False
+    if FENCE_RE.match(stripped):
+        return False
+    return True
+
+
 def is_setext_boundary(lines: list[str], index: int) -> bool:
     if index <= 0:
         return False
     if not SETEXT_UNDERLINE_RE.match(lines[index].rstrip("\r\n")):
         return False
 
-    previous = lines[index - 1].strip()
-    return bool(previous)
+    return looks_like_setext_heading_text(lines[index - 1])
 
 
 def find_managed_section(lines: list[str]) -> tuple[int, int] | None:
