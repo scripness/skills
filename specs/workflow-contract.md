@@ -34,7 +34,8 @@ target repos.
 - keep `consult`, `plan`, `execute`, and `verify` as distinct steps with sharp
   trigger boundaries
 - keep the shipped `src/*/SKILL.md` files as the workflow source of truth;
-  helpers may standardize invocation, transport, and presentation only
+  keep `src/*/README.md` as human-facing companion overviews only; helpers may
+  standardize invocation, transport, and presentation only
 - allow a local `.agents/skills -> ../src` symlink mirror in this source repo
   for copied-layout ergonomics without creating a second owning skill tree
 - prefer structured `consult -> plan` carry-forward so concrete facts,
@@ -54,7 +55,11 @@ target repos.
   independent pass, but keep the main session responsible for applying the
   skill and comparing or synthesizing results rather than blindly trusting
   either side alone
-- use manual copy as the baseline distribution and refresh workflow
+- treat `src/<skill>/` as the full upstream source payload and downstream
+  `.agents/skills/<skill>/` as a filtered installed payload rather than a
+  byte-for-byte mirror
+- use `make sync`, backed by `scripts/sync_downstream.py`, as the required
+  downstream install and refresh workflow
 
 ## Truth Layers
 
@@ -66,8 +71,8 @@ target repos.
 - `plans/*.md` own task-local plans for new work and also contain a small
   number of tracked plan-shaped eval fixtures plus completed historical build
   records.
-- `src/` and `evals/` are the shipped implementation surface behind those
-  docs.
+- `src/`, `scripts/`, and `evals/` are the shipped implementation surface
+  behind those docs.
 - `.agents/skills/` may exist locally as a symlink mirror to `src/` for
   copied-layout checks, but it is not a separate truth layer.
 
@@ -98,13 +103,17 @@ target repos.
 
 ## Distribution And Refresh
 
-- Copy the source skill directories from `src/` into `.agents/skills/` in the
-  target repo.
+- Use `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]` as the
+  required downstream install and refresh path.
+- The sync helper copies filtered skill payloads from `src/` into the target
+  repo's `.agents/skills/`, excluding upstream-only `evals/`,
+  `__pycache__/`, and `*.py[cod]`.
+- The sync helper also creates or fully replaces the target `README.md`
+  `## Agentic Workflow` section with the managed human-facing workflow
+  overview, including the currently installed shipped skills.
 - In this source repo, `.agents/skills` may exist as a tracked symlink mirror
   to `src/` for local copied-layout checks; it does not replace `src/` as the
   authoritative source.
-- Refresh downstream repos by re-copying only the changed skill directories and
-  supporting assets.
 - Keep helper scripts, wrapper commands, and provider-specific integrations
   optional and replaceable.
 - Keep the workflow file-backed so a fresh session can recover truth from the

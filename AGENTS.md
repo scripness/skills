@@ -15,7 +15,7 @@ Read this repo from shipped reality in this order:
 3. `README.md`
 4. `docs/maintenance.md` and `docs/sources.md` when the task needs operator
    guidance or design grounding
-5. the shipped surfaces under `src/`, `evals/`, `Makefile`, and
+5. the shipped surfaces under `src/`, `scripts/`, `evals/`, `Makefile`, and
    `src/execute/scripts/loop.py`
 6. `plans/*.md` only when a task names an explicit plan path or when you need
    historical background
@@ -23,10 +23,11 @@ Read this repo from shipped reality in this order:
 Code and checked-in files are reality. Docs must stay synced to the shipped
 surface.
 
-The shipped `src/*/SKILL.md` files are the workflow source of truth. Helper
-scripts in `src/execute/scripts/` may standardize invocation, exit-code
-mapping, machine-readable events, or terminal presentation, but they must not
-become a competing workflow contract.
+The shipped `src/*/SKILL.md` files are the workflow source of truth. Companion
+`src/*/README.md` files are human-facing overviews only. Helper scripts in
+`src/execute/scripts/` may standardize invocation, exit-code mapping,
+machine-readable events, or terminal presentation, but they must not become a
+competing workflow contract.
 
 This source repo also tracks `.agents/skills -> ../src` as a local symlink
 mirror so copied-layout paths can be exercised without duplicating files.
@@ -72,8 +73,8 @@ When copied into a target repo, these directories are intended to live under
 
 ## Shipped Surface
 
-- Each skill directory ships `SKILL.md`, `agents/openai.yaml`, and
-  `evals/evals.json`.
+- Each skill directory ships `SKILL.md`, `README.md`,
+  `agents/openai.yaml`, and `evals/evals.json`.
 - `src/plan/` also ships `assets/plan-template.md`.
 - `src/specs/` also ships bootstrap assets for `AGENTS.md` and `specs/`.
 - `src/execute/` also ships `scripts/loop.py` as an optional explicit-plan
@@ -81,20 +82,26 @@ When copied into a target repo, these directories are intended to live under
   review before success.
 - `src/execute/` also ships `references/optional-helper.md` for the helper's
   detailed contract and wrapper notes.
-- This source repo also ships `scripts/providers/codex_loop.py` as an optional
-  repo-local Codex convenience wrapper that delegates back to the generic
+- This source repo also ships
+  `src/execute/scripts/providers/codex_loop.py` as an optional repo-local
+  Codex convenience wrapper that delegates back to the generic
   `scripts/loop.py` contract. It is a local accelerator only, not workflow
   truth.
 - This source repo also ships
-  `scripts/providers/codex_loop_dashboard.py` as an optional repo-local
-  terminal dashboard for the Codex wrapper. It is presentation only and falls
-  back to the raw wrapper output when the dashboard is unsuitable.
+  `src/execute/scripts/providers/codex_loop_dashboard.py` as an optional
+  repo-local terminal dashboard for the Codex wrapper. It is presentation only
+  and falls back to the raw wrapper output when the dashboard is unsuitable.
+- `scripts/sync_downstream.py` syncs a filtered downstream skill install
+  surface into a target repo's `.agents/skills/` and refreshes the target
+  `README.md` `## Agentic Workflow` section so it stays truthful for the
+  currently installed shipped skills.
 - `evals/runtime.json` pins the default runtime profile and machine-readable
   governance settings for the shared eval harness.
 - `evals/fixtures/cryptoli.json` pins the first real-repo fixture manifest.
 - `evals/scripts/harness.py` validates tracked harness truth and scaffolds
   `.tmp/evals/<run-id>/`.
-- `Makefile` is a thin wrapper over the harness helper.
+- `Makefile` is a thin repo-root maintenance wrapper over the eval harness
+  commands plus downstream sync.
 - `.agents/skills -> ../src` is a tracked local convenience mirror for copied
   layout testing only.
 - `CLAUDE.md` must remain a thin symlink mirror to `AGENTS.md`.
@@ -126,15 +133,16 @@ Keep generic `plans/*.md` references where they are part of the shipped
 
 ## Refresh Workflow
 
-- Use manual copy as the default distribution and refresh workflow.
-- Copy the shipped skill directories from `src/` into `.agents/skills/` in the
-  target repo.
+- Use `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]` as the
+  required downstream install and refresh workflow.
+- The sync helper copies filtered skill payloads from `src/` into the target
+  repo's `.agents/skills/`, excluding upstream-only `evals/`,
+  `__pycache__/`, and `*.py[cod]`, and syncs the target `README.md`
+  `## Agentic Workflow` section.
 - In this source repo, keep using `src/` as the owning surface; the local
   `.agents/skills` mirror is convenience only.
-- Refresh downstream repos by re-copying only the changed skill directories
-  and supporting assets.
-- Treat install helpers, git subtree wiring, provider-specific plugins, and
-  other automation as optional accelerators only.
+- Treat git subtree wiring, provider-specific plugins, and other automation as
+  optional accelerators only.
 
 ## Architecture
 
@@ -148,6 +156,8 @@ Keep generic `plans/*.md` references where they are part of the shipped
 ├── docs/
 │   ├── maintenance.md
 │   └── sources.md
+├── scripts/
+│   └── sync_downstream.py
 ├── specs/
 ├── evals/
 │   ├── README.md
@@ -179,7 +189,9 @@ Completed historical records also remain under `plans/`.
 | Read the specs index | `sed -n '1,220p' specs/README.md` |
 | Show the repo maintenance targets | `make help` |
 | Validate shipped skill metadata and eval invariants | `make validate` |
+| Sync filtered skills into a downstream repo | `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]` |
 | Scaffold a repeatable eval workspace | `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run\|validation\|all] [SKILL="consult execute"] [PROFILE=<profile>]` |
+| Show the downstream sync helper | `python3 scripts/sync_downstream.py --help` |
 | Show the direct harness CLI | `python3 evals/scripts/harness.py --help` |
 | Run validation directly | `python3 evals/scripts/harness.py validate` |
 | Show the optional loop helper | `python3 src/execute/scripts/loop.py --help` |
@@ -197,8 +209,8 @@ Completed historical records also remain under `plans/`.
 Always:
 
 - keep this repo provider-agnostic
-- keep docs synced to the shipped files under `src/`, `evals/`, `Makefile`,
-  and repo docs
+- keep docs synced to the shipped files under `src/`, `scripts/`, `evals/`,
+  `Makefile`, and repo docs
 - keep `AGENTS.md` concise and put durable topic truth in `specs/`
 - keep skill boundaries sharp
 - keep active task state in one explicit plan file when work becomes

@@ -29,10 +29,12 @@ durable improvements discovered while using copied skills in downstream repos.
 ## Update Loop
 
 1. Change the owning skill or doc paths directly:
-   `src/<skill>/SKILL.md`, `src/<skill>/agents/openai.yaml`, local assets,
-   `src/<skill>/evals/evals.json`, `README.md`, `AGENTS.md`, `evals/README.md`,
-   or this file as needed. Do not edit through `.agents/skills/`; it is only
-   the local symlink mirror of `src/`.
+   `src/<skill>/SKILL.md`, `src/<skill>/README.md`,
+   `src/<skill>/agents/openai.yaml`, local assets,
+   `src/<skill>/evals/evals.json`, `scripts/sync_downstream.py`, `Makefile`,
+   `README.md`, `AGENTS.md`, `evals/README.md`, or this file as needed. Do
+   not edit through `.agents/skills/`; it is only the local symlink mirror of
+   `src/`.
 2. Keep boundaries sharp. Durable workflow truth belongs in repo docs and
    skills, not in shell wrappers or chat-only instructions.
 3. If shipped behavior changed, sync the owning docs in the same slice before
@@ -51,9 +53,14 @@ durable improvements discovered while using copied skills in downstream repos.
   Runs repo-level validation for shipped skill structure, frontmatter, local
   asset integrity, tracked eval definitions, fixture manifests, runtime
   metadata, must-run selection, and `.tmp/evals/` ignore coverage.
+- `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]`
+  Syncs filtered skill payloads into a downstream repo's `.agents/skills/`
+  and refreshes the target `README.md` `## Agentic Workflow` section.
 - `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
   Scaffolds `.tmp/evals/<run-id>/` through `evals/scripts/harness.py` without
   duplicating harness logic in the wrapper.
+- `python3 scripts/sync_downstream.py --help`
+  Shows the direct downstream sync helper interface behind `make sync`.
 - `python3 evals/scripts/harness.py --help`
   Shows the direct harness interface behind the Makefile wrappers.
 - `python3 evals/scripts/harness.py validate`
@@ -109,6 +116,7 @@ durable improvements discovered while using copied skills in downstream repos.
   definitions, thin maintenance tooling, and repo docs.
 - Do not encode downstream-specific stack details or one-off project habits as
   shared workflow truth in this repo.
-- After upstreaming a portable fix here, refresh downstream repos by re-copying
-  only the changed skill directories from `src/` and supporting assets into
-  `.agents/skills/`.
+- After upstreaming a portable fix here, refresh downstream repos with
+  `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]` so the
+  filtered skill install surface and managed downstream `README.md` section
+  stay aligned.

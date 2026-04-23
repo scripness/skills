@@ -14,7 +14,8 @@ shared eval metadata, and thin local helpers that can be copied into other
 repos.
 
 The shipped `src/*/SKILL.md` files remain the workflow source of truth.
-Helper scripts are optional accelerators only: they may change invocation,
+Companion `src/*/README.md` files are human-facing overviews only. Helper
+scripts are optional accelerators only: they may change invocation,
 machine-readable transport, and presentation, but they must not redefine the
 skills themselves.
 
@@ -30,7 +31,8 @@ Read this repo in the same order the shipped workflow expects:
 2. `specs/README.md` and the relevant `specs/*.md`
 3. `README.md`
 4. `docs/maintenance.md` and `docs/sources.md` as needed
-5. `src/`, `evals/`, `Makefile`, and `src/execute/scripts/loop.py`
+5. `src/`, `scripts/`, `evals/`, `Makefile`, and
+   `src/execute/scripts/loop.py`
 
 Completed historical plan records remain available under `plans/` as
 background, but they are not the default operational reading chain.
@@ -46,6 +48,8 @@ background, but they are not the default operational reading chain.
 - shared eval surface: `src/<skill>/evals/evals.json`, `evals/runtime.json`,
   `evals/fixtures/cryptoli.json`, and `evals/scripts/harness.py`
 - thin repo maintenance wrapper: `Makefile`
+- required downstream sync helper:
+  `scripts/sync_downstream.py`
 - optional explicit-plan execute/verify helper with opt-in continuous
   repair flow and strict final review:
   `src/execute/scripts/loop.py`
@@ -80,6 +84,8 @@ background, but they are not the default operational reading chain.
 ├── docs/
 │   ├── maintenance.md
 │   └── sources.md
+├── scripts/
+│   └── sync_downstream.py
 ├── specs/
 ├── evals/
 ├── Makefile
@@ -96,14 +102,19 @@ background, but they are not the default operational reading chain.
 
 Completed historical records also remain under `plans/`.
 
-Each `src/<skill>/` directory ships `SKILL.md`, `agents/openai.yaml`, and
-`evals/evals.json`. `plan` and `specs` also ship local assets, and `execute`
-ships the optional `scripts/loop.py` helper plus
+Each `src/<skill>/` directory ships `SKILL.md`, `README.md`,
+`agents/openai.yaml`, and `evals/evals.json`. `plan` and `specs` also ship
+local assets, and `execute` ships the optional `scripts/loop.py` helper plus
 `references/optional-helper.md`.
 
 In this source repo, `.agents/skills` resolves to the same files through the
 tracked symlink mirror. Edit `src/`; use the mirror only when you need
 copied-layout paths locally.
+
+In downstream repos, normal installs are filtered copies produced by
+`make sync` or `scripts/sync_downstream.py`. They keep the skill-local runtime
+files and `README.md` overviews, but exclude upstream-only `evals/`,
+`__pycache__/`, and `*.py[cod]`.
 
 ## Six-Skill Workflow
 
@@ -125,8 +136,10 @@ copied-layout paths locally.
 
 ## Target Repo Flow
 
-1. Copy the shipped skill directories from `src/` into `.agents/skills/` in
-   the target repo.
+1. Run `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]` in this
+   source repo to install or refresh the filtered downstream skill surface
+   under `.agents/skills/` and sync the target repo's managed
+   `README.md` `## Agentic Workflow` section.
 2. Run `specs` when repo truth is weak, missing, stale, or blocking safe work.
 3. Run `tests` when test truth is weak, missing, stale, or clearly below what
    the repo needs.
@@ -175,7 +188,9 @@ interactive session.
 
 - `make help`
 - `make validate`
+- `make sync TARGET=/abs/path/to/repo [SKILL="consult execute"]`
 - `make eval-init-run RUN_ID=<run-id> [SELECTION=must-run|validation|all] [SKILL="consult execute"] [PROFILE=<profile>]`
+- `python3 scripts/sync_downstream.py --help`
 - `python3 evals/scripts/harness.py --help`
 - `python3 evals/scripts/harness.py validate`
 - `python3 src/execute/scripts/loop.py --help`

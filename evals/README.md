@@ -27,8 +27,8 @@ without changing the tracked-versus-generated split below.
 ## Local Runner Surface
 
 The repo ships a direct harness helper plus a thin repo-root `Makefile`
-wrapper. The wrappers stay deliberately small and delegate unique logic back
-to `evals/scripts/harness.py`.
+maintenance wrapper. The eval-related targets stay deliberately small and
+delegate unique logic back to `evals/scripts/harness.py`.
 
 See [../docs/maintenance.md](../docs/maintenance.md) for the repo-wide
 maintenance loop that uses this harness surface to refresh eval workspaces and
