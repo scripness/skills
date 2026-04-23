@@ -244,5 +244,18 @@ Never:
 
 ## Git
 
+Format: `type(scope): description` — e.g.,
+`feat(sync): ship downstream skill sync workflow`,
+`docs(execute): move helper details into reference`.
+
+Branches: `type/scope-description` — e.g.,
+`feat/sync-downstream-skill-sync-workflow`,
+`docs/execute-helper-reference`.
+
+PR titles: use the same format as commits — e.g.,
+`feat(sync): ship downstream skill sync workflow`,
+`docs(execute): move helper details into reference`.
+Do not prefix branch names or PR titles with tool labels such as `codex`.
+
 Do not amend or rewrite history unless explicitly requested.
 Do not revert unrelated user changes.
