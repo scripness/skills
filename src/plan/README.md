@@ -8,7 +8,9 @@ state across sessions, milestones, or review loops.
 `plan` owns task-local planning. It reads repo truth, chooses one explicit plan
 path, and writes a living plan that is resumable from repo files plus that plan
 alone. It should make the next unfinished slice decision-complete so later
-`execute` work does not need to guess.
+`execute` work does not need to guess. When the optional execute loop is in
+play, keep `## Blockers` as `- ...` bullet items and `## Progress` as
+`- [ ]` / `- [x]` checklist items so the helper can read plan state directly.
 
 ## Use It When
 
@@ -36,7 +38,8 @@ same exact plan file path.
 - `SKILL.md`: workflow contract and source of truth
 - `README.md`: human-facing overview
 - `agents/openai.yaml`: local agent shim metadata
-- `assets/plan-template.md`: local plan template
+- `assets/plan-template.md`: local plan template; use it as the baseline
+  section and progress format
 - `evals/`: upstream-only eval metadata in this source repo; not included in normal downstream installs
 
 ## Related Scripts

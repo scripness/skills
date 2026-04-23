@@ -51,6 +51,8 @@ Do not use this skill when:
    - Prefer updating the existing plan in place over creating duplicates.
 
 4. Write or update one living plan document.
+   - Start from `assets/plan-template.md` when it is available instead of
+     inventing new section names or progress formats.
    - Make it resumable from repo truth plus the plan file alone.
    - Capture:
      - `Goal`
@@ -61,8 +63,9 @@ Do not use this skill when:
      - milestones or other bounded slices
      - verification plan plus accumulated execution and verification history
      - risks and open questions
-     - blockers
-     - progress
+     - blockers as `- ...` bullet items under `## Blockers`, using
+       `- None currently.` when clear
+     - progress as `- [ ]` / `- [x]` checklist items under `## Progress`
      - discoveries
      - decision log
      - outcomes or retrospective
@@ -123,6 +126,10 @@ Return:
 - The trigger is evidence-backed: durable task state is actually needed.
 - The plan is self-contained enough for a fresh session to resume safely.
 - Milestones are bounded, ordered, and verifiable.
+- `Blockers` stays parseable as `- ...` bullet items and uses
+  `- None currently.` when clear.
+- `Progress` stays parseable as `- [ ]` / `- [x]` checklist items instead of
+  free-form prose.
 - The next unfinished slice is decision-complete enough that `execute` can act
   without re-planning or guessing required `specs` / `tests` follow-through.
 - Material blockers are named explicitly rather than left in chat.

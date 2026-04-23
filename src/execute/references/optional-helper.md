@@ -9,6 +9,14 @@ Use it only when you already have:
 - one explicit `plans/*.md` path
 - one explicit non-interactive external runner
 
+The plan file should stay on the shipped template shape. In particular, keep:
+
+- `## Progress` as `- [ ]` / `- [x]` checklist items
+- `## Blockers` as `- ...` bullet items, using `- None currently.` when clear
+
+The helper reads those sections directly and does not infer plan state from
+free-form prose.
+
 The runner contract is:
 
 ```text

@@ -113,6 +113,9 @@ Do not treat every repairable verify failure as a blocker. If the next safe
 move is another bounded execute slice, reopen or append that work in
 `Progress` instead.
 
+Keep each blocker as a `- ...` bullet item. When nothing blocks the next safe
+execute slice, write `- None currently.`
+
 - None currently.
 
 ## Progress
@@ -123,6 +126,10 @@ that an earlier completion claim was too optimistic, correct it here.
 When a strict final review uncovers a cross-cutting failure that does not map
 cleanly to an existing milestone, append one new bounded follow-up milestone
 instead of overwriting unrelated historical progress.
+
+Keep every milestone state as a checkbox item using `- [ ]` or `- [x]`. The
+optional execute loop reads this section directly rather than inferring plan
+state from prose.
 
 - [ ] Milestone 1
 - [ ] Milestone 2

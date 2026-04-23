@@ -53,6 +53,10 @@ truth or coverage needs to be added or synced.
 - `scripts/providers/codex_loop.py`: optional local Codex wrapper over `scripts/loop.py`
 - `scripts/providers/codex_loop_dashboard.py`: optional dashboard wrapper over the Codex loop flow
 
+The generic helper reads `## Progress` checkbox items and `## Blockers` bullet
+lines from the plan file. Keep plans on the shipped template structure rather
+than replacing those sections with free-form prose.
+
 When copied into a target repo, these live under:
 - `.agents/skills/execute/scripts/loop.py`
 - `.agents/skills/execute/scripts/providers/codex_loop.py`

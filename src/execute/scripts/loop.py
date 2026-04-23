@@ -308,20 +308,30 @@ def read_plan_state(plan_path: Path) -> PlanState:
 
     if not milestones:
         raise ValueError(
-            f"{plan_path} must have at least one '- [ ]' or '- [x]' item in ## Progress"
+            f"{plan_path} must have at least one '- [ ]' or '- [x]' item in "
+            "## Progress; use the shipped plan template and keep milestone "
+            "state as checkbox items"
         )
 
     blockers_section = read_section(text, "Blockers")
     blockers: list[str] = []
+    blocker_bullets = 0
     for raw_line in blockers_section:
         stripped = raw_line.strip()
         if not stripped:
             continue
         if not stripped.startswith("- "):
             continue
+        blocker_bullets += 1
         if normalize_none_marker(stripped) in {"none", "none currently", "n/a"}:
             continue
         blockers.append(stripped)
+
+    if blocker_bullets == 0:
+        raise ValueError(
+            f"{plan_path} must have at least one '- ...' item in ## Blockers; "
+            "use '- None currently.' when nothing blocks the next safe execute slice"
+        )
 
     total = len(milestones)
     completed = sum(1 for done, _label in milestones if done)
