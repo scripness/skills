@@ -22,7 +22,7 @@ BLOCKQUOTE_RE = re.compile(r"^[ ]{0,3}>")
 LIST_MARKER_RE = re.compile(r"^[ ]{0,3}(?:[-+*][ \t]+|\d+[.)][ \t]+)")
 INDENTED_CODE_RE = re.compile(r"^(?: {4,}|\t)")
 SETEXT_UNDERLINE_RE = re.compile(r"^[ ]{0,3}(=+|-+)[ \t]*$")
-FENCE_RE = re.compile(r"^[ ]{0,3}([`~]{3,})")
+FENCE_RE = re.compile(r"^[ ]{0,3}([`~]{3,})(.*)$")
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -226,18 +226,24 @@ def sync_skill(skill_name: str, target_skills_root: Path, dry_run: bool) -> None
 def update_fence_state(
     line: str, fence_state: tuple[str, int] | None
 ) -> tuple[str, int] | None:
-    match = FENCE_RE.match(line)
+    stripped = line.rstrip("\r\n")
+    match = FENCE_RE.match(stripped)
     if not match:
         return fence_state
 
     marker = match.group(1)
+    trailing = match.group(2)
     marker_char = marker[0]
     marker_length = len(marker)
 
     if fence_state is None:
         return (marker_char, marker_length)
 
-    if fence_state[0] == marker_char and marker_length >= fence_state[1]:
+    if (
+        fence_state[0] == marker_char
+        and marker_length >= fence_state[1]
+        and trailing.strip(" \t") == ""
+    ):
         return None
 
     return fence_state

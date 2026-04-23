@@ -944,6 +944,33 @@ Optional plan-driven helpers for the broader workflow live under:
   code, so the managed downstream `README.md` section is fully replaced
   without regressing the earlier heading-hardening cases. No additional
   `specs` or `tests` follow-through is required.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-fence-reviewer-repro> --skill consult`
+  reproduced the later PR review finding on the pre-fix tree: `update_fence_state()`
+  treated ```` ```python ```` inside an already-open fenced block as a closing
+  fence, then treated the following `## Agentic Workflow` line inside code as a
+  real heading boundary and aborted with a duplicate-heading error instead of
+  fully replacing the stale managed section.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-fence-reviewer-repro> --skill consult`
+  now succeeds, removes the entire stale managed section, and preserves only
+  the later `## Keep Me` sibling section when that code-block repro is present.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-nested-fence> --skill consult`
+  still preserves a valid longer outer fenced example containing
+  ```` ```python ```` text while replacing the real managed section that
+  follows it.
+- [2026-04-23] `python3 scripts/sync_downstream.py --target <tmp-list-break> --skill consult`,
+  `python3 scripts/sync_downstream.py --target <tmp-setext> --skill consult`,
+  and `python3 scripts/sync_downstream.py --target <tmp-duplicate-readme>`
+  still pass the previously fixed thematic-break, preserved-setext, and
+  duplicate-heading preflight proofs after the fence-close hardening.
+- [2026-04-23] `make help`, `python3 scripts/sync_downstream.py --help`,
+  `make validate`, and `git diff --check` all passed again after the
+  fence-close hardening fix.
+- [2026-04-23] Verify verdict: `pass`. `scripts/sync_downstream.py` now only
+  exits fenced mode on a same-marker line when the rest of that line contains
+  only spaces or tabs, so info-string-like lines such as ```` ```python ````
+  no longer terminate code blocks early or expose heading-like text inside code
+  to the managed-section parser. No additional `specs` or `tests`
+  follow-through is required.
 
 ## Risks
 
@@ -1079,6 +1106,19 @@ Optional plan-driven helpers for the broader workflow live under:
   proof, nested-fence proof, duplicate-heading preflight, subset `make sync`
   proof, `make help`, helper `--help`, `make validate`, and `git diff --check`,
   so the plan is back to an honest complete state after the PR-review repair.
+- [2026-04-23] A later PR review disproved milestone 7 completeness again:
+  `update_fence_state()` still treated info-string-like same-marker lines such
+  as ```` ```python ```` as closing fences, so heading-like text inside code
+  could escape fenced mode and trigger a duplicate-heading failure or partial
+  managed-section replacement.
+- [2026-04-23] Completed milestone 7 fully by tightening fence-close detection
+  in `scripts/sync_downstream.py` so an open fence only closes when the
+  trailing text after the marker is blank except for spaces or tabs.
+- [2026-04-23] Post-fix proof reran the exact fence-close reviewer repro, the
+  longer-outer-fence nested example, the preserved thematic-break and setext
+  proofs, duplicate-heading preflight, `make help`, helper `--help`,
+  `make validate`, and `git diff --check`, so the plan is back to an honest
+  complete state after the later PR-review repair.
 
 ## Decision Log
 
@@ -1160,6 +1200,10 @@ Optional plan-driven helpers for the broader workflow live under:
   replacement, but only when the preceding line looks like plain paragraph
   text; do not drop setext support just to avoid thematic-break false
   positives.
+- [2026-04-23] Keep the fence-aware README parser lightweight, but only treat
+  a same-marker fence line as closing when the rest of that line is blank
+  except for spaces or tabs; do not let info strings such as ```` ```python ````
+  close an already-open fence.
 
 ## Discoveries
 
@@ -1235,6 +1279,10 @@ Optional plan-driven helpers for the broader workflow live under:
   misclassifies thematic breaks after list items, ordered-list items, and
   blockquotes as section boundaries and can leave stale managed-section tail
   text in downstream `README.md`.
+- [2026-04-23] Treating any same-marker fence line as a closing fence lets
+  info-string-like lines such as ```` ```python ```` terminate an already-open
+  fence too early, which can surface heading-like text inside code to the
+  managed-section parser and leave stale section content in place.
 
 ## Outcomes / Retrospective
 
