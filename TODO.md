@@ -125,8 +125,17 @@ When revisiting this file later, confirm whether:
   Follow-through:
   - define how clarifications, approvals, and changed decisions pause the loop
     and resume against the same plan path
+  - define explicit loop outcomes such as `ready`, `needs_input`, `blocked`,
+    and `complete` so pause/resume behavior stays machine-readable instead of
+    hiding in prose
+  - treat follow-up clarifications and changed decisions as deltas against the
+    same explicit plan file, reopening only the affected milestones instead of
+    creating replacement plans or restarting broad research
   - define the default consult/verify fan-out shape and how it scales for
     larger work without turning the generic workflow contract provider-specific
+  - make the wrapper-owned swarm policy deterministic about how many consult or
+    verify angles run and which ones are expected, rather than leaving that to
+    ad hoc model behavior
 
 - [ ] Strengthen execute-loop verification fan-out in the provider-specific
   runner layer.
@@ -144,3 +153,9 @@ When revisiting this file later, confirm whether:
   - keep the generic `src/execute/scripts/loop.py` contract unchanged
   - put multi-agent fan-out and synthesis in provider-specific wrappers or
     optional helper layers rather than in the provider-agnostic skill contract
+  - define verification cadence so lighter slice-level review and heavier
+    whole-plan swarm passes happen at predictable points instead of every pass
+    using the same maximal fan-out
+  - define closure explicitly: after fixes, rerun the whole-plan verify swarm
+    until a fresh pass yields no new material findings, then still require the
+    final strict `verify=pass` completion gate
