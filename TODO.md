@@ -42,6 +42,49 @@ When revisiting this file later, confirm whether:
 - this repo still intends to optimize for coding-agent environments rather than
   generic drop-in marketplace portability
 
+## Dependency And External Grounding
+
+- [ ] Design and ship dependency-sensitive source grounding rules across the
+  six-skill workflow.
+  The goal is to stop agents from relying on training-memory assumptions when
+  work depends on current library, framework, SDK, API, security, deployment,
+  or "best practice" behavior.
+  Follow-through:
+  - require agents to identify the repo's actual dependency version from local
+    manifests, lockfiles, generated clients, vendored source, installed
+    packages, or build configuration before choosing an implementation target
+  - prefer the exact shipped artifact first when available, such as
+    `node_modules`, `site-packages`, vendored code, generated SDK files, type
+    definitions, package tarballs, or source distributions
+  - when local artifacts are absent or insufficient, inspect the official
+    upstream source at the exact tag, commit, release archive, or package
+    version; clone locally only when that is more reliable than remote
+    inspection
+  - read implementation, tests, types, fixtures, and official examples for the
+    version under review so behavior and supported usage are grounded in actual
+    evidence
+  - compare source behavior with versioned official docs, API references,
+    changelogs, release notes, and migration guides; record conflicts as risks
+    rather than silently choosing the convenient source
+  - distinguish "what the code currently does" from "what the public contract
+    supports"; avoid depending on private internals unless the task explicitly
+    accepts that tradeoff
+  - for upgrade or latest-version work, compare current repo version, target
+    version, and latest available version instead of blindly applying latest
+    docs to the pinned repo state
+  - label community posts, issue threads, search snippets, blogs, and model
+    memory as supporting clues only; they must not be the primary evidence for
+    current API behavior
+  - add a plan-template `External Grounding` section that records freshness
+    requirement, local version evidence, official source/docs checked, accessed
+    date, decision impact, recheck trigger, and unresolved gaps
+  - update `consult`, `plan`, `execute`, `verify`, `specs`, and `tests` so this
+    grounding is required when dependency freshness materially affects safe
+    planning, implementation, verification, repo truth, or test truth
+  - add eval cases that fail when agents make dependency-sensitive claims
+    without exact-version evidence, source inspection, and docs/source
+    comparison
+
 ## Standards Alignment
 
 - [ ] Revisit `argument-hint` in skill frontmatter.
