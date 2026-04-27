@@ -202,3 +202,20 @@ When revisiting this file later, confirm whether:
   - define closure explicitly: after fixes, rerun the whole-plan verify swarm
     until a fresh pass yields no new material findings, then still require the
     final strict `verify=pass` completion gate
+
+## Operations Interface
+
+- [ ] Design the operator surface after the loop-facing workflow contracts are
+  stronger.
+  Likely sequence:
+  - tighten the machine-facing contracts needed by both loops, including plan
+    parse rules, event schemas, outcomes, pause/resume states, log retention,
+    and locking
+  - add a file-backed `plan_loop.py` for the automated
+    `consult -> plan -> verify(plan)` flow described above
+  - extract shared operations plumbing for plan indexing, process launching,
+    JSON event ingestion, logs, file locks, and run history
+  - build one local TUI over TODO intake, plan creation/review, plan-loop runs,
+    execute-loop runs, blockers, verdicts, diffs, and logs
+  - keep a Phoenix dashboard as a later option only if the TUI proves there is
+    real need for richer browsing, multi-session use, or cross-repo operations
