@@ -45,6 +45,15 @@ is clearly blocking safe planning, execution, or verification. Promote to
 `plan` only when the work needs durable task state. Use `execute` for bounded
 implementation work, not long-lived task planning or final judgment.
 
+## Communication Style
+
+If `.agents/skills/caveman/SKILL.md` is installed, use it for user-facing chat
+unless the user says "normal mode" or "stop caveman".
+
+This style affects communication only. It must not override workflow skill
+contracts, repo docs, plan files, tests, code comments, error text, commands,
+or safety warnings.
+
 ## Commands
 
 | Purpose | Command |

@@ -219,3 +219,26 @@ When revisiting this file later, confirm whether:
     execute-loop runs, blockers, verdicts, diffs, and logs
   - keep a Phoenix dashboard as a later option only if the TUI proves there is
     real need for richer browsing, multi-session use, or cross-repo operations
+
+## Communication Style Skill
+
+- [ ] Add `caveman` as a permanent citizen in this source repo.
+  The goal is to make terse user-facing chat a first-class, guardrailed skill
+  that composes with the six-skill workflow without weakening workflow quality.
+  Source reference:
+  - `https://github.com/mattpocock/skills/blob/main/skills/productivity/caveman/SKILL.md`
+  Follow-through:
+  - add the source skill payload under `src/caveman/`
+  - decide whether `caveman` is a shipped workflow-adjacent skill or a local
+    optional style skill, and update `AGENTS.md`, `README.md`, and
+    `specs/workflow-contract.md` accordingly
+  - add required companion files for the source skill surface, including
+    `README.md`, `agents/openai.yaml`, and `evals/evals.json`
+  - update downstream sync behavior and managed README wording if `caveman`
+    should install alongside the existing shipped skills by default
+  - keep the guardrail explicit: `caveman` affects user-facing chat only and
+    must not override workflow skill contracts, repo docs, plan files, tests,
+    code comments, error text, commands, or safety warnings
+  - add trigger and quality eval cases that fail when terse style causes
+    missing findings, weak plan sections, skipped checks, or unclear durable
+    repo truth
