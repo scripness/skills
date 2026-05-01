@@ -57,6 +57,11 @@ When revisiting this file later, confirm whether:
   - scripted skill use must invoke the same skill contracts with explicit
     prompts, repo paths, plan paths, permission boundaries, output contracts,
     logs, and exit-code handling rather than depending on hidden provider state
+  - helper and wrapper scripts are authored in this source repo, then synced
+    into downstream repos and run from the downstream install surface such as
+    `<repo>/.agents/skills/<skill>/scripts/...`; they must resolve repo paths,
+    skill paths, assets, references, and logs from that installed layout rather
+    than assuming execution from this source repo
   - "multi-agent" or "fan-out" in this repo should mean repo-owned wrappers
     launching isolated provider sessions or processes through adapters, with
     clear role prompts and file-backed inputs/outputs
@@ -70,6 +75,9 @@ When revisiting this file later, confirm whether:
   - define a generic worker/session launch contract for wrappers: command
     template, working directory, prompt payload, skill invocation, read/write
     policy, timeout, log path, structured output schema, and exit-code mapping
+  - define installed-layout path rules for wrappers so source paths under
+    `src/<skill>/...` and downstream paths under
+    `.agents/skills/<skill>/...` stay equivalent after `make sync`
   - replace ambiguous `subagent` wording in repo docs with generic terms such
     as `worker`, `shard`, `session`, or `provider process` unless discussing a
     provider feature explicitly as non-required
@@ -374,6 +382,18 @@ When revisiting this file later, confirm whether:
   - make the parent orchestrator own final decisions, canonical plan updates,
     fix ordering, commits, pushes, and final readiness verdicts; worker outputs
     are evidence until the parent accepts them with local confirmation
+  - require an independent synthesis-confirmation pass after the synthesizing
+    orchestrator proposes accepted/rejected findings and before any fixes begin;
+    the campaign must not treat first synthesis as authoritative without this
+    confirmation
+  - define synthesis-confirmation checks: dropped real shard findings, accepted
+    false positives, weakened original-plan scope, unsupported severity/status,
+    missing file/line evidence, rejected findings without evidence, overbroad
+    fix briefs, unsafe plan-update text, and readiness claims that outpace the
+    evidence
+  - require a fix-audit pass after each accepted fix batch and before commit or
+    final readiness when the batch changes code, specs, tests, migrations, or
+    plan state
   - define synthesis rules for rejecting false positives with evidence,
     severity ordering, fix batching, rerunning focused verification after fixes,
     and final whole-plan verification
