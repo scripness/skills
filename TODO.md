@@ -42,6 +42,44 @@ When revisiting this file later, confirm whether:
 - this repo still intends to optimize for coding-agent environments rather than
   generic drop-in marketplace portability
 
+## Provider-Agnostic Runtime Boundary
+
+- [ ] Promote a strict provider-agnostic runtime boundary across the repo.
+  Fundamental note:
+  - this source repo, the current six skills, and future skills must not rely on
+    any provider's built-in workflow features as required primitives
+  - provider features such as built-in skills, plugins, MCPs, rules, hooks, plan
+    modes, auto-memory, native subagents, background workers, or client-specific
+    agent APIs may be used only as optional local conveniences behind adapters
+  - direct-chat skill use must remain self-sufficient: each skill should do one
+    focused job accurately from repo truth, explicit user input, and the normal
+    tools available to the agent session
+  - scripted skill use must invoke the same skill contracts with explicit
+    prompts, repo paths, plan paths, permission boundaries, output contracts,
+    logs, and exit-code handling rather than depending on hidden provider state
+  - "multi-agent" or "fan-out" in this repo should mean repo-owned wrappers
+    launching isolated provider sessions or processes through adapters, with
+    clear role prompts and file-backed inputs/outputs
+  - provider-specific wrappers under `src/execute/scripts/providers/` may
+    translate generic run specs into provider CLI commands, but they must not
+    move workflow semantics into provider-native subagent APIs, plugins, hooks,
+    rules, MCPs, or other client-specific surfaces
+  - if a provider-native feature is useful locally, keep it replaceable and
+    require a process-based fallback with the same observable contract
+  Follow-through:
+  - define a generic worker/session launch contract for wrappers: command
+    template, working directory, prompt payload, skill invocation, read/write
+    policy, timeout, log path, structured output schema, and exit-code mapping
+  - replace ambiguous `subagent` wording in repo docs with generic terms such
+    as `worker`, `shard`, `session`, or `provider process` unless discussing a
+    provider feature explicitly as non-required
+  - audit `src/*/SKILL.md`, `README.md`, `AGENTS.md`,
+    `specs/workflow-contract.md`, helper references, and eval assertions so
+    they say provider features are optional adapters, not workflow truth
+  - add eval cases that fail when skills or wrappers require provider-native
+    plugins, built-in skills, MCPs, rules, hooks, subagents, auto-memory, or
+    other hidden client state
+
 ## Dependency And External Grounding
 
 - [ ] Design and ship dependency-sensitive source grounding rules across the
@@ -326,6 +364,16 @@ When revisiting this file later, confirm whether:
   - define shard output requirements: pass/fail verdict, real findings with
     file/line references, missing implementation, scope drift, missing or weak
     tests, spec drift, risk level, checks run, and suggested fix scope
+  - keep verification shards read-only even when they find real issues; do not
+    let finding agents self-fix, because that mixes diagnosis, false-positive
+    filtering, mutation, and plan authority in one worker
+  - define accepted-finding fix flow: the parent orchestrator creates bounded
+    fix briefs from accepted findings, then either fixes locally or dispatches
+    separate `execute` worker sessions with explicit write scopes and required
+    checks; verifier shards remain separate from fixer workers
+  - make the parent orchestrator own final decisions, canonical plan updates,
+    fix ordering, commits, pushes, and final readiness verdicts; worker outputs
+    are evidence until the parent accepts them with local confirmation
   - define synthesis rules for rejecting false positives with evidence,
     severity ordering, fix batching, rerunning focused verification after fixes,
     and final whole-plan verification
