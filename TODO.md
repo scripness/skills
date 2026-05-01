@@ -291,6 +291,53 @@ When revisiting this file later, confirm whether:
     until a fresh pass yields no new material findings, then still require the
     final strict `verify=pass` completion gate
 
+- [ ] Design and ship an implemented-plan verification campaign wrapper for
+  already-implemented branches.
+  The campaign should make the current manual "verify an implemented branch
+  against the original plan, fix real issues, and leave the PR ready" prompt a
+  native optional workflow without bloating the `verify` skill itself.
+  Contract boundary:
+  - the campaign is an orchestrated wrapper over lean skills, not a new
+    provider-agnostic skill contract
+  - the immutable original contract is a required `commit:path` plan ref
+  - the mutable living execution log is the current explicit `plans/*.md` file
+  - the original contract defines required scope unless the living plan records
+    an explicit, repo-truth-backed, previously verified change in scope
+  - read-only shard agents use `verify` and write scratch reports only, not
+    code, commits, or canonical plan edits
+  - one synthesizing orchestrator dedupes shard findings, locally checks each
+    candidate issue before accepting it, and performs the canonical plan update
+  - accepted findings become bounded `execute` fix batches; use `consult` for
+    disputed architecture judgment and `tests` when coverage or test topology
+    is unclear
+  - commit and push coherent verified fix batches using the target repo's
+    commit style
+  Follow-through:
+  - add a reference contract such as
+    `src/execute/references/verification-campaign.md`
+  - decide whether generic plumbing belongs in `src/execute/scripts/` and
+    provider-specific Codex fan-out belongs under
+    `src/execute/scripts/providers/`
+  - define the verification matrix schema: scope item, original-plan
+    requirement, current-plan notes, owning paths/specs/tests, assigned shard,
+    verdict, findings, accepted/rejected status, fix commit, and recheck status
+  - define wave behavior for large campaigns so wrappers can queue 30+ shards
+    in smaller read-only waves without skipping scope
+  - define shard output requirements: pass/fail verdict, real findings with
+    file/line references, missing implementation, scope drift, missing or weak
+    tests, spec drift, risk level, checks run, and suggested fix scope
+  - define synthesis rules for rejecting false positives with evidence,
+    severity ordering, fix batching, rerunning focused verification after fixes,
+    and final whole-plan verification
+  - define final readiness gates: accepted findings fixed or explicitly
+    documented as non-blocking, living plan complete, required checks recorded,
+    worktree clean, branch pushed, final commit SHA known, and PR ready for
+    review
+  - add eval cases that fail when shard agents mutate canonical state, living
+    plan edits silently weaken the original contract, findings are accepted
+    without local double-check, or final output omits agent matrix, finding
+    status, checks, remaining risk, final SHA, or PR readiness
+
 ## Operations Interface
 
 - [ ] Design the operator surface after the loop-facing workflow contracts are
