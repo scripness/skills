@@ -158,6 +158,8 @@ When revisiting this file later, confirm whether:
   `consult -> plan -> verify(plan)` workflow while staying file-backed and
   resumable from the explicit `plans/*.md` path.
   Clear orchestration note:
+  - the plan loop is planning-only: it must not invoke `execute`, implement
+    code, or modify repo truth outside the canonical plan file
   - the plan loop should spawn multiple `consult` and `verify` angles rather
     than rely on a single pass
   - the orchestrator should also run its own `consult` / `verify` effort so it
@@ -165,12 +167,16 @@ When revisiting this file later, confirm whether:
   - those agent outputs should be treated as inputs to one synthesizing
     orchestrator agent
   - only that orchestrator should update the canonical plan file
+  - side `consult` and `verify` agents are read-only inputs to synthesis; they
+    must write to logs or scratch copies only, not the canonical plan file
   Follow-through:
   - define how clarifications, approvals, and changed decisions pause the loop
     and resume against the same plan path
   - define explicit loop outcomes such as `ready`, `needs_input`, `blocked`,
     and `complete` so pause/resume behavior stays machine-readable instead of
     hiding in prose
+  - define `complete` as "the plan is verified and ready for later execute
+    sessions", not "the planned implementation work is complete"
   - treat follow-up clarifications and changed decisions as deltas against the
     same explicit plan file, reopening only the affected milestones instead of
     creating replacement plans or restarting broad research
