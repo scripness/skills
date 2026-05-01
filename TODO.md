@@ -130,6 +130,8 @@ When revisiting this file later, confirm whether:
   - skill contracts own task semantics: trigger boundaries, repo evidence to
     inspect, allowed canonical writes, output shape, verdict rules, and
     required follow-through
+  - a skill may inspect files outside its owning write surface as evidence, but
+    it should only create or update canonical artifacts in its own domain
   - wrapper/helper layers own execution strategy: number of agents, side-agent
     roles, parallelism, cadence, scratch artifacts, log retention, dashboards,
     JSON events, and provider-specific invocation details
@@ -144,31 +146,47 @@ When revisiting this file later, confirm whether:
     language such as using stronger checks, a fresh pass, or available
     independent review when risk warrants it; deterministic swarm policy
     belongs to the loop wrapper
+  - remove generic boilerplate across all skills and keep only skill-specific
+    inputs, outputs, and quality gates; a skill may inspect surrounding repo
+    truth to avoid false claims, but must not turn that inspection into a
+    second job or broaden writes beyond its domain
   Follow-through:
   - `consult`: keep clarification, repo-truth reading, option comparison,
     recommendation, and copy-ready plan carry-forward; compress repeated
     handoff wording; make output headings flexible enough for concise direct
-    chat; move multi-angle/fan-out specifics to wrapper documentation
+    chat; make `Options` conditional when the request is pure current-behavior
+    explanation; move multi-angle/fan-out specifics to wrapper documentation
   - `plan`: keep durable-state trigger, one explicit plan path, update-in-place
     behavior, canonical-plan handoff, and decision-complete next-slice
     requirements; move exhaustive section schema and parseability details into
-    `assets/plan-template.md` and validators; remove duplicate `specs` /
-    `tests` obligation wording
+    `assets/plan-template.md` and validators; inspect enough repo truth to
+    make the plan accurate without turning planning into implementation
+    research or architecture audit; remove duplicate `specs` / `tests`
+    obligation wording
   - `execute`: keep direct and plan-driven entry modes, explicit-plan safety,
     one bounded slice, under-specified-slice stop behavior, mechanical checks,
     required `specs` / `tests` follow-through, plan updates, and `verify`
-    handoff; move helper invocation details and continuous-loop quality bars
-    to `references/optional-helper.md` or provider wrappers
+    handoff; make the follow-through boundary explicit so `execute` completes
+    only slice-required `specs` / `tests` updates and does not broaden into
+    general cleanup; move helper invocation details and continuous-loop quality
+    bars to `references/optional-helper.md` or provider wrappers
   - `verify`: keep adversarial target typing, findings-first output, verdict
     rubric, strict final completion semantics, and canonical plan updates;
-    condense repeated weak-next-slice and missing-sync failure rules; move
-    independent-pass and swarm execution strategy to wrapper/helper docs
-  - `specs`: keep bootstrap/sync/gap-close triggers, durable-truth boundaries,
-    proportional repo-shape discovery, bootstrap assets, ambiguity stop rules,
-    and compact `AGENTS.md` guidance; remove historical narration, duplicate
-    internal `audit -> consult -> verify -> apply` wording, provider-specific
-    mirror mechanics where not required, and template-detail bloat better owned
-    by assets
+    check test coverage required by repo policy, risk, or plan rather than
+    implying every applicable test tier must change; condense repeated
+    weak-next-slice and missing-sync failure rules; move independent-pass and
+    swarm execution strategy to wrapper/helper docs
+  - `specs`: keep only bootstrap/sync/gap-close work for `AGENTS.md`,
+    `CLAUDE.md` symlink when required by repo convention, `specs/README.md`,
+    and `specs/*.md`; inspect codebase structure only as evidence for truthful
+    updates; remove standalone topology mapping, codebase architecture audit,
+    agentic-readiness assessment, proportional organization improvements,
+    navigation-map work, historical narration, duplicate internal
+    `audit -> consult -> verify -> apply` wording, provider-specific mirror
+    mechanics where not required, template-detail bloat better owned by assets,
+    and output claims that certify the whole repo as ready for
+    planning/execution instead of reporting changed truth files and remaining
+    repo-truth gaps for the named scope
   - `tests`: keep bootstrap/sync/gap-close triggers, test-topology discovery,
     smallest credible layer selection, existing helper reuse, blocked-layer
     reporting, and meaningful checks; remove the `specs` analogy, broad
