@@ -118,6 +118,70 @@ When revisiting this file later, confirm whether:
   - record any boundary cases where `consult` vs `plan` vs `execute` are
     especially easy for clients to mis-trigger
 
+## Six-Skill Lean Contract
+
+- [ ] Trim and sharpen the six source skills while preserving direct-chat
+  usefulness.
+  The goal is for each `src/*/SKILL.md` to remain fully useful when invoked
+  directly in a normal agent session, while optional loop wrappers amplify the
+  same skill contract with fan-out, retries, logs, dashboards, and exit-code
+  transport.
+  Contract boundary:
+  - skill contracts own task semantics: trigger boundaries, repo evidence to
+    inspect, allowed canonical writes, output shape, verdict rules, and
+    required follow-through
+  - wrapper/helper layers own execution strategy: number of agents, side-agent
+    roles, parallelism, cadence, scratch artifacts, log retention, dashboards,
+    JSON events, and provider-specific invocation details
+  - wrapper output is supporting evidence only; canonical task truth remains in
+    repo files, especially the explicit plan file for plan-driven work
+  - direct chat must not require a loop helper; wrappers may deepen scrutiny
+    but must not redefine what the skill means
+  - keep `verify` plan writes as core behavior: when verifying plan-driven
+    work, `verify` updates the same explicit plan with findings, verdict,
+    blockers, progress corrections, and repairable follow-up slices
+  - replace exact subagent/fan-out wording inside skills with portable scrutiny
+    language such as using stronger checks, a fresh pass, or available
+    independent review when risk warrants it; deterministic swarm policy
+    belongs to the loop wrapper
+  Follow-through:
+  - `consult`: keep clarification, repo-truth reading, option comparison,
+    recommendation, and copy-ready plan carry-forward; compress repeated
+    handoff wording; make output headings flexible enough for concise direct
+    chat; move multi-angle/fan-out specifics to wrapper documentation
+  - `plan`: keep durable-state trigger, one explicit plan path, update-in-place
+    behavior, canonical-plan handoff, and decision-complete next-slice
+    requirements; move exhaustive section schema and parseability details into
+    `assets/plan-template.md` and validators; remove duplicate `specs` /
+    `tests` obligation wording
+  - `execute`: keep direct and plan-driven entry modes, explicit-plan safety,
+    one bounded slice, under-specified-slice stop behavior, mechanical checks,
+    required `specs` / `tests` follow-through, plan updates, and `verify`
+    handoff; move helper invocation details and continuous-loop quality bars
+    to `references/optional-helper.md` or provider wrappers
+  - `verify`: keep adversarial target typing, findings-first output, verdict
+    rubric, strict final completion semantics, and canonical plan updates;
+    condense repeated weak-next-slice and missing-sync failure rules; move
+    independent-pass and swarm execution strategy to wrapper/helper docs
+  - `specs`: keep bootstrap/sync/gap-close triggers, durable-truth boundaries,
+    proportional repo-shape discovery, bootstrap assets, ambiguity stop rules,
+    and compact `AGENTS.md` guidance; remove historical narration, duplicate
+    internal `audit -> consult -> verify -> apply` wording, provider-specific
+    mirror mechanics where not required, and template-detail bloat better owned
+    by assets
+  - `tests`: keep bootstrap/sync/gap-close triggers, test-topology discovery,
+    smallest credible layer selection, existing helper reuse, blocked-layer
+    reporting, and meaningful checks; remove the `specs` analogy, broad
+    recent-change inference in dirty worktrees, duplicate internal
+    meta-process, and the mandate to update "every applicable existing layer"
+    in favor of risk- and policy-required layers
+  - update `src/*/README.md`, `agents/openai.yaml`, specs, README, and eval
+    assertions when skill contract wording changes so shipped surfaces stay
+    aligned
+  - add or update eval cases that fail when skills become wrapper-dependent,
+    over-trigger, skip canonical plan writes, over-prescribe broad test/spec
+    work, or let wrapper artifacts replace repo truth
+
 ## Compatibility Metadata
 
 - [ ] Add explicit `compatibility` metadata where environment assumptions
