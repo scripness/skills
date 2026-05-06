@@ -1,7 +1,9 @@
 # TODO
 
 Follow-up items from the April 22, 2026 comparison between this repo's
-six-skill workflow and the official Agent Skills docs:
+six-skill workflow and the official Agent Skills docs, plus the May 6, 2026
+workflow synthesis around planning automation, adjunct skills, specs hardening,
+and downstream cryptoli refresh.
 
 ## Source Grounding
 
@@ -20,6 +22,16 @@ Upstream sources reviewed:
 - `https://agentskills.io/skill-creation/using-scripts`
 - `https://agentskills.io/client-implementation/adding-skills-support`
 
+Additional May 6, 2026 sources reviewed:
+
+- `https://github.com/forrestchang/andrej-karpathy-skills/blob/main/skills/karpathy-guidelines/SKILL.md`
+- `https://github.com/mattpocock/skills`
+- `https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me`
+- `https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs`
+- `https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture`
+- selected Matt Pocock engineering skills for surrounding patterns:
+  `diagnose`, `tdd`, `to-issues`, and `zoom-out`
+
 Local repo sources reviewed:
 
 - `AGENTS.md`
@@ -28,6 +40,11 @@ Local repo sources reviewed:
 - `specs/evaluation-harness.md`
 - `src/*/SKILL.md`
 - `src/execute/scripts/loop.py`
+- `src/specs/assets/AGENTS.md`
+- `src/specs/assets/specs/README.md`
+- `src/specs/assets/specs/spec-template.md`
+- local `/home/scrip/Code/cryptoli/AGENTS.md` and
+  `/home/scrip/Code/cryptoli/specs/`
 
 When revisiting this file later, confirm whether:
 
@@ -41,6 +58,112 @@ When revisiting this file later, confirm whether:
   baselines, and human review
 - this repo still intends to optimize for coding-agent environments rather than
   generic drop-in marketplace portability
+
+## May 6, 2026 Final Synthesis
+
+This is the current intake decision before converting the backlog into one or
+more explicit plan files.
+
+Core workflow shape:
+
+- Keep the six workflow skills as the semantic core:
+  `consult`, `plan`, `execute`, `verify`, `specs`, and `tests`.
+- Treat `grill` and `caveman` as workflow-adjacent adjunct skills, not as
+  owners of core workflow semantics.
+- Use `grill` for alignment and decision-tree clarification before planning or
+  before high-risk design choices.
+- Use `caveman` for user-facing communication style only.
+- Keep Karpathy-style guidance as quality-bar language inside existing skills:
+  explicit assumptions, simple scoped changes, surgical edits, and verifiable
+  success criteria.
+- Treat Matt Pocock's skills as useful pattern input, not as a contract to copy.
+  Import the small/composable stance and selected practices; do not import
+  provider-native mechanics, mandatory `CONTEXT.md`, or required ADR layers.
+
+Repo truth direction:
+
+- `AGENTS.md` should be stronger, shorter, and more operational.
+- `specs/` must explain durable code and system truth only. Specs must not
+  contain task plans, task lists, future-work backlogs, milestone status, or
+  implementation TODOs.
+- The `specs` skill and bootstrap assets must enforce that boundary.
+- A mature repo should preserve its house style, but the generic assets must
+  make the no-planning/no-TODO rule explicit.
+- Use repo-owned specs as the default durable language layer. `CONTEXT.md` and
+  ADRs may be optional target-repo conventions, not required workflow truth.
+
+Automation direction:
+
+- Every shipped skill may grow optional scripts, but scripts amplify the skill;
+  they do not replace or redefine it.
+- Generic helper naming should mirror execute:
+  `src/<skill>/scripts/loop.py`,
+  `src/<skill>/scripts/providers/codex_loop.py`, and dashboard wrappers only
+  when an operator need is real.
+- Skill contracts own trigger rules, required evidence, canonical writes,
+  output/verdict rules, and `specs` / `tests` obligations.
+- Wrappers own worker count, fan-out, retries, logs, dashboards, events,
+  provider CLI invocation, pause/resume, locks, and run history.
+- Worker or shard outputs are evidence only. Canonical truth stays in
+  `AGENTS.md`, `specs/`, explicit `plans/*.md`, and tests.
+
+Planning loop direction:
+
+- Ship a planning-only loop under `src/plan/scripts/loop.py`.
+- It creates or checkpoints one explicit canonical plan path early, before
+  brainstorming exhausts session context.
+- It may launch read-only `consult` and `verify` workers; only the orchestrator
+  writes the canonical plan.
+- It must never invoke `execute`, implement code, or edit repo truth outside
+  the canonical plan file.
+- `complete` means the plan is verified and ready for later execute sessions,
+  not that implementation is complete.
+
+Milestone and commit direction:
+
+- Plans should be smaller, with bounded milestones that can be executed and
+  verified one at a time.
+- A coherent completed milestone should normally become one commit after:
+  execution, checks, verification, plan evidence updates, and unrelated dirty
+  worktree review.
+- Base skills should not auto-commit. Commit gates belong in wrapper/operator
+  flows and verification-campaign flows.
+
+Specs-agent campaign direction:
+
+- Use "6+1 specs agents" as orchestration topology: six read-only specs audit
+  angles plus one orchestrator that writes `AGENTS.md` and `specs/`.
+- For this source repo, suggested angles are workflow contract, repo surface,
+  eval harness, skill payloads, helper/scripts, and downstream sync/assets.
+- For cryptoli, suggested angles are backend, frontend, admin,
+  data/auth/realtime, testing, and ops/deploy.
+- Read-only agents must write scratch reports only; the orchestrator owns the
+  canonical repo-truth edits.
+
+Downstream direction:
+
+- Both this `skills` repo and `/home/scrip/Code/cryptoli` need repo-truth and
+  skill refresh after the source workflow decisions settle.
+- Cryptoli currently has a dirty product worktree; downstream sync should wait
+  for that branch to stabilize or be done as an explicitly isolated skill/spec
+  refresh with dirty-worktree risk acknowledged.
+- After source changes land, refresh cryptoli's installed skills, `AGENTS.md`,
+  and `specs/`, then refresh the pinned cryptoli eval fixture if the fixture is
+  no longer representative.
+
+Recommended conversion order:
+
+1. Finalize this `TODO.md` as the intake backlog.
+2. Convert the selected architecture slice into one explicit plan file.
+3. First plan milestone: provider-agnostic runtime boundary and generic
+   worker/session contract.
+4. Second: harden `AGENTS.md`, `specs/`, and the `specs` skill/assets.
+5. Third: trim the six skills and add quality-bar guidance.
+6. Fourth: add `grill` and settle `caveman` status.
+7. Fifth: define shared per-skill script conventions.
+8. Sixth: ship the planning-only loop and provider wrappers.
+9. Seventh: strengthen execute verification fan-out and verification campaign.
+10. Eighth: sync/update cryptoli.
 
 ## Provider-Agnostic Runtime Boundary
 
@@ -164,6 +287,43 @@ When revisiting this file later, confirm whether:
   - record any boundary cases where `consult` vs `plan` vs `execute` are
     especially easy for clients to mis-trigger
 
+## Repo Truth And Specs Hard Boundary
+
+- [ ] Improve `AGENTS.md` and `specs/` so repo truth is easier for fresh agents
+  to apply without confusing durable system truth with task planning.
+  Core rule:
+  - `AGENTS.md` owns concise repo-wide operational truth: reading order,
+    commands, boundaries, skill inventory, git conventions, and non-obvious
+    workflow rules
+  - `specs/` owns durable code, domain, architecture, operational, and testing
+    truth by topic
+  - `specs/` must not contain task plans, task lists, future-work backlogs,
+    implementation TODOs, milestone state, active blockers, or status prose
+    that belongs in `plans/*.md`
+  - specs may describe intended system contracts only when those contracts are
+    grounded in code, durable design docs, migrations, schemas, tests, or
+    explicit repo policy; otherwise they must state the gap as current truth
+    rather than smuggling planned work into specs
+  - verification sections in specs should contain commands, code-path checks,
+    or source inspections that confirm the spec against the repo; they should
+    not become task checklists
+  Follow-through:
+  - update `AGENTS.md`, `specs/README.md`, `specs/workflow-contract.md`,
+    `specs/repo-surface.md`, `README.md`, `docs/maintenance.md`, and
+    `docs/sources.md` to reflect the stricter boundary
+  - update `src/specs/SKILL.md` so it bootstraps, syncs, and repairs repo truth
+    without producing readiness certifications, architecture-audit backlogs, or
+    planning content
+  - update `src/specs/assets/AGENTS.md`,
+    `src/specs/assets/specs/README.md`, and
+    `src/specs/assets/specs/spec-template.md` so downstream repos inherit the
+    same hard boundary
+  - add eval cases that fail when the `specs` skill writes TODOs, milestones,
+    execution plans, stale desired behavior, or broad repo-readiness claims
+    into `AGENTS.md` or `specs/`
+  - use a 6+1 specs-agent campaign for broad syncs: six read-only audit angles
+    plus one orchestrator that writes canonical `AGENTS.md` and `specs/`
+
 ## Six-Skill Lean Contract
 
 - [ ] Trim and sharpen the six source skills while preserving direct-chat
@@ -246,6 +406,39 @@ When revisiting this file later, confirm whether:
     over-trigger, skip canonical plan writes, over-prescribe broad test/spec
     work, or let wrapper artifacts replace repo truth
 
+## Milestone Commit Cadence
+
+- [ ] Bake smaller plans and milestone commit gates into plan-driven workflow
+  guidance without making base skills auto-commit.
+  Contract boundary:
+  - plans should be small enough that each milestone can be executed, checked,
+    verified, and reasoned about independently
+  - each milestone should define a clear done condition, owning paths, required
+    `specs` / `tests` exit criteria, and the intended commit boundary when
+    commit cadence applies
+  - a completed milestone should normally become one coherent commit only after
+    execution, mechanical checks, required `specs` / `tests` follow-through,
+    `verify`, and plan evidence updates
+  - base skills should not auto-commit because that mixes workflow semantics
+    with repository authority; commit gates belong in wrapper/operator flows or
+    verification-campaign flows
+  - if the worktree contains unrelated dirty changes, the milestone commit gate
+    must stop or require explicit user approval rather than sweeping unrelated
+    work into the commit
+  Follow-through:
+  - update `src/plan/SKILL.md` and `src/plan/assets/plan-template.md` so plans
+    can record intended commit boundaries and post-verify commit evidence
+    without turning every task into an overbearing process
+  - update `src/execute/SKILL.md` and `src/verify/SKILL.md` so they preserve
+    milestone evidence needed for a later commit gate, while still avoiding
+    direct commit authority
+  - update execute helper or provider wrapper references to describe the
+    optional milestone commit gate, dirty-worktree handling, and commit SHA
+    recording
+  - add eval cases that fail when milestones are too broad, commit unrelated
+    work, skip verification before commit, or leave no commit evidence in the
+    plan when commit cadence was required
+
 ## Compatibility Metadata
 
 - [ ] Add explicit `compatibility` metadata where environment assumptions
@@ -281,14 +474,17 @@ When revisiting this file later, confirm whether:
 
 ## Workflow Automation
 
-- [ ] Design and ship a plan loop for large task planning work.
-  The plan loop should automate the current manual
+- [ ] Design and ship a planning-only loop for large task planning work.
+  The loop should automate the current manual
   `consult -> plan -> verify(plan)` workflow while staying file-backed and
   resumable from the explicit `plans/*.md` path.
   Clear orchestration note:
-  - the plan loop is planning-only: it must not invoke `execute`, implement
+  - the loop is planning-only: it must not invoke `execute`, implement
     code, or modify repo truth outside the canonical plan file
-  - the plan loop should spawn multiple `consult` and `verify` angles rather
+  - create the explicit canonical plan path early, before brainstorming can
+    consume the session context, and checkpoint emerging facts into that same
+    file as synthesis proceeds
+  - spawn multiple `consult` and `verify` angles rather
     than rely on a single pass
   - the orchestrator should also run its own `consult` / `verify` effort so it
     has a first-party view of the problem before synthesizing side-agent input
@@ -298,6 +494,14 @@ When revisiting this file later, confirm whether:
   - side `consult` and `verify` agents are read-only inputs to synthesis; they
     must write to logs or scratch copies only, not the canonical plan file
   Follow-through:
+  - ship the generic helper under `src/plan/scripts/loop.py`, mirroring the
+    execute helper naming convention
+  - ship provider-specific wrappers under `src/plan/scripts/providers/`, such
+    as `codex_loop.py` and, if there is a real planning operator need,
+    `codex_loop_dashboard.py`
+  - add a reference contract under `src/plan/references/optional-helper.md`
+    that defines invocation, installed-layout path resolution, scratch logs,
+    structured reports, outcomes, and exit-code mapping
   - define how clarifications, approvals, and changed decisions pause the loop
     and resume against the same plan path
   - define explicit loop outcomes such as `ready`, `needs_input`, `blocked`,
@@ -321,7 +525,8 @@ When revisiting this file later, confirm whether:
   verification angles and synthesize them before returning one verdict.
   Clear orchestration note:
   - make the execute loop spawn more verification agents in the same general
-    way the future plan loop should spawn multiple consult/verify angles
+    way the future planning-only loop should spawn multiple consult/verify
+    angles
   - the orchestrator should also run its own `verify` effort so it is not only
     relaying swarm output when updating the canonical plan and verdict
   - feed those independent syntheses to one orchestrator agent that updates
@@ -406,6 +611,35 @@ When revisiting this file later, confirm whether:
     without local double-check, or final output omits agent matrix, finding
     status, checks, remaining risk, final SHA, or PR readiness
 
+## Downstream Cryptoli Refresh
+
+- [ ] Update the live cryptoli repo after this source repo's workflow decisions
+  settle.
+  Current grounding:
+  - local repo path: `/home/scrip/Code/cryptoli`
+  - pinned eval fixture: `evals/fixtures/cryptoli.json`, currently pinned to
+    commit `5c634bd5018eba27b5d6881116d5328e287c03c3` from April 16, 2026
+  - local cryptoli currently has a dirty product worktree, including schema,
+    backend service/test, migration, plan, and `specs/data-model.md` changes
+  Refresh scope:
+  - sync updated shipped skills into cryptoli's `.agents/skills/`
+  - update cryptoli `AGENTS.md` and `specs/` to the stricter repo-truth
+    boundary: specs explain durable code/system truth, not plans or TODOs
+  - add or preserve cryptoli-specific adjunct skills such as `caveman` and
+    `grill` according to the final source-repo stack decision
+  - use a 6+1 specs-agent campaign for broad cryptoli repo-truth sync:
+    backend, frontend, admin, data/auth/realtime, testing, ops/deploy, plus one
+    orchestrator writer
+  - refresh the cryptoli fixture manifest when the live repo becomes the better
+    representative target for evals
+  Safety:
+  - do not overwrite or commit unrelated dirty product work during skill/spec
+    refresh
+  - prefer waiting until the current cryptoli branch stabilizes, unless the
+    user explicitly asks for an isolated skill/spec refresh on the dirty tree
+  - record any refreshed cryptoli commit SHA and fixture pin changes in the
+    relevant plan or eval fixture update
+
 ## Operations Interface
 
 - [ ] Design the operator surface after the loop-facing workflow contracts are
@@ -414,14 +648,77 @@ When revisiting this file later, confirm whether:
   - tighten the machine-facing contracts needed by both loops, including plan
     parse rules, event schemas, outcomes, pause/resume states, log retention,
     and locking
-  - add a file-backed `plan_loop.py` for the automated
+  - add a file-backed `src/plan/scripts/loop.py` for the automated
     `consult -> plan -> verify(plan)` flow described above
   - extract shared operations plumbing for plan indexing, process launching,
     JSON event ingestion, logs, file locks, and run history
-  - build one local TUI over TODO intake, plan creation/review, plan-loop runs,
-    execute-loop runs, blockers, verdicts, diffs, and logs
+  - build one local TUI over TODO intake, plan creation/review,
+    planning-loop runs, execute-loop runs, blockers, verdicts, diffs, and logs
   - keep a Phoenix dashboard as a later option only if the TUI proves there is
     real need for richer browsing, multi-session use, or cross-repo operations
+
+## Adjunct Skill Stack
+
+- [ ] Add `grill` as a workflow-adjacent alignment skill.
+  Source references:
+  - `https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me`
+  - `https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs`
+  Role:
+  - interview the user one question at a time about a plan, design, or
+    high-risk implementation direction until the decision tree is resolved
+  - provide the recommended answer with each question so the user can accept,
+    correct, or sharpen the decision quickly
+  - inspect repo code and specs instead of asking when the repo can answer the
+    question
+  - preserve copy-ready carry-forward for `plan` when the grilling session
+    produces durable decisions, risks, rejected options, naming choices, or
+    open questions
+  - use repo-owned `AGENTS.md` and `specs/` as the durable language and
+    decision layer by default; treat `CONTEXT.md` and ADRs as optional
+    target-repo conventions only
+  Boundaries:
+  - `grill` does not replace `consult`; it is a sharper alignment/interview
+    mode used when user understanding and decision quality are the risk
+  - `grill` does not create implementation plans unless it hands off to `plan`
+  - `grill` does not write `specs/` directly unless a future explicit
+    repo-truth sync flow defines that behavior; by default it returns
+    carry-forward
+  Follow-through:
+  - add `src/grill/SKILL.md`, `README.md`, `agents/openai.yaml`, and
+    `evals/evals.json`
+  - decide whether `grill` ships by default in downstream sync or remains an
+    optional adjunct skill selected by `SKILL=...`
+  - update `AGENTS.md`, `README.md`, `specs/workflow-contract.md`,
+    `specs/repo-surface.md`, sync behavior, and managed README wording
+  - add eval cases for one-question-at-a-time behavior, code/spec lookup before
+    asking, copy-ready plan carry-forward, and non-interference with
+    `consult`, `plan`, and `specs`
+
+- [ ] Decide whether to add an `improve` adjunct skill or fold architecture
+  improvement into `consult`.
+  Source reference:
+  - `https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture`
+  Candidate behavior:
+  - inspect repo truth and code to surface architecture friction and deepening
+    opportunities
+  - present numbered candidates with files, problem, solution, benefits,
+    testing impact, and any conflict with existing repo truth
+  - ask the user which candidate to explore before designing interfaces or
+    implementation slices
+  - hand off chosen work to `grill` for design-tree clarification or to `plan`
+    when durable task state is warranted
+  Boundaries:
+  - do not import provider-specific subagent mechanics as required behavior
+  - do not hard-code `CONTEXT.md`, ADRs, or Matt's glossary as required repo
+    truth
+  - do not generate broad refactor backlogs by default; keep candidates
+    evidence-backed and user-selected
+  Follow-through:
+  - decide whether the repo wants a standalone `src/improve/` skill, a
+    `consult` reference/mode, or no shipped surface yet
+  - if shipped, add companion files, sync behavior, docs, specs, and evals
+  - add eval cases that fail on speculative refactor lists, provider-native
+    dependency, or architecture claims without code/spec evidence
 
 ## Communication Style Skill
 
