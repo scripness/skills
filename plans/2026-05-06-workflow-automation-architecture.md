@@ -1,8 +1,8 @@
 # Workflow Automation Architecture
 
 Use this file as the living task plan for replacing `TODO.md` with a
-ready-to-execute, file-backed plan for the workflow automation and adjunct
-skill work. Keep it updated in place. A fresh session should be able to resume
+ready-to-execute, file-backed plan for the workflow automation and skill-stack
+work. Keep it updated in place. A fresh session should be able to resume
 from repo truth plus this file alone.
 
 Update `Progress`, `Decision Log`, `Discoveries`, `Verification`, and
@@ -15,8 +15,8 @@ later `execute` and `verify` sessions with this exact file path:
 Replace the broad `TODO.md` backlog with a durable, executable plan that moves
 the skills repo toward a stronger provider-agnostic workflow architecture:
 clearer repo truth, stricter specs boundaries, leaner six-skill contracts,
-optional script-based amplification, planning automation, adjunct skills, and a
-controlled downstream cryptoli refresh.
+optional script-based amplification, planning automation, core skill-stack
+additions, and a refreshed cryptoli eval fixture.
 
 Done means:
 
@@ -45,17 +45,19 @@ Done means:
 - Add dependency-sensitive external grounding rules.
 - Align frontmatter, compatibility metadata, trigger descriptions, and eval
   portability with current Agent Skills guidance where useful.
-- Add optional adjunct skill surfaces for `grill` and `caveman`, and decide
-  whether `improve` should become a standalone adjunct skill or a `consult`
-  mode/reference.
+- Add `grill` and `caveman` as source-repo core skills that sync downstream,
+  while keeping the six workflow skills as the semantic workflow core.
+- Decide whether `improve` should become a standalone adjacent skill or a
+  `consult` mode/reference.
 - Define shared script/wrapper conventions for optional skill amplification.
 - Ship a planning-only loop under `src/plan/scripts/loop.py`.
 - Strengthen execute-loop verification fan-out in the provider wrapper layer
   without changing the generic execute loop contract.
 - Define an implemented-plan verification campaign wrapper.
 - Add optional operator surface guidance after loop contracts are strong.
-- Refresh downstream cryptoli repo truth, installed skills, and fixture pin
-  after source-repo decisions land.
+- Refresh the source repo's `evals/fixtures/cryptoli.json` after cryptoli
+  becomes a stronger eval target. Direct cryptoli repo sync/spec work is out of
+  scope for this plan.
 
 ## Non-Goals
 
@@ -67,11 +69,10 @@ Done means:
   or scratch logs.
 - Do not replace `AGENTS.md`, `specs/`, and explicit `plans/*.md` with
   `CONTEXT.md`, ADRs, or other external repo-truth layers.
-- Do not make `grill`, `caveman`, or `improve` owners of core workflow
+- Do not make `grill`, `caveman`, or `improve` owners of six-skill workflow
   semantics.
-- Do not modify cryptoli product code as part of source-repo workflow
-  architecture work.
-- Do not overwrite dirty cryptoli work during downstream refresh.
+- Do not perform direct `/home/scrip/Code/cryptoli` skill sync, specs sync, or
+  product-code edits as part of this source-repo workflow architecture plan.
 - Do not commit generated `.tmp/evals/` artifacts.
 
 ## Deliverables
@@ -94,8 +95,8 @@ Done means:
   - `src/verify/`
   - `src/specs/`
   - `src/tests/`
-  - optional `src/grill/`
-  - optional `src/caveman/`
+  - `src/grill/`
+  - `src/caveman/`
   - optional `src/improve/` or `consult` reference material
 - Updated bootstrap assets under `src/specs/assets/`.
 - Updated shared eval metadata and workflow cases under `src/*/evals/` and
@@ -107,8 +108,8 @@ Done means:
     value is real
   - `src/<skill>/references/optional-helper.md`
   - `src/execute/references/verification-campaign.md`
-- Refreshed downstream cryptoli install and fixture manifest when source work
-  is ready.
+- Refreshed source repo `evals/fixtures/cryptoli.json` when the current
+  cryptoli repo is ready to serve as the better eval fixture target.
 
 ## Repo Context
 
@@ -145,8 +146,8 @@ Done means:
   - `src/specs/assets/AGENTS.md`
   - `src/specs/assets/specs/README.md`
   - `src/specs/assets/specs/spec-template.md`
-- Downstream repo:
-  - `/home/scrip/Code/cryptoli`
+- External fixture context:
+  - `/home/scrip/Code/cryptoli` as the local source for fixture refresh only
   - `evals/fixtures/cryptoli.json`
 
 ## Source Grounding
@@ -189,8 +190,8 @@ Local sources reviewed:
 - `src/specs/assets/AGENTS.md`
 - `src/specs/assets/specs/README.md`
 - `src/specs/assets/specs/spec-template.md`
-- local `/home/scrip/Code/cryptoli/AGENTS.md`
-- local `/home/scrip/Code/cryptoli/specs/`
+- local `/home/scrip/Code/cryptoli/AGENTS.md` and `specs/` as sampled fixture
+  context only; this plan does not edit the cryptoli repo
 
 Durable source-grounding recheck triggers:
 
@@ -208,8 +209,8 @@ Durable source-grounding recheck triggers:
 
 - Keep the six workflow skills as the semantic core:
   `consult`, `plan`, `execute`, `verify`, `specs`, and `tests`.
-- Treat `grill` and `caveman` as workflow-adjacent adjunct skills, not as
-  owners of core workflow semantics.
+- Treat `grill` and `caveman` as source-repo core skills that sync downstream,
+  not as owners of six-skill workflow semantics.
 - Use `grill` for alignment and decision-tree clarification before planning or
   before high-risk design choices.
 - Use `caveman` for user-facing communication style only.
@@ -242,11 +243,13 @@ Durable source-grounding recheck triggers:
   worktree review.
 - Base skills should not auto-commit. Commit gates belong in wrapper/operator
   flows and verification-campaign flows.
-- Use "6+1 specs agents" as orchestration topology: six read-only specs audit
-  angles plus one orchestrator that writes `AGENTS.md` and `specs/`.
-- Cryptoli currently has a dirty product worktree; downstream sync should wait
-  for that branch to stabilize or be done as an explicitly isolated skill/spec
-  refresh with dirty-worktree risk acknowledged.
+- Use "6+1 specs agents" as the source-repo specs audit topology: six
+  read-only specs audit agents using the `specs` skill plus one main
+  orchestrator that writes this repo's `AGENTS.md` and `specs/`. Code is always
+  the source of truth.
+- Cryptoli direct repo work is intentionally outside this plan. The only
+  cryptoli-related source-repo work here is refreshing
+  `evals/fixtures/cryptoli.json` when the live repo is a better eval target.
 
 ## Dependencies
 
@@ -258,8 +261,9 @@ Durable source-grounding recheck triggers:
 - Existing `TODO.md` remains available until that review gate is complete.
 - `make validate` should pass after the plan conversion and after `TODO.md`
   deletion.
-- Broad downstream cryptoli refresh depends on either a stable cryptoli branch
-  or explicit user approval to refresh skill/spec surfaces on a dirty tree.
+- Cryptoli fixture refresh depends on choosing a stable cryptoli commit/ref to
+  pin in `evals/fixtures/cryptoli.json`; it does not include direct cryptoli
+  repo writes.
 - External source rechecks are required before implementation slices that make
   dependency-sensitive or upstream-compatibility claims.
 
@@ -267,7 +271,7 @@ Durable source-grounding recheck triggers:
 
 - `specs`: Required for most milestones. Source repo specs and docs must stay
   aligned with any changed shipped behavior, helper surface, eval contract,
-  downstream sync behavior, adjunct skill status, or provider-agnostic runtime
+  downstream sync behavior, skill-stack status, or provider-agnostic runtime
   boundary. Specific owning specs are named at each milestone.
 - `tests`: Required when a milestone changes harness behavior, helper scripts,
   eval assertions, trigger behavior, or workflow cases. In this repo, "tests"
@@ -364,56 +368,55 @@ Durable source-grounding recheck triggers:
    verification before commit, and missing commit evidence when cadence was
    required. Commit: one plan/execute/verify commit.
 
-8. Adjunct skill governance and install-surface decision: decide how adjunct
-   skills fit the repo before adding new skill directories. Cover `grill`,
-   `caveman`, and possible `improve`; decide default downstream install versus
-   optional `SKILL=...`; update the harness/runtime/sync model so
+8. Core skill-stack governance and install-surface decision: decide how new
+   source-repo core skills and adjacent candidate skills fit the repo before
+   adding new skill directories. Cover required core skills `grill` and
+   `caveman`, plus possible `improve`; update the harness/runtime/sync model so
    `evals/scripts/harness.py`, `evals/runtime.json`,
    `scripts/sync_downstream.py`, managed README wording, `AGENTS.md`, and specs
-   all agree on which skills are shipped core, shipped adjunct, optional-only,
-   or local-only. Done when adding an adjunct directory will not surprise
-   validation, sync, or downstream docs. `specs` exit criteria:
+   all agree on which skills are shipped core, adjacent/candidate,
+   optional-only, or local-only. Done when adding a skill directory will not
+   surprise validation, sync, or downstream docs. `specs` exit criteria:
    `specs/workflow-contract.md` and `specs/repo-surface.md` record the
-   adjunct/core boundary. `tests` exit criteria: `make validate` and any
-   harness/sync eval updates required by the decision. Commit: one
-   adjunct-governance commit.
+   six-workflow/core-skill boundary. `tests` exit criteria: `make validate`
+   and any harness/sync eval updates required by the decision. Commit: one
+   skill-stack-governance commit.
 
-9. Grill adjunct skill: add `grill` as a workflow-adjacent alignment skill when
-   Milestone 8 says it should ship. It should interview the user one question
-   at a time about a plan, design, or high-risk implementation direction;
-   provide the recommended answer with each question; inspect repo code and
+9. Grill core skill: add `grill` as a shipped source-repo core skill synced
+   downstream. It should interview the user one question at a time about a
+   plan, design, or high-risk implementation direction; provide the recommended
+   answer with each question; inspect repo code and
    specs instead of asking when the repo can answer; preserve copy-ready
    carry-forward for `plan`; use `AGENTS.md` and `specs/` as the durable
    language layer; and treat `CONTEXT.md` or ADRs as optional target-repo
    conventions only. Done when `grill` cannot replace `consult`, cannot create
    implementation plans except by handing off to `plan`, and does not write
    `specs/` directly by default. `specs` exit criteria: core docs and specs
-   mention `grill` only as adjunct alignment. `tests` exit criteria: evals
+   mention `grill` as a core skill for alignment that does not own workflow
+   semantics. `tests` exit criteria: evals
    cover one-question-at-a-time behavior, code/spec lookup before asking,
    copy-ready plan carry-forward, and non-interference with `consult`, `plan`,
    and `specs`. Commit: one `grill` commit.
 
-10. Caveman permanent-citizen adjunct skill: add `caveman` as a permanent
-    citizen in this source repo, using
+10. Caveman core skill: add `caveman` as a shipped source-repo core skill
+    synced downstream, using
     `https://github.com/mattpocock/skills/blob/main/skills/productivity/caveman/SKILL.md`
     as source reference. Add the source skill payload under `src/caveman/` and
-    decide whether it is a shipped workflow-adjacent skill or local optional
-    style skill for downstream install purposes, but do not leave it absent
-    from this source repo. It affects user-facing chat only and must not
-    override workflow skill contracts, repo docs, plan files, tests, code
+    include it in downstream sync. It affects user-facing chat only and must
+    not override workflow skill contracts, repo docs, plan files, tests, code
     comments, error text, commands, safety warnings, findings, required checks,
     or durable repo truth. Done when `src/caveman/` has `SKILL.md`,
     `README.md`, `agents/openai.yaml`, and `evals/evals.json`; `AGENTS.md`,
-    README, and `specs/workflow-contract.md` match the chosen shipped/default
-    status; downstream sync behavior and managed README wording are updated
-    when applicable; and the guardrail is explicit that `caveman` affects
+    README, and `specs/workflow-contract.md` match shipped core-skill status;
+    downstream sync behavior and managed README wording are updated; and the
+    guardrail is explicit that `caveman` affects
     communication only. `specs` exit criteria: `AGENTS.md`, README,
-    `specs/workflow-contract.md`, and `specs/repo-surface.md` match the chosen
-    status. `tests` exit criteria: evals fail if terse style causes missing
-    findings, weak plan sections, skipped checks, unclear durable truth, or
-    contract override. Commit: one `caveman` commit.
+    `specs/workflow-contract.md`, and `specs/repo-surface.md` match shipped
+    core-skill status. `tests` exit criteria: evals fail if terse style causes
+    missing findings, weak plan sections, skipped checks, unclear durable
+    truth, or contract override. Commit: one `caveman` commit.
 
-11. Improve architecture adjunct decision: decide whether Matt-style
+11. Improve architecture adjacent-skill decision: decide whether Matt-style
     `improve-codebase-architecture` becomes a standalone `src/improve/` skill,
     a `consult` reference/mode, or no shipped surface yet. Candidate behavior
     must inspect repo truth and code to surface architecture friction; present
@@ -504,26 +507,19 @@ Durable source-grounding recheck triggers:
     exit criteria: helper-level smoke/dry-run checks where applicable. Commit:
     one ops-contract commit before any UI implementation.
 
-17. Downstream cryptoli refresh and fixture update: after source decisions
-    settle, refresh `/home/scrip/Code/cryptoli` without overwriting unrelated
-    dirty product work. Sync updated shipped skills into cryptoli's
-    `.agents/skills/`, update cryptoli `AGENTS.md` and `specs/` to the stricter
-    repo-truth boundary, add or preserve cryptoli-specific adjunct skills
-    according to the final source stack, run a 6+1 specs-agent campaign, and
-    refresh `evals/fixtures/cryptoli.json` if the live repo is the better eval
-    target. Preserve the current grounding until refreshed: pinned fixture
-    commit `5c634bd5018eba27b5d6881116d5328e287c03c3` from April 16, 2026; the
-    local cryptoli worktree was dirty on May 6, 2026 with schema, backend
-    service/test, migration, plan, and `specs/data-model.md` changes. The 6+1
-    cryptoli specs audit angles are backend, frontend, admin,
-    data/auth/realtime, testing, ops/deploy, plus one orchestrator writer.
-    Require explicit user approval before isolated skill/spec refresh on a
-    dirty tree, and record refreshed cryptoli commit SHA and fixture pin
-    changes. `specs` exit criteria: cryptoli `AGENTS.md` and `specs/` reflect
-    code reality and no-planning spec boundary. `tests` exit criteria: relevant
-    cryptoli checks or explicitly documented blocked checks, plus source repo
-    fixture validation. Commit: separate cryptoli repo commit(s) and one source
-    repo fixture commit if fixture changes.
+17. Cryptoli fixture manifest refresh: after source decisions settle, refresh
+    only this source repo's `evals/fixtures/cryptoli.json` because cryptoli has
+    grown into a better eval target. Do not sync skills into
+    `/home/scrip/Code/cryptoli`, do not update cryptoli `AGENTS.md` or
+    `specs/`, and do not run a cryptoli specs campaign as part of this plan.
+    Preserve the current grounding until refreshed: pinned fixture commit
+    `5c634bd5018eba27b5d6881116d5328e287c03c3` from April 16, 2026. Select and
+    record the refreshed cryptoli commit/ref, update the fixture manifest to
+    match the current eval target, and validate the source repo harness.
+    `specs` exit criteria: source repo specs mention fixture semantics only if
+    changed. `tests` exit criteria: source repo fixture validation through
+    `make validate` or direct harness validation. Commit: one source repo
+    fixture commit if the fixture changes.
 
 18. Final whole-plan verification and cleanup: run a strict plan review after
     all milestones are complete. Confirm shipped docs, specs, skills, helpers,
@@ -671,33 +667,33 @@ Implemented-plan verification campaign:
 - Require synthesis confirmation before fixes and fix-audit before commit or
   final readiness.
 
-Adjunct skills:
+Core and adjacent skills:
 
 - `grill` must ask one question at a time, include a recommended answer, inspect
   code/specs before asking when possible, and preserve plan carry-forward.
+- `grill` must be added under `src/grill/` as a shipped source-repo core skill
+  and included in downstream sync.
 - `grill` is not a replacement for `consult`, does not create implementation
   plans unless handing off to `plan`, and does not write `specs/` directly by
   default.
 - `improve` candidates must be evidence-backed, numbered, file-referenced, and
-  user-selected before design; avoid speculative refactor backlogs.
+  user-selected before design; avoid speculative refactor backlogs. `improve`
+  is still a decision, not a required core skill.
 - `caveman` affects communication only and must not weaken findings, plan
   sections, checks, durable truth, commands, errors, code comments, docs,
   plan files, tests, or safety warnings.
-- `caveman` must be added under `src/caveman/` as a permanent citizen of this
-  source repo; only its downstream default-install status remains to be
-  decided.
+- `caveman` must be added under `src/caveman/` as a shipped source-repo core
+  skill and included in downstream sync.
 
-Cryptoli refresh:
+Cryptoli fixture refresh:
 
 - Current fixture pin: `5c634bd5018eba27b5d6881116d5328e287c03c3`, committed
   April 16, 2026.
-- Current local repo path: `/home/scrip/Code/cryptoli`.
-- Current dirty-worktree categories observed on May 6, 2026: schema, backend
-  service/test, migration, plan, and `specs/data-model.md`.
-- Cryptoli 6+1 specs audit angles: backend, frontend, admin,
-  data/auth/realtime, testing, ops/deploy, plus one orchestrator writer.
-- Do not refresh skills/specs on the dirty tree without explicit user approval;
-  record refreshed commit SHA and fixture pin changes.
+- Current local repo path for sampling only: `/home/scrip/Code/cryptoli`.
+- Do not refresh skills, `AGENTS.md`, or `specs/` in cryptoli as part of this
+  plan; the user will handle that separately with sync and the `specs` skill.
+- Record refreshed cryptoli commit/ref and fixture pin changes in this source
+  repo only.
 
 ## Verification
 
@@ -713,38 +709,43 @@ Planned proof points:
   checks where the helper supports them.
 - For eval/harness changes, run `python3 evals/scripts/harness.py validate`
   directly or through `make validate`.
-- For downstream cryptoli sync, inspect cryptoli dirty worktree first and avoid
-  unrelated product changes.
+- For cryptoli fixture refresh, update only this source repo's
+  `evals/fixtures/cryptoli.json` and validate the harness.
 
 Initial review gate for this conversion:
 
 - [2026-05-06] Consult agent 1 coverage review: fail before patch. Required
   expanding TODO detail for provider-boundary evals, dependency grounding,
   standards/trigger checks, specs guardrails, per-skill lean-contract edits,
-  planning/verify fan-out, adjunct skills, and cryptoli facts.
+  planning/verify fan-out, skill-stack additions, and cryptoli fixture facts.
 - [2026-05-06] Verify agent 1 plan-skill and TODO coverage review: fail before
   patch. Required preserving missing TODO details before deleting `TODO.md`.
 - [2026-05-06] Verify agent 2 workflow-safety review: pass, with suggestions
   to split later broad milestones and recheck external sources before
   freshness-sensitive work.
 - [2026-05-06] Consult agent 2 practical architecture review: pass with risks.
-  Accepted safeguards: adjunct registry/sync decision before adding skill dirs,
+  Accepted safeguards: skill-stack registry/sync decision before adding skill dirs,
   minimal worker contract first, lock/stale-plan guard before planning-loop
-  writes, split adjunct work, campaign reference before full runner, and TUI
+  writes, split new-skill work, campaign reference before full runner, and TUI
   only after real CLI usage evidence.
 - [2026-05-06] Plan patched to address the failing review findings by adding
-  `Detailed Carry-Forward Requirements`, splitting adjunct milestones, adding
-  lock/stale-plan safeguards, and preserving cryptoli grounding details.
+  `Detailed Carry-Forward Requirements`, splitting skill-stack milestones,
+  adding lock/stale-plan safeguards, and preserving cryptoli fixture grounding
+  details.
 - [2026-05-06] Re-review round: consult coverage review passed; consult
   practical architecture review passed; verify workflow-safety review passed;
   verify plan/TODO coverage review failed on `caveman` being weakened from
   "permanent citizen" to optional/local-only. Plan patched to preserve
-  `caveman` as a permanent source-repo adjunct skill while leaving only
-  downstream default-install status as the decision.
+  `caveman` as a permanent source-repo skill before the later core-sync
+  clarification.
 - [2026-05-06] Focused final re-verification of the `caveman` patch passed.
   `TODO.md` deletion approved from the final blocking-review perspective.
 - [2026-05-06] `TODO.md` deleted after review gate passed and the backlog was
   preserved in this plan.
+- [2026-05-06] User clarified post-conversion scope: `grill` and `caveman`
+  are source-repo core skills synced downstream; the 6+1 specs audit is for
+  this skills repo's `AGENTS.md` and `specs/`; direct cryptoli repo work is out
+  of scope except refreshing `evals/fixtures/cryptoli.json`.
 
 ## Risks
 
@@ -757,15 +758,15 @@ Initial review gate for this conversion:
 - `specs/` could accidentally become another backlog. Mitigation: hard-rule
   specs to durable code/system truth and fail evals when specs contain plans or
   TODOs.
-- `grill`, `caveman`, or `improve` could blur the six-skill contract.
-  Mitigation: treat them as adjunct skills with explicit non-interference
-  evals.
+- `grill`, `caveman`, or `improve` could blur the six-skill workflow contract.
+  Mitigation: keep `grill` and `caveman` as core shipped skills with explicit
+  non-interference evals, and keep `improve` behind a decision gate.
 - Milestone commits could mix unrelated work or grant too much authority to
   automation. Mitigation: make commit gates wrapper/operator behavior only and
   stop on unrelated dirty worktree.
-- Cryptoli refresh could overwrite dirty product work. Mitigation: wait for a
-  stable branch or run an explicitly isolated skill/spec refresh with dirty
-  state acknowledged.
+- Cryptoli fixture refresh could pin an unstable target. Mitigation: choose and
+  record a stable cryptoli commit/ref and validate the source repo fixture
+  manifest.
 - External guidance could drift. Mitigation: recheck upstream sources when
   freshness affects a milestone.
 - The overall program could become over-engineered. Mitigation: ship in small
@@ -774,17 +775,14 @@ Initial review gate for this conversion:
 
 ## Open Questions
 
-- Should `grill` ship by default during downstream sync, or remain optional via
-  `SKILL=...`?
-- Should `caveman` ship by default, or remain a local optional style skill?
 - Should `improve` become `src/improve/`, a `consult` reference/mode, or no
   shipped surface yet?
 - Which provider wrapper should be implemented first for the planning loop:
   raw `codex_loop.py` only, or dashboard at the same time?
 - Should milestone commit gates live only in provider wrappers, or also in a
   generic operator helper that can be provider-neutral?
-- When should cryptoli sync happen relative to its current dirty product
-  branch?
+- Which cryptoli commit/ref should refresh `evals/fixtures/cryptoli.json` when
+  Milestone 17 runs?
 - Which real-client smoke path should be used for frontmatter and trigger
   portability?
 
@@ -801,16 +799,16 @@ Initial review gate for this conversion:
 - [ ] Milestone 5: Dependency-sensitive external grounding
 - [ ] Milestone 6: Standards alignment, compatibility metadata, trigger ergonomics, and eval portability
 - [ ] Milestone 7: Milestone commit cadence
-- [ ] Milestone 8: Adjunct skill governance and install-surface decision
-- [ ] Milestone 9: Grill adjunct skill
-- [ ] Milestone 10: Caveman adjunct skill
-- [ ] Milestone 11: Improve architecture adjunct decision
+- [ ] Milestone 8: Core skill-stack governance and install-surface decision
+- [ ] Milestone 9: Grill core skill
+- [ ] Milestone 10: Caveman core skill
+- [ ] Milestone 11: Improve architecture adjacent-skill decision
 - [ ] Milestone 12: Shared per-skill script convention
 - [ ] Milestone 13: Planning-only loop
 - [ ] Milestone 14: Execute-loop verification fan-out
 - [ ] Milestone 15: Implemented-plan verification campaign reference
 - [ ] Milestone 16: Operations interface
-- [ ] Milestone 17: Downstream cryptoli refresh and fixture update
+- [ ] Milestone 17: Cryptoli fixture manifest refresh
 - [ ] Milestone 18: Final whole-plan verification and cleanup
 
 ## Decision Log
@@ -818,9 +816,9 @@ Initial review gate for this conversion:
 - [2026-05-06] Converted `TODO.md` backlog into this plan path so future work
   has one canonical plan-driven state file and `TODO.md` can be removed after
   the requested review gate passes.
-- [2026-05-06] Kept the six workflow skills as the core semantic contract and
-  treated `grill`, `caveman`, and possible `improve` as adjunct skills so they
-  cannot override `consult`, `plan`, `execute`, `verify`, `specs`, or `tests`.
+- [2026-05-06] Kept the six workflow skills as the core semantic contract.
+  `grill` and `caveman` are required source-repo core skills synced
+  downstream, while possible `improve` remains a decision-gated adjacent skill.
 - [2026-05-06] Chose `src/plan/scripts/loop.py` naming for the planning loop to
   mirror execute's helper naming and avoid redundant `plan_loop.py` naming
   under the plan skill directory.
@@ -828,6 +826,9 @@ Initial review gate for this conversion:
   belong in wrapper/operator flows and verification-campaign flows.
 - [2026-05-06] Deleted `TODO.md`; this plan is now the canonical task record
   for the workflow automation architecture backlog.
+- [2026-05-06] Removed direct cryptoli repo work from this plan. The user will
+  run downstream skill sync and cryptoli `AGENTS.md`/`specs/` refresh
+  separately; this source repo only refreshes `evals/fixtures/cryptoli.json`.
 
 ## Discoveries
 
@@ -839,8 +840,9 @@ Initial review gate for this conversion:
   through assets and evals.
 - [2026-05-06] Only `execute` ships helper scripts today; per-skill scripts are
   future optional amplification surfaces, not current workflow truth.
-- [2026-05-06] Local `/home/scrip/Code/cryptoli` exists and has a dirty product
-  worktree, so downstream sync needs explicit dirty-worktree handling.
+- [2026-05-06] Latest user correction narrowed cryptoli scope here to fixture
+  manifest refresh only. Direct `/home/scrip/Code/cryptoli` sync and specs
+  updates are separate work.
 
 ## Outcomes / Retrospective
 
